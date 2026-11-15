@@ -27,7 +27,7 @@ export interface DrawChar {
   moving: boolean;
   walkT: number;
   look: Look;
-  costume?: CostumeKind;
+  costume?: CostumeKind | undefined;
   isPlayer?: boolean;
   scale?: number;
 }

@@ -1,9 +1,10 @@
-import { CHARACTERS, CHAR_BY_ID } from "../data/characters";
+import { CHARACTERS, charById } from "../data/characters";
 import { CONVERSATIONS } from "../data/conversations";
 import { eventForDate, formatLongDate, parseLocalDate } from "../data/events";
 import { BASE_MAILS, EVENT_MAILS } from "../data/mails";
-import { SPOTS } from "../data/map";
-import { ITEMS, MISSIONS, MISSION_BY_ID } from "../data/missions";
+import { spotAt } from "../data/map";
+import { ITEMS, MISSIONS, missionById } from "../data/missions";
+import { pick } from "../random";
 import { DUNDIES, OBJECTS, OBJ_BY_ID, SERVICES, SHOP } from "../data/objects";
 import {
   CLIENTS,
@@ -127,8 +128,8 @@ export class Game {
     this.date = parseLocalDate(dateISO);
     this.event = eventForDate(this.date);
     this.npcs = CHARACTERS.map((def) => {
-      const first = def.routine[0];
-      const pos = walkableTarget(SPOTS[first.spot].x, SPOTS[first.spot].y);
+      const first = def.routine[0]!;
+      const pos = walkableTarget(spotAt(first.spot).x, spotAt(first.spot).y);
       return {
         def,
         x: pos.x,
@@ -146,7 +147,7 @@ export class Game {
     for (const m of MISSIONS) this.missionStatus[m.id] = "locked";
     this.phase = "playing";
     this.activateMission("intro", true);
-    this.toast(`Pam: «${MISSION_BY_ID.intro.offer}»`, "mission");
+    this.toast(`Pam: «${missionById("intro").offer}»`, "mission");
     if (this.event) this.toast(`${this.event.emoji} Hoy es ${this.event.name}: ${this.event.description}`, "event");
     this.emit();
   }
@@ -249,6 +250,10 @@ export class Game {
     return false;
   }
 
+  private npcById(id: string): NPC | undefined {
+    return this.npcs.find((n) => n.def.id === id);
+  }
+
   private activeConvoFor(id: string): ConvoRuntime | null {
     for (const c of this.convos) {
       if (c.state === "done") continue;
@@ -259,7 +264,7 @@ export class Game {
   }
 
   private convoPos(c: ConvoRuntime, id: string) {
-    const base = SPOTS[c.def.spot];
+    const base = spotAt(c.def.spot);
     const side = c.def.who[0] === id ? -1 : 1;
     return walkableTarget(base.x + side * 24, base.y);
   }
@@ -277,10 +282,10 @@ export class Game {
         action = "Charlando";
         n.faceTo = convo.def.who[0] === n.def.id ? "right" : "left";
       } else {
-        let r = n.def.routine[0];
+        let r = n.def.routine[0]!;
         for (const e of n.def.routine) if (this.mins >= e.at) r = e;
         key = r.spot;
-        const s = SPOTS[r.spot];
+        const s = spotAt(r.spot);
         target = walkableTarget(s.x, s.y);
         action = r.action;
       }
@@ -291,7 +296,7 @@ export class Game {
       }
       n.action = action;
       if (n.path.length) {
-        const wp = n.path[0];
+        const wp = n.path[0]!;
         const dx = wp.x - n.x;
         const dy = wp.y - n.y;
         const d = Math.hypot(dx, dy);
@@ -326,7 +331,8 @@ export class Game {
         if (this.mins >= c.def.at + c.def.duration) c.state = "done";
         continue;
       }
-      const [a, b] = c.def.who.map((id) => this.npcs.find((n) => n.def.id === id)!);
+      const a = this.npcById(c.def.who[0]);
+      const b = this.npcById(c.def.who[1]);
       if (!a || !b) continue;
       if (!c.arrived) {
         if (!a.moving && !b.moving && a.targetKey.startsWith("convo:") && b.targetKey.startsWith("convo:")) {
@@ -339,7 +345,7 @@ export class Game {
       const near = Math.hypot(this.player.x - mx, this.player.y - my) < HEAR_RADIUS;
       if (!near) continue;
       c.lineT += dt;
-      const line = c.def.lines[c.line];
+      const line = c.def.lines[c.line]!;
       const dur = 2.4 + line.text.length * 0.045;
       if (c.lineT >= dur) {
         c.lineT = 0;
@@ -361,12 +367,14 @@ export class Game {
     const out: { x: number; y: number; text: string; muted: boolean }[] = [];
     for (const c of this.convos) {
       if (c.state !== "playing") continue;
-      const [a, b] = c.def.who.map((id) => this.npcs.find((n) => n.def.id === id)!);
+      const a = this.npcById(c.def.who[0]);
+      const b = this.npcById(c.def.who[1]);
+      if (!a || !b) continue;
       const mx = (a.x + b.x) / 2;
       const my = (a.y + b.y) / 2;
       const near = Math.hypot(this.player.x - mx, this.player.y - my) < HEAR_RADIUS;
       if (near) {
-        const line = c.def.lines[Math.min(c.line, c.def.lines.length - 1)];
+        const line = c.def.lines[Math.min(c.line, c.def.lines.length - 1)]!;
         const sp = line.who === a.def.id ? a : b;
         out.push({ x: sp.x, y: sp.y - 66, text: line.text, muted: false });
       } else {
@@ -399,22 +407,23 @@ export class Game {
   }
 
   currentStep(id: string) {
-    const m = MISSION_BY_ID[id];
+    const m = missionById(id);
     if (this.missionStatus[id] !== "active") return null;
-    return m.steps[this.missionStep[id]] ?? null;
+    return m.steps[this.missionStep[id] ?? 0] ?? null;
   }
 
   private activateMission(id: string, silent = false) {
     this.missionStatus[id] = "active";
     this.missionStep[id] = 0;
     this.missionBase[id] = { sales: this.sales, gossip: this.heard.length };
-    if (!silent) this.toast(`📋 Nueva misión: ${MISSION_BY_ID[id].title}`, "mission");
+    if (!silent) this.toast(`📋 Nueva misión: ${missionById(id).title}`, "mission");
   }
 
   private advanceMission(id: string) {
-    const m = MISSION_BY_ID[id];
-    this.missionStep[id]++;
-    if (this.missionStep[id] >= m.steps.length) {
+    const m = missionById(id);
+    const next = (this.missionStep[id] ?? 0) + 1;
+    this.missionStep[id] = next;
+    if (next >= m.steps.length) {
       this.missionStatus[id] = "done";
       this.rep += m.reward.rep;
       if (m.reward.money) this.money += m.reward.money;
@@ -424,7 +433,7 @@ export class Game {
       );
       const unlocked = this.dayMissions().filter((x) => this.isAvailable(x) && x.requires?.includes(id));
       if (unlocked.length) {
-        const names = [...new Set(unlocked.map((u) => CHAR_BY_ID[u.giver].name.split(" ")[0]))].join(", ");
+        const names = [...new Set(unlocked.map((u) => charById(u.giver).name.split(" ")[0]))].join(", ");
         this.toast(`💬 ${names} podría necesitar algo de ti ahora.`, "info");
       }
     } else {
@@ -436,7 +445,7 @@ export class Game {
     for (const m of MISSIONS) {
       const s = this.currentStep(m.id);
       if (!s) continue;
-      const base = this.missionBase[m.id];
+      const base = this.missionBase[m.id] ?? { sales: 0, gossip: 0 };
       if (s.kind === "sales" && this.sales - base.sales >= s.count) this.advanceMission(m.id);
       else if (s.kind === "money" && this.money >= s.amount) this.advanceMission(m.id);
       else if (s.kind === "gossip" && this.heard.length - base.gossip >= s.count) this.advanceMission(m.id);
@@ -642,7 +651,7 @@ export class Game {
         "Phyllis y Bob Vance se conocieron en una feria de refrigeración. Romántico.",
       ];
       this.energy = Math.min(100, this.energy + 5);
-      this.toast("💧 " + lines[Math.floor(Math.random() * lines.length)], "info");
+      this.toast("💧 " + pick(lines), "info");
       this.emit();
       return;
     }
@@ -697,7 +706,7 @@ export class Game {
     const convo = this.activeConvoFor(id);
     let line = n.def.intro;
     if (convo && convo.state === "playing") {
-      const other = CHAR_BY_ID[convo.def.who.find((w) => w !== id)!];
+      const other = charById(convo.def.who.find((w) => w !== id)!);
       line = `Estoy hablando con ${other.name.split(" ")[0]}, pero dime.`;
     } else if (this.event && n.def.eventLines?.[this.event.id] && Math.random() < 0.5) {
       line = n.def.eventLines[this.event.id]!;
@@ -706,7 +715,7 @@ export class Game {
   }
 
   private npcOptions(id: string): DialogOption[] {
-    const n = CHAR_BY_ID[id];
+    const n = charById(id);
     const opts: DialogOption[] = [];
     // Deliveries first
     for (const m of MISSIONS) {
@@ -844,7 +853,7 @@ export class Game {
           label: s,
           tag: "game" as const,
           act: () => {
-            const opp = shots[Math.floor(Math.random() * 3)];
+            const opp = pick(shots);
             let res: string;
             if (opp === s) res = `Los dos hacéis «${s}». Punto repetido.`;
             else if (beats[s] === opp) {
@@ -852,7 +861,7 @@ export class Game {
               res = `Tu «${s}» supera su «${opp}». ¡Punto!`;
             } else {
               state.them++;
-              res = `Su «${opp}» supera tu «${s}». Punto para ${CHAR_BY_ID[oppId].name.split(" ")[0]}.`;
+              res = `Su «${opp}» supera tu «${s}». Punto para ${charById(oppId).name.split(" ")[0]}.`;
             }
             round(res);
           },
@@ -909,7 +918,7 @@ export class Game {
   };
 
   pcStartCall = () => {
-    const client = CLIENTS[Math.floor(Math.random() * CLIENTS.length)];
+    const client = pick(CLIENTS);
     this.call = {
       client,
       stage: 0,
@@ -954,7 +963,7 @@ export class Game {
     c.history.push({ stage: c.stage, option: opt, delta });
     c.interest = Math.max(0, Math.min(MAX_INTEREST, c.interest + delta));
     const pool = REACTIONS[p][bucketFor(delta)];
-    c.reaction = pool[Math.floor(Math.random() * pool.length)];
+    c.reaction = pick(pool);
     c.youLine = opt.text;
     c.lastDelta = delta;
     this.skipTime(3);
@@ -979,7 +988,7 @@ export class Game {
     }
     c.stage++;
     c.options = optionsFor(c.stage, opt.approach);
-    c.clientLine = PROMPTS[p][c.stage];
+    c.clientLine = PROMPTS[p][c.stage] ?? "";
     this.pc = { screen: "call", call: this.callSnapshot() };
     this.emit();
   };
@@ -1100,7 +1109,7 @@ export class Game {
   private buildSnapshot(): UIState {
     const missions: MissionUI[] = this.dayMissions().map((m) => {
       const st = this.missionStatus[m.id] ?? "locked";
-      const step = st === "active" ? m.steps[this.missionStep[m.id]] : null;
+      const step = st === "active" ? (m.steps[this.missionStep[m.id] ?? 0] ?? null) : null;
       let stepText = step?.text ?? null;
       if (step?.kind === "sales") stepText = `${step.text} (${this.sales - (this.missionBase[m.id]?.sales ?? 0)}/${step.count})`;
       if (step?.kind === "money") stepText = `${step.text} ($${this.money}/$${step.amount})`;
@@ -1110,7 +1119,7 @@ export class Game {
         title: m.title,
         desc: m.desc,
         status: st,
-        giver: CHAR_BY_ID[m.giver].name,
+        giver: charById(m.giver).name,
         step: stepText,
         stepIndex: this.missionStep[m.id] ?? 0,
         steps: m.steps.length,

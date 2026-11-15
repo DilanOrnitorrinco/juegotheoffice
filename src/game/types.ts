@@ -161,7 +161,7 @@ export interface ConversationDef {
   at: number;
   duration: number;
   lines: ConversationLine[];
-  event?: EventId;
+  event?: EventId | undefined;
 }
 
 export interface EventDef {

@@ -517,3 +517,9 @@ export const MISSIONS: MissionDef[] = [
 ];
 
 export const MISSION_BY_ID: Record<string, MissionDef> = Object.fromEntries(MISSIONS.map((m) => [m.id, m]));
+
+export function missionById(id: string): MissionDef {
+  const m = MISSION_BY_ID[id];
+  if (!m) throw new Error(`Unknown mission ${id}`);
+  return m;
+}

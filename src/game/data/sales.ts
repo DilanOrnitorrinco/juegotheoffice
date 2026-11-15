@@ -55,7 +55,7 @@ export interface SaleOption {
   approach: Approach;
   text: string;
   /** Personality that gets an extra +1 from this specific line. */
-  bonus?: Personality;
+  bonus?: Personality | undefined;
 }
 
 const O = (approach: Approach, text: string, bonus?: Personality): SaleOption => ({ approach, text, bonus });

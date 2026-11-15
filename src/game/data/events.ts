@@ -119,7 +119,7 @@ export function eventById(id: EventId | null | undefined): EventDef | null {
 
 /** Parse "YYYY-MM-DD" as a local date (no timezone shift). */
 export function parseLocalDate(s: string): Date {
-  const [y, m, d] = s.split("-").map(Number);
+  const [y = 2026, m = 1, d = 1] = s.split("-").map(Number);
   return new Date(y, (m || 1) - 1, d || 1);
 }
 

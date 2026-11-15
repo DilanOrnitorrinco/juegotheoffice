@@ -475,3 +475,9 @@ export const CHARACTERS: CharacterDef[] = [
 export const CHAR_BY_ID: Record<string, CharacterDef> = Object.fromEntries(
   CHARACTERS.map((c) => [c.id, c]),
 );
+
+export function charById(id: string): CharacterDef {
+  const c = CHAR_BY_ID[id];
+  if (!c) throw new Error(`Unknown character ${id}`);
+  return c;
+}
