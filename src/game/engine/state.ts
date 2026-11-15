@@ -12,7 +12,7 @@ export interface NPC {
   targetKey: string;
   target: { x: number; y: number };
   action: string;
-  faceTo?: Facing;
+  faceTo?: Facing | undefined;
 }
 
 export interface Player {

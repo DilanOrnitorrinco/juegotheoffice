@@ -276,3 +276,7 @@ export const WINDOWS: Window[] = [
 ];
 
 export const ELEVATOR = { x: 640, w: 90 };
+
+export function spotAt(name: string): { x: number; y: number } {
+  return SPOTS[name] ?? { x: 810, y: 600 };
+}

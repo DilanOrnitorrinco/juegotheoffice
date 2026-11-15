@@ -4,7 +4,7 @@ import { CHAR_BY_ID } from "@/game/data/characters";
 import { drawCharacter } from "@/game/engine/sprites";
 import type { CostumeKind } from "@/game/types";
 
-export function Portrait({ id, costume, size = 76 }: { id: string; costume?: CostumeKind; size?: number }) {
+export function Portrait({ id, costume, size = 76 }: { id: string; costume?: CostumeKind | undefined; size?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const c = ref.current;
