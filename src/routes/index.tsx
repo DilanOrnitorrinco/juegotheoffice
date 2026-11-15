@@ -1,23 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { GameRoot } from "@/components/game/GameRoot";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "The Office: Scranton — Un día en Dunder Mifflin" },
+      {
+        name: "description",
+        content: "Juego fan de The Office: vende papel por teléfono, ayuda a tus compañeros, escucha sus conversaciones y vive eventos como Halloween o Navidad.",
+      },
+      { property: "og:title", content: "The Office: Scranton — Un día en Dunder Mifflin" },
+      {
+        property: "og:description",
+        content: "Vende papel, cumple encargos y cotillea en la oficina de Scranton. Eventos especiales según la fecha.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  return <GameRoot />;
 }
