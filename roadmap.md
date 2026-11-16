@@ -6,3 +6,4 @@
 - [ ] Conversaciones entre personajes con bocadillos al acercarse
 - [ ] Mapa más bonito (suelos, muebles, ventanas, luz, decoración)
 - [ ] Más misiones, bloqueadas hasta que alguien te las pida; más actividades (café, máquina, Dundies)
+- [ ] Usar la clave de Pollinations del usuario (pendiente: confirmar para qué — diálogos con IA, imágenes…; guardarla de forma segura, nunca en el código)
