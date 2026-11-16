@@ -1075,7 +1075,7 @@ export function renderWorld(g: G, game: Game, view: View) {
       g.fill();
       g.fillStyle = "#fff";
       g.fillText(name, n.x, n.y + 17);
-      if (dist < 150 && n.action) {
+      if (dist < 150 && n.action && n.action !== "Charlando") {
         g.font = "italic 600 10px Archivo, sans-serif";
         g.fillStyle = "rgba(20,26,32,0.85)";
         g.fillText(n.action, n.x, n.y + 32);
