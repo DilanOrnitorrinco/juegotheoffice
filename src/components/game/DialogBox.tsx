@@ -4,7 +4,7 @@ import type { CostumeKind } from "@/game/types";
 
 import { Portrait } from "./Portrait";
 
-export function DialogBox({ ui, game, costume }: { ui: UIState; game: Game; costume?: CostumeKind }) {
+export function DialogBox({ ui, game, costume }: { ui: UIState; game: Game; costume?: CostumeKind | undefined }) {
   const d = ui.dialog;
   if (!d) return null;
   return (
