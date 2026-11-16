@@ -23,7 +23,7 @@ function noise(g: G, size: number, base: string, dots: string[], n: number, seed
   let s = seed;
   const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
   for (let i = 0; i < n; i++) {
-    g.fillStyle = dots[i % dots.length];
+    g.fillStyle = dots[i % dots.length]!;
     g.fillRect(rnd() * size, rnd() * size, 1.5, 1.5);
   }
 }
@@ -182,8 +182,8 @@ function buildFloor(event: EventId | null): HTMLCanvasElement {
   // Event floor decor
   if (event === "sanpatricio") {
     g.fillStyle = "rgba(47,154,79,0.35)";
-    for (const [x, y] of [[300, 560], [820, 760], [1250, 560], [1700, 760], [990, 290]]) {
-      for (const [dx, dy] of [[0, -10], [-9, 2], [9, 2]]) {
+    for (const [x, y] of [[300, 560], [820, 760], [1250, 560], [1700, 760], [990, 290]] as const) {
+      for (const [dx, dy] of [[0, -10], [-9, 2], [9, 2]] as const) {
         g.beginPath();
         g.arc(x + dx, y + dy, 9, 0, Math.PI * 2);
         g.fill();
@@ -226,7 +226,7 @@ function buildFloor(event: EventId | null): HTMLCanvasElement {
   drawChair(g, 930, 226, true);
   drawChair(g, 1000, 226, true);
   // Kitchen chairs
-  for (const [x, y] of [[1505, 255], [1625, 255], [1695, 255], [1815, 255]]) drawChair(g, x, y, false);
+  for (const [x, y] of [[1505, 255], [1625, 255], [1695, 255], [1815, 255]] as const) drawChair(g, x, y, false);
   return c;
 }
 
@@ -378,7 +378,7 @@ function drawWall(g: G, w: Wall, t: number, event: EventId | null) {
     let i = 0;
     for (let x = w.x + 21; x < w.x + w.w - 10; x += 22) {
       const on = Math.sin(t * 4 + i) > -0.3;
-      g.fillStyle = on ? cols[i % cols.length] : "rgba(80,80,80,0.6)";
+      g.fillStyle = on ? cols[i % cols.length]! : "rgba(80,80,80,0.6)";
       g.beginPath();
       g.arc(x, fy + 8, 2.6, 0, Math.PI * 2);
       g.fill();
@@ -487,7 +487,8 @@ function drawDesk(g: G, f: Furniture, t: number, isPlayer: boolean) {
   g.fillStyle = "#2b2f33";
   rr(g, f.x + f.w - 22, f.y + 22, 14, 10, 2);
   g.fill();
-  if (f.owner && OWNER_DECOR[f.owner]) OWNER_DECOR[f.owner](g, f);
+  const deco = f.owner ? OWNER_DECOR[f.owner] : undefined;
+  if (deco) deco(g, f);
   if (isPlayer) {
     g.strokeStyle = `rgba(242,193,78,${0.55 + Math.sin(t * 3) * 0.35})`;
     g.lineWidth = 3;
@@ -538,7 +539,7 @@ function drawFurniture(g: G, f: Furniture, t: number) {
       g.fillStyle = "#2b2f33";
       rr(g, f.x + 90, f.y + 8, 16, 11, 2);
       g.fill();
-      OWNER_DECOR.pam(g, f);
+      OWNER_DECOR["pam"]?.(g, f);
       g.fillStyle = "#c9a548";
       g.fillRect(f.x + 44, f.y + f.h - 12, 44, 7);
       return;
@@ -590,7 +591,7 @@ function drawFurniture(g: G, f: Furniture, t: number) {
       const snack = ["#f2c14e", "#e0476b", "#3aa7a3", "#e8862f"];
       for (let r = 0; r < 3; r++)
         for (let c = 0; c < 4; c++) {
-          g.fillStyle = snack[(r + c) % 4];
+          g.fillStyle = snack[(r + c) % 4]!;
           g.fillRect(f.x + 8 + c * 7, f.y + 34 + r * 6, 5, 4);
         }
       g.fillStyle = "#c9ced2";
@@ -671,7 +672,7 @@ function drawFurniture(g: G, f: Furniture, t: number) {
     case "bookshelf":
       block(g, f.x, f.y, f.w, f.h, "#8a6845", "#5f4730", 14, 2);
       for (let x = f.x + 4; x < f.x + f.w - 8; x += 9) {
-        g.fillStyle = ["#3f6fa8", "#c8312f", "#e3b93a", "#3f7a4c", "#e6e1d3"][Math.floor(x) % 5];
+        g.fillStyle = ["#3f6fa8", "#c8312f", "#e3b93a", "#3f7a4c", "#e6e1d3"][Math.floor(x) % 5]!;
         g.fillRect(x, f.y + 3, 7, f.h - 20);
       }
       return;
@@ -833,7 +834,7 @@ function eventDecos(event: EventId | null): Deco[] {
     });
 
   if (event === "halloween") {
-    [[620, 360], [480, 560], [1360, 560], [1960, 860 - 10], [150, 860 - 30], [1880, 360], [1300, 1330], [90, 1340]].forEach(([x, y]) => pumpkin(x, y));
+    ([[620, 360], [480, 560], [1360, 560], [1960, 860 - 10], [150, 860 - 30], [1880, 360], [1300, 1330], [90, 1340]] as const).forEach(([x, y]) => pumpkin(x, y));
     // cobwebs in corners
     for (const [x, y, sx] of [[24, 40, 1], [1976, 40, -1], [24, 420, 1], [1976, 420, -1], [760, 900, 1], [1976, 900, -1]] as const) {
       out.push({
@@ -875,7 +876,7 @@ function eventDecos(event: EventId | null): Deco[] {
         }
         const cols = ["#e53935", "#fdd835", "#1e88e5", "#ffffff"];
         for (let i = 0; i < 12; i++) {
-          g.fillStyle = Math.sin(t * 3 + i) > 0 ? cols[i % 4] : "rgba(255,255,255,0.3)";
+          g.fillStyle = Math.sin(t * 3 + i) > 0 ? cols[i % 4]! : "rgba(255,255,255,0.3)";
           g.beginPath();
           g.arc(x - 20 + ((i * 13) % 40), y - 20 - ((i * 7) % 44), 2.2, 0, Math.PI * 2);
           g.fill();
@@ -889,7 +890,7 @@ function eventDecos(event: EventId | null): Deco[] {
     out.push({
       y: 760,
       draw: (g) => {
-        for (const [x, y] of [[300, 420], [1300, 420], [1700, 420]]) {
+        for (const [x, y] of [[300, 420], [1300, 420], [1700, 420]] as const) {
           g.strokeStyle = "#2e7d32";
           g.lineWidth = 6;
           g.beginPath();
@@ -1031,7 +1032,7 @@ export function renderWorld(g: G, game: Game, view: View) {
           moving: n.moving,
           walkT: n.walkT,
           look: n.def.look,
-          costume: game.event?.costumes[n.def.id],
+          costume: game.event?.costumes[n.def.id] ?? undefined,
         }),
     });
   }
@@ -1067,14 +1068,14 @@ export function renderWorld(g: G, game: Game, view: View) {
       const alpha = Math.min(1, (280 - dist) / 80);
       g.globalAlpha = alpha;
       g.font = "700 11px Archivo, sans-serif";
-      const name = n.def.name.split(" ")[0];
+      const name = n.def.name.split(" ")[0] ?? n.def.name;
       const w = g.measureText(name).width + 12;
       g.fillStyle = "rgba(24,32,40,0.78)";
       rr(g, n.x - w / 2, n.y + 6, w, 15, 7);
       g.fill();
       g.fillStyle = "#fff";
       g.fillText(name, n.x, n.y + 17);
-      if (dist < 150 && n.action) {
+      if (dist < 150 && n.action && n.action !== "Charlando") {
         g.font = "italic 600 10px Archivo, sans-serif";
         g.fillStyle = "rgba(20,26,32,0.85)";
         g.fillText(n.action, n.x, n.y + 32);
@@ -1286,7 +1287,7 @@ export function renderMinimap(g: G, game: Game, w: number, h: number, dpr: numbe
     concrete: "#97978f",
   };
   for (const r of ROOMS) {
-    g.fillStyle = floorCol[r.floor];
+    g.fillStyle = floorCol[r.floor] ?? "#888";
     g.fillRect(r.x * sx, r.y * sy, r.w * sx, r.h * sy);
   }
   g.fillStyle = "#1b232b";

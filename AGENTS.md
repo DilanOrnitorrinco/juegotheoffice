@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- The game is a canvas engine in `src/game/` (data in `data/`, logic in `engine/game.ts`, drawing in `engine/render.ts`/`sprites.ts`) and React only renders overlays from `game.getSnapshot()` via `useSyncExternalStore` — keeps the 60fps loop out of React.
+- All game content (characters, missions, conversations, sales tree, events) lives as typed data in `src/game/data/`; add content there, not in engine code — keeps the engine generic.
+- NPCs move only along A* paths over a grid built from walls + furniture (`engine/pathfinding.ts`); new furniture must be added to `FURNITURE` so collisions and paths stay correct.

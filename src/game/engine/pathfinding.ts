@@ -94,13 +94,13 @@ export function findPath(sx: number, sy: number, tx: number, ty: number): { x: n
     let k = heap.length - 1;
     while (k > 0) {
       const p = (k - 1) >> 1;
-      if (f[heap[p]] <= f[heap[k]]) break;
-      [heap[p], heap[k]] = [heap[k], heap[p]];
+      if (f[heap[p]!]! <= f[heap[k]!]!) break;
+      [heap[p], heap[k]] = [heap[k]!, heap[p]!];
       k = p;
     }
   };
   const pop = (): number => {
-    const top = heap[0];
+    const top = heap[0]!;
     const last = heap.pop()!;
     if (heap.length) {
       heap[0] = last;
@@ -109,10 +109,10 @@ export function findPath(sx: number, sy: number, tx: number, ty: number): { x: n
         const l = k * 2 + 1;
         const r = l + 1;
         let m = k;
-        if (l < heap.length && f[heap[l]] < f[heap[m]]) m = l;
-        if (r < heap.length && f[heap[r]] < f[heap[m]]) m = r;
+        if (l < heap.length && f[heap[l]!]! < f[heap[m]!]!) m = l;
+        if (r < heap.length && f[heap[r]!]! < f[heap[m]!]!) m = r;
         if (m === k) break;
-        [heap[m], heap[k]] = [heap[k], heap[m]];
+        [heap[m], heap[k]] = [heap[k]!, heap[m]!];
         k = m;
       }
     }
@@ -142,8 +142,8 @@ export function findPath(sx: number, sy: number, tx: number, ty: number): { x: n
         const ni = nr * COLS + nc;
         if (g[ni] || closed[ni]) continue;
         if (dr && dc && (g[cr * COLS + nc] || g[nr * COLS + cc])) continue;
-        const cost = gScore[cur] + (dr && dc ? 1.414 : 1);
-        if (cost < gScore[ni]) {
+        const cost = gScore[cur]! + (dr && dc ? 1.414 : 1);
+        if (cost < gScore[ni]!) {
           gScore[ni] = cost;
           came[ni] = cur;
           f[ni] = cost + h(ni);
@@ -155,15 +155,15 @@ export function findPath(sx: number, sy: number, tx: number, ty: number): { x: n
   if (!found) return [];
 
   const cells: number[] = [];
-  for (let i = goal; i !== -1; i = came[i]) cells.push(i);
+  for (let i = goal; i !== -1; i = came[i]!) cells.push(i);
   cells.reverse();
   const center = (i: number) => ({ x: (i % COLS) * CELL + CELL / 2, y: ((i / COLS) | 0) * CELL + CELL / 2 });
   // Keep only the turning points.
   const pts: { x: number; y: number }[] = [];
   let lastDir = "";
   for (let k = 1; k < cells.length; k++) {
-    const a = cells[k - 1];
-    const b = cells[k];
+    const a = cells[k - 1]!;
+    const b = cells[k]!;
     const dir = `${(b % COLS) - (a % COLS)},${((b / COLS) | 0) - ((a / COLS) | 0)}`;
     if (dir !== lastDir && k > 1) pts.push(center(a));
     lastDir = dir;

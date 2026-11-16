@@ -113,7 +113,7 @@ export function drawCharacter(g: G, c: DrawChar) {
   // hawaiian flowers
   if (c.costume === "hawaiian") {
     g.fillStyle = "#ffe17a";
-    for (const [fx, fy] of [[-6, -30], [5, -24], [-3, -18]]) {
+    for (const [fx, fy] of [[-6, -30], [5, -24], [-3, -18]] as const) {
       g.beginPath();
       g.arc(fx, fy, 2.2, 0, Math.PI * 2);
       g.fill();
@@ -335,7 +335,7 @@ function drawHair(g: G, look: Look, facing: Facing, hy: number) {
       g.fillRect(-11, hy - 6, 22, 4);
       break;
     case "curly":
-      for (const [x, y] of [[-11, hy - 2], [-12, hy + 5], [-11, hy + 12], [11, hy - 2], [12, hy + 5], [11, hy + 12], [-6, hy - 9], [0, hy - 11], [6, hy - 9]]) {
+      for (const [x, y] of [[-11, hy - 2], [-12, hy + 5], [-11, hy + 12], [11, hy - 2], [12, hy + 5], [11, hy + 12], [-6, hy - 9], [0, hy - 11], [6, hy - 9]] as const) {
         g.beginPath();
         g.arc(x, y, 4.5, 0, Math.PI * 2);
         g.fill();
@@ -700,7 +700,7 @@ export function drawItemSprite(g: G, sprite: string, x: number, y: number, t: nu
       break;
     case "shamrock":
       g.fillStyle = "#2f9a4f";
-      for (const [fx, fy] of [[0, -7], [-5, -2], [5, -2]]) {
+      for (const [fx, fy] of [[0, -7], [-5, -2], [5, -2]] as const) {
         g.beginPath();
         g.arc(fx, fy, 4.2, 0, Math.PI * 2);
         g.fill();

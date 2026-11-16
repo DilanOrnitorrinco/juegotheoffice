@@ -482,7 +482,9 @@ export class Game {
     let best: NPC | null = null;
     let bd = TALK_RADIUS;
     for (const n of this.npcs) {
-      const d = Math.hypot(n.x - this.player.x, n.y - this.player.y);
+      let d = Math.hypot(n.x - this.player.x, n.y - this.player.y);
+      // People sitting behind a counter/desk (Pam, Michael) can be reached across it.
+      if (!n.moving && (n.targetKey === "seat_pam" || n.targetKey === "seat_michael")) d *= 0.6;
       if (d < bd) {
         bd = d;
         best = n;
