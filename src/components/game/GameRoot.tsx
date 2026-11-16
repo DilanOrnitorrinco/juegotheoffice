@@ -92,7 +92,7 @@ export function GameRoot() {
     };
   }, [game]);
 
-  const portraitCostume = ui.dialog?.portrait && ui.event ? game.event?.costumes[ui.dialog.portrait] : undefined;
+  const portraitCostume = ui.dialog?.portrait && ui.event ? (game.event?.costumes[ui.dialog.portrait] ?? undefined) : undefined;
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-background">

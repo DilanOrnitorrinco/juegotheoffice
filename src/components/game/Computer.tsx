@@ -129,7 +129,7 @@ export function Computer({ ui, game }: { ui: UIState; game: Game }) {
                   <>
                     <p className="crt-line pt-1">
                       <span className="crt-dim">
-                        NIVEL {pc.call.stage + 1}/5 · {STAGES[pc.call.stage].toUpperCase()}
+                        NIVEL {pc.call.stage + 1}/5 · {(STAGES[pc.call.stage] ?? "").toUpperCase()}
                       </span>
                       <br />
                       {pc.call.contact.toUpperCase()}: «{pc.call.clientLine}»

@@ -265,7 +265,7 @@ export function bucketFor(delta: number): FitBucket {
 
 export function optionsFor(stage: number, prev: Approach | null): SaleOption[] {
   if (stage === 0 || !prev) return OPENING;
-  return TREE[stage][prev];
+  return TREE[stage]?.[prev] ?? OPENING;
 }
 
 export type SaleOutcome = { kind: "big" | "sale" | "small" | "none"; amount: number };
