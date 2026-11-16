@@ -6,4 +6,5 @@
 - [x] Conversaciones entre personajes con bocadillos al acercarse
 - [x] Mapa más bonito (suelos, muebles, ventanas, luz, decoración)
 - [x] Más misiones, bloqueadas hasta que alguien te las pida; más actividades (café, máquina, Dundies, ping-pong)
-- [ ] Usar la clave de Pollinations del usuario — bloqueado: falta que el usuario diga para qué (diálogos con IA, imágenes…). Guardar como secreto, nunca en el código.
+- [ ] Pollinations: charlas libres con personajes (escribir y que respondan en personaje)
+- [ ] Pollinations: llamadas de venta inventadas por IA (clientes y respuestas nuevas, manteniendo el árbol de 4 opciones)
