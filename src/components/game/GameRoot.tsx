@@ -21,6 +21,7 @@ export function GameRoot() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const g = canvas.getContext("2d")!;
+    if (import.meta.env.DEV) (window as unknown as { __game?: Game }).__game = game;
     let vw = window.innerWidth;
     let vh = window.innerHeight;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
