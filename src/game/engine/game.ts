@@ -5,11 +5,13 @@ import { BASE_MAILS, EVENT_MAILS } from "../data/mails";
 import { spotAt } from "../data/map";
 import { ITEMS, MISSIONS, missionById } from "../data/missions";
 import { pick } from "../random";
+import type { GameAi } from "../ai";
 import { DUNDIES, OBJECTS, OBJ_BY_ID, SERVICES, SHOP } from "../data/objects";
 import {
   CLIENTS,
   HANGUPS,
   MAX_INTEREST,
+  OPENING,
   PROMPTS,
   REACTIONS,
   START_INTEREST,
@@ -101,6 +103,12 @@ export class Game {
   dialogHistory: { line: string; options: DialogOption[] }[] = [];
   pc: PcUI | null = null;
   call: CallState | null = null;
+  /** NPC id of the free (AI) chat currently open. */
+  chatWith: string | null = null;
+  /** Client reactions of the current AI call, by step (fed back as context). */
+  private aiReactions: (string | null)[] = [];
+  /** AI provider plugged in by the UI; null = classic content only. */
+  ai: GameAi | null = null;
   toasts: Toast[] = [];
   private toastId = 1;
   private listeners = new Set<Listener>();
@@ -169,7 +177,7 @@ export class Game {
   }
 
   get frozen() {
-    return this.phase !== "playing" || this.paused || this.journal || !!this.dialog || !!this.pc;
+    return this.phase !== "playing" || this.paused || this.journal || !!this.dialog || !!this.pc || !!this.chatWith;
   }
 
   // ---------- loop ----------
@@ -778,9 +786,23 @@ export class Game {
     if ((id === "darryl" || id === "roy") && Math.hypot(this.player.x - 1330, this.player.y - 1175) < 200) {
       opts.push({ label: "🏓 ¿Una partida de ping-pong?", tag: "game", act: () => this.startPingPong(id) });
     }
+    if (this.ai) opts.push({ label: "💬 Charlar libremente (escribe tú)", tag: "chat", act: () => this.openChat(id) });
     opts.push({ label: "Despedirme", tag: "leave", act: this.closeDialog });
     return opts;
   }
+
+  openChat(id: string) {
+    this.dialog = null;
+    this.dialogHistory = [];
+    this.chatWith = id;
+    this.emit();
+  }
+
+  closeChat = () => {
+    this.chatWith = null;
+    this.talkingTo = null;
+    this.emit();
+  };
 
   private noTaskLine(id: string): string {
     const pending = this.dayMissions().find((m) => m.giver === id && this.missionStatus[m.id] === "locked");
@@ -931,9 +953,52 @@ export class Game {
       youLine: null,
       reaction: null,
       lastDelta: null,
+      ai: false,
+      loading: false,
     };
     this.calls++;
     this.pc = { screen: "call", call: this.callSnapshot() };
+    this.emit();
+  };
+
+  /** Same tree rules, but the client and every line are invented by the AI. */
+  pcStartAiCall = async () => {
+    if (!this.ai) return this.pcStartCall();
+    const call: CallState = {
+      client: { company: "Marcando…", contact: "…", personality: "amable", need: "…", budget: 0, greeting: "" },
+      stage: 0,
+      interest: START_INTEREST,
+      history: [],
+      options: [],
+      clientLine: "",
+      youLine: null,
+      reaction: null,
+      lastDelta: null,
+      ai: true,
+      loading: true,
+    };
+    this.call = call;
+    this.aiReactions = [];
+    this.calls++;
+    this.pc = { screen: "call", call: this.callSnapshot() };
+    this.emit();
+    try {
+      const r = await this.ai.salesStart();
+      if (this.call !== call) return;
+      call.client = r.client;
+      call.clientLine = r.client.greeting;
+      call.options = r.options;
+    } catch {
+      if (this.call !== call) return;
+      const client = pick(CLIENTS);
+      call.client = client;
+      call.clientLine = client.greeting;
+      call.options = OPENING;
+      call.ai = false;
+      this.toast("🤖 La IA no responde: te paso una llamada normal.", "warn");
+    }
+    call.loading = false;
+    if (this.pc?.screen === "call") this.pc = { screen: "call", call: this.callSnapshot() };
     this.emit();
   };
 
@@ -952,12 +1017,14 @@ export class Game {
       youLine: c.youLine,
       reaction: c.reaction,
       lastDelta: c.lastDelta,
+      ai: c.ai,
+      loading: c.loading,
     };
   }
 
   pcChooseOption = (i: number) => {
     const c = this.call;
-    if (!c || this.pc?.screen !== "call") return;
+    if (!c || c.loading || this.pc?.screen !== "call") return;
     const opt: SaleOption | undefined = c.options[i];
     if (!opt) return;
     const p = c.client.personality;
@@ -989,11 +1056,46 @@ export class Game {
       return;
     }
     c.stage++;
+    if (c.ai && this.ai) {
+      void this.aiNextTurn(c, opt, delta);
+      return;
+    }
     c.options = optionsFor(c.stage, opt.approach);
     c.clientLine = PROMPTS[p][c.stage] ?? "";
     this.pc = { screen: "call", call: this.callSnapshot() };
     this.emit();
   };
+
+  private async aiNextTurn(c: CallState, opt: SaleOption, delta: number) {
+    const fallbackReaction = c.reaction;
+    c.loading = true;
+    c.reaction = null;
+    c.options = [];
+    c.clientLine = "";
+    this.pc = { screen: "call", call: this.callSnapshot() };
+    this.emit();
+    const history = c.history.map((h, i) => ({
+      approach: h.option.approach,
+      text: h.option.text,
+      reaction: i === c.history.length - 1 ? null : (this.aiReactions[i] ?? null),
+    }));
+    try {
+      const r = await this.ai!.salesTurn({ client: c.client, stage: c.stage, interest: c.interest, delta, history });
+      if (this.call !== c) return;
+      c.reaction = r.reaction;
+      c.clientLine = r.clientLine;
+      c.options = r.options;
+    } catch {
+      if (this.call !== c) return;
+      c.reaction = fallbackReaction;
+      c.clientLine = PROMPTS[c.client.personality][c.stage] ?? "";
+      c.options = optionsFor(c.stage, opt.approach);
+    }
+    this.aiReactions[c.history.length - 1] = c.reaction;
+    c.loading = false;
+    if (this.pc?.screen === "call") this.pc = { screen: "call", call: this.callSnapshot() };
+    this.emit();
+  }
 
   pcHangUp = () => {
     this.call = null;
@@ -1007,7 +1109,7 @@ export class Game {
     if (!pc) return;
     if (pc.screen === "call") return this.pcChooseOption(i);
     if (pc.screen === "menu") {
-      [this.pcStartCall, this.pcMail, this.pcSummary, this.closePC][i]?.();
+      [this.pcStartCall, this.pcStartAiCall, this.pcMail, this.pcSummary, this.closePC][i]?.();
       return;
     }
     if (pc.screen === "result") {
@@ -1055,6 +1157,7 @@ export class Game {
     }
     if (k === "Escape") {
       if (this.dialog) return this.closeDialog();
+      if (this.chatWith) return this.closeChat();
       if (this.pc) return this.closePC();
       if (this.journal) return this.toggleJournal();
       return this.togglePause();
@@ -1067,6 +1170,7 @@ export class Game {
     if (this.phase === "ended") return;
     this.phase = "ended";
     this.dialog = null;
+    this.chatWith = null;
     this.pc = null;
     this.emit();
   }
@@ -1159,6 +1263,13 @@ export class Game {
             canBack: this.dialogHistory.length > 0,
           }
         : null,
+      chat: this.chatWith
+        ? (() => {
+            const c = charById(this.chatWith);
+            return { id: c.id, name: c.name, role: c.role, intro: c.intro };
+          })()
+        : null,
+      aiEnabled: !!this.ai,
       pc: this.pc,
       toasts: this.toasts,
       gossip: {

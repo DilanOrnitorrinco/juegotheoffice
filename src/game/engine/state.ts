@@ -35,7 +35,7 @@ export interface ConvoRuntime {
 
 export interface DialogOption {
   label: string;
-  tag: "topic" | "mission" | "deliver" | "missing" | "event" | "shop" | "leave" | "accept" | "back" | "game";
+  tag: "topic" | "mission" | "deliver" | "missing" | "event" | "shop" | "leave" | "accept" | "back" | "game" | "chat";
   act: () => void;
 }
 
@@ -58,6 +58,10 @@ export interface CallState {
   youLine: string | null;
   reaction: string | null;
   lastDelta: number | null;
+  /** Lines and client invented by the AI. */
+  ai: boolean;
+  /** Waiting for the AI to answer. */
+  loading: boolean;
 }
 
 export type PcUI =
@@ -81,6 +85,8 @@ export interface CallSnapshot {
   youLine: string | null;
   reaction: string | null;
   lastDelta: number | null;
+  ai: boolean;
+  loading: boolean;
 }
 
 export interface Mail {
@@ -138,6 +144,8 @@ export interface UIState {
   missions: MissionUI[];
   inventory: { id: string; name: string; emoji: string; count: number; edible: boolean }[];
   dialog: DialogUI | null;
+  chat: { id: string; name: string; role: string; intro: string } | null;
+  aiEnabled: boolean;
   pc: PcUI | null;
   toasts: Toast[];
   gossip: { heard: { title: string }[]; total: number };
