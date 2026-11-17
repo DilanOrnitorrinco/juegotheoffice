@@ -1,11 +1,14 @@
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { WORLD } from "@/game/data/map";
 import { Game } from "@/game/engine/game";
 import { renderMinimap, renderWorld } from "@/game/engine/render";
+import { aiChat, aiSalesStart, aiSalesTurn } from "@/lib/ai.functions";
 
 import { Computer } from "./Computer";
 import { DialogBox } from "./DialogBox";
+import { FreeChat } from "./FreeChat";
 import { Hud } from "./Hud";
 import { Journal } from "./Journal";
 import { EndScreen, PauseScreen, Toasts } from "./Overlays";
@@ -16,6 +19,30 @@ export function GameRoot() {
   const ui = useSyncExternalStore(game.subscribe, game.getSnapshot, game.getSnapshot);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const minimapRef = useRef<HTMLCanvasElement>(null);
+  const salesStartFn = useServerFn(aiSalesStart);
+  const salesTurnFn = useServerFn(aiSalesTurn);
+  const chatFn = useServerFn(aiChat);
+
+  useEffect(() => {
+    game.ai = {
+      salesStart: async () => {
+        const r = await salesStartFn();
+        if (!r.ok) throw new Error(r.error);
+        return { client: r.client, options: r.options };
+      },
+      salesTurn: async (input) => {
+        const r = await salesTurnFn({ data: input });
+        if (!r.ok) throw new Error(r.error);
+        return { reaction: r.reaction, clientLine: r.clientLine, options: r.options };
+      },
+      chat: async (input) => {
+        const r = await chatFn({ data: input });
+        if (!r.ok) throw new Error(r.error);
+        return r.reply;
+      },
+    };
+    game.emit();
+  }, [game, salesStartFn, salesTurnFn, chatFn]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -94,6 +121,7 @@ export function GameRoot() {
   }, [game]);
 
   const portraitCostume = ui.dialog?.portrait && ui.event ? (game.event?.costumes[ui.dialog.portrait] ?? undefined) : undefined;
+  const chatCostume = ui.chat && ui.event ? (game.event?.costumes[ui.chat.id] ?? undefined) : undefined;
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-background">
@@ -102,6 +130,7 @@ export function GameRoot() {
       {ui.phase === "playing" && <Hud ui={ui} game={game} minimapRef={minimapRef} />}
       <Toasts ui={ui} />
       <DialogBox ui={ui} game={game} costume={portraitCostume} />
+      <FreeChat ui={ui} game={game} costume={chatCostume} />
       <Computer ui={ui} game={game} />
       <Journal ui={ui} game={game} />
       <PauseScreen ui={ui} game={game} />

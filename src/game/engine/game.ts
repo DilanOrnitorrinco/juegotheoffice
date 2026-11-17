@@ -1141,7 +1141,7 @@ export class Game {
     this.emit();
   };
   toggleJournal = () => {
-    if (this.phase !== "playing" || this.dialog || this.pc) return;
+    if (this.phase !== "playing" || this.dialog || this.pc || this.chatWith) return;
     this.journal = !this.journal;
     this.emit();
   };
