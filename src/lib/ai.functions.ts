@@ -75,17 +75,17 @@ export const aiSalesStart = createServerFn({ method: "POST" }).handler(async () 
       600,
     );
     const j = parseJson(text);
-    const personality = asPersonality(j.personality);
-    const budgetNum = Number(j.budget);
+    const personality = asPersonality(j["personality"]);
+    const budgetNum = Number(j["budget"]);
     const client = {
-      company: cleanLine(j.company, 60) ?? "Cliente misterioso S.L.",
-      contact: cleanLine(j.contact, 40) ?? "Sr. Smith",
+      company: cleanLine(j["company"], 60) ?? "Cliente misterioso S.L.",
+      contact: cleanLine(j["contact"], 40) ?? "Sr. Smith",
       personality,
-      need: cleanLine(j.need, 90) ?? "papel de oficina",
+      need: cleanLine(j["need"], 90) ?? "papel de oficina",
       budget: Math.round(Math.max(300, Math.min(1000, Number.isFinite(budgetNum) ? budgetNum : 500)) / 10) * 10,
-      greeting: cleanLine(j.greeting, 240) ?? "¿Diga?",
+      greeting: cleanLine(j["greeting"], 240) ?? "¿Diga?",
     };
-    return { ok: true as const, client, options: normalizeOptions(j.options, OPENING) };
+    return { ok: true as const, client, options: normalizeOptions(j["options"], OPENING) };
   } catch (e) {
     console.error("aiSalesStart", e);
     return { ok: false, error: "La IA no está disponible ahora mismo" } satisfies Fail;
@@ -141,9 +141,9 @@ Formato: {"reaction": "...", "clientLine": "...", "options": {"cercano": "...", 
       const j = parseJson(text);
       return {
         ok: true as const,
-        reaction: cleanLine(j.reaction, 200) ?? "Mm.",
-        clientLine: cleanLine(j.clientLine, 220) ?? PROMPTS[client.personality][stage] ?? "",
-        options: normalizeOptions(j.options, optionsFor(stage, last.approach)),
+        reaction: cleanLine(j["reaction"], 200) ?? "Mm.",
+        clientLine: cleanLine(j["clientLine"], 220) ?? PROMPTS[client.personality][stage] ?? "",
+        options: normalizeOptions(j["options"], optionsFor(stage, last.approach)),
       };
     } catch (e) {
       console.error("aiSalesTurn", e);
