@@ -220,6 +220,10 @@
     background: color-mix(in oklab, var(--mustard) 45%, var(--paper));
     border-color: var(--mustard);
   }
+  .dm-choice[data-tag="chat"] {
+    border-style: dashed;
+    border-color: var(--teal);
+  }
   .dm-choice[data-tag="missing"] {
     opacity: 0.6;
   }

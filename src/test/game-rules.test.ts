@@ -59,3 +59,23 @@ describe("missions are locked until someone asks", () => {
     expect(hw.getSnapshot().missions.some((m) => m.id === "ev_costume")).toBe(true);
   });
 });
+
+describe("AI sales calls keep the 4-option tree", () => {
+  it("always yields exactly 4 options, one per approach, even if the AI returns junk", async () => {
+    const { normalizeOptions } = await import("@/game/ai");
+    const fromAi = normalizeOptions({ cercano: "Hola", humor: "Chiste", precio: 42 }, OPENING);
+    expect(fromAi.map((o) => o.approach)).toEqual(APPROACHES);
+    expect(fromAi[0]!.text).toBe("Hola");
+    expect(fromAi[2]!.text).toBe(OPENING.find((o) => o.approach === "precio")!.text);
+    expect(normalizeOptions(null, OPENING)).toHaveLength(4);
+  });
+
+  it("free chat is offered in conversations only when the AI is available", () => {
+    const g = new Game();
+    g.start("2026-11-11");
+    const labels = () => (g as unknown as { npcOptions(id: string): { tag: string }[] }).npcOptions("jim").map((o) => o.tag);
+    expect(labels()).not.toContain("chat");
+    g.ai = { salesStart: async () => ({ client: {} as never, options: [] }), salesTurn: async () => ({ reaction: "", clientLine: "", options: [] }), chat: async () => "" };
+    expect(labels()).toContain("chat");
+  });
+});
