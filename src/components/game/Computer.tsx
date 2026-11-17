@@ -92,14 +92,17 @@ export function Computer({ ui, game }: { ui: UIState; game: Game }) {
                 <button type="button" className="crt-btn" onClick={game.pcStartCall}>
                   [1] 📞 Atender siguiente llamada
                 </button>
+                <button type="button" className="crt-btn" onClick={() => void game.pcStartAiCall()}>
+                  [2] 🤖 Llamada sorpresa (cliente inventado por IA)
+                </button>
                 <button type="button" className="crt-btn" onClick={game.pcMail}>
-                  [2] ✉ Correo electrónico
+                  [3] ✉ Correo electrónico
                 </button>
                 <button type="button" className="crt-btn" onClick={game.pcSummary}>
-                  [3] 📊 Resumen del día
+                  [4] 📊 Resumen del día
                 </button>
                 <button type="button" className="crt-btn" onClick={game.closePC}>
-                  [4] ⏻ Apagar pantalla
+                  [5] ⏻ Apagar pantalla
                 </button>
               </div>
             </div>
@@ -108,7 +111,9 @@ export function Computer({ ui, game }: { ui: UIState; game: Game }) {
           {(pc.screen === "call" || pc.screen === "result") && (
             <div className="grid gap-5 md:grid-cols-[1fr_300px]">
               <div className="min-w-0 space-y-2">
-                <p className="crt-line text-2xl">☎ {pc.call.company}</p>
+                <p className="crt-line text-2xl">
+                  ☎ {pc.call.company} {pc.call.ai && <span className="crt-amber text-lg">[🤖 IA]</span>}
+                </p>
                 <p className="crt-dim">
                   Contacto: {pc.call.contact} · Busca: {pc.call.need} · Presupuesto aprox.: <span className="crt-amber">${pc.call.budget}</span>
                 </p>
@@ -125,7 +130,11 @@ export function Computer({ ui, game }: { ui: UIState; game: Game }) {
                   </div>
                 )}
 
-                {pc.screen === "call" ? (
+                {pc.screen === "call" && pc.call.loading ? (
+                  <p className="crt-line crt-amber animate-pulse pt-2">
+                    {pc.call.stage === 0 ? "☎ Marcando… buscando un cliente nuevo" : `⏳ ${pc.call.contact} está pensando…`}
+                  </p>
+                ) : pc.screen === "call" ? (
                   <>
                     <p className="crt-line pt-1">
                       <span className="crt-dim">

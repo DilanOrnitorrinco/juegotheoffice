@@ -34,3 +34,4 @@ use the editor.
 - The game is a canvas engine in `src/game/` (data in `data/`, logic in `engine/game.ts`, drawing in `engine/render.ts`/`sprites.ts`) and React only renders overlays from `game.getSnapshot()` via `useSyncExternalStore` — keeps the 60fps loop out of React.
 - All game content (characters, missions, conversations, sales tree, events) lives as typed data in `src/game/data/`; add content there, not in engine code — keeps the engine generic.
 - NPCs move only along A* paths over a grid built from walls + furniture (`engine/pathfinding.ts`); new furniture must be added to `FURNITURE` so collisions and paths stay correct.
+- AI (Pollinations) calls live only in `src/lib/ai.functions.ts` server functions reading `POLLINATIONS_API_KEY`; the engine talks to them through the `GameAi` interface in `src/game/ai.ts` injected by GameRoot, and always falls back to the static content — keeps the key server-side and the game playable when the AI fails.
