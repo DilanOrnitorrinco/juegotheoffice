@@ -110,7 +110,7 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
             }}
             placeholder={`Dile algo a ${first}…`}
             aria-label={`Mensaje para ${chat.name}`}
-            className="min-w-0 flex-1 rounded-md border-2 border-border bg-background px-3 py-2 text-[15px] outline-none focus:border-primary"
+            className="min-w-0 flex-1 rounded-md border-2 border-border bg-card px-3 py-2 text-[15px] text-card-foreground outline-none focus:border-primary"
           />
           <button type="submit" className="dm-btn px-4 py-2" disabled={busy || !text.trim()}>
             Enviar
