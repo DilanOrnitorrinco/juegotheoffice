@@ -4,7 +4,7 @@ import { z } from "zod";
 import { asPersonality, cleanLine, normalizeOptions } from "@/game/ai";
 import { charById } from "@/game/data/characters";
 import { PERSONAS } from "@/game/data/personas";
-import { APPROACHES, OPENING, PROMPTS, STAGES, optionsFor } from "@/game/data/sales";
+import { OPENING, PROMPTS, STAGES, optionsFor } from "@/game/data/sales";
 
 const ENDPOINT = "https://gen.pollinations.ai/v1/chat/completions";
 const MODEL = "openai";
@@ -170,7 +170,7 @@ export const aiChat = createServerFn({ method: "POST" })
     const c = charById(data.characterId);
     const system = `Eres ${c.name} (${c.role}) de The Office, en la oficina de Dunder Mifflin Scranton. ${persona}
 Hablas con el empleado nuevo, que acaba de empezar. Son las ${data.clock}${data.eventName ? ` y hoy es ${data.eventName} en la oficina` : ""}.
-Reglas: responde SIEMPRE en español de España, en personaje, en 1-3 frases cortas, con el humor de la serie. Nunca digas que eres una IA ni rompas el personaje. Mantén todo apto para todos los públicos. Puedes mencionar a otros compañeros (${APPROACHES.length ? "Michael, Dwight, Jim, Pam, Stanley, Angela, Kevin, Oscar, Toby..." : ""}).`;
+Reglas: responde SIEMPRE en español de España, en personaje, en 1-3 frases cortas, con el humor de la serie. Nunca digas que eres una IA ni rompas el personaje. Mantén todo apto para todos los públicos. Puedes mencionar a otros compañeros (Michael, Dwight, Jim, Pam, Stanley, Angela, Kevin, Oscar, Toby…).`;
     try {
       const reply = await complete(apiKey, [{ role: "system", content: system }, ...data.messages.slice(-12)], false, 220);
       return { ok: true as const, reply: reply.slice(0, 600) };
