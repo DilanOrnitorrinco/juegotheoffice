@@ -176,3 +176,24 @@ export interface EventDef {
   salesBonus?: number;
   example: (year: number) => string;
 }
+
+export type OfficeDecorKind = "diversity" | "casino" | "merger" | "convict" | "return" | "funrun";
+
+export interface EpisodeDef {
+  id: string;
+  season: 1 | 2 | 3 | 4;
+  epLabel: string;
+  title: string;
+  dateISO: string;
+  dateLabel: string;
+  summary: string;
+  officeState: string;
+  castIds: string[];
+  extraDesks: string[];
+  seatOverrides?: Record<string, string>;
+  roleOverrides?: Record<string, string>;
+  introOverrides?: Record<string, string>;
+  decor?: OfficeDecorKind;
+  openingToast: string;
+}
+

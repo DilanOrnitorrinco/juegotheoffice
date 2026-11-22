@@ -18,3 +18,7 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: () => {},
   }),
 });
+
+if (typeof window !== "undefined" && window.localStorage) {
+  window.localStorage.setItem("dm_welcome_seen", "1");
+}

@@ -8,6 +8,10 @@ const NPC_RADIUS = 11;
 
 let grid: Uint8Array | null = null;
 
+export function resetNavGrid() {
+  grid = null;
+}
+
 function buildGrid(): Uint8Array {
   const g = new Uint8Array(COLS * ROWS);
   for (let r = 0; r < ROWS; r++) {

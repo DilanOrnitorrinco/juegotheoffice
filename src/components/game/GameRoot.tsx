@@ -4,14 +4,14 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { WORLD } from "@/game/data/map";
 import { Game } from "@/game/engine/game";
 import { renderMinimap, renderWorld } from "@/game/engine/render";
-import { aiChat, aiSalesStart, aiSalesTurn } from "@/lib/ai.functions";
+import { aiChat, aiChatImpact, aiDailyConvos, aiDailyMissions, aiSalesStart, aiSalesTurn } from "@/lib/ai.functions";
 
 import { Computer } from "./Computer";
 import { DialogBox } from "./DialogBox";
 import { FreeChat } from "./FreeChat";
 import { Hud } from "./Hud";
 import { Journal } from "./Journal";
-import { EndScreen, PauseScreen, Toasts } from "./Overlays";
+import { EndScreen, PauseScreen, CinematicOverlay, Toasts } from "./Overlays";
 import { StartScreen } from "./StartScreen";
 
 export function GameRoot() {
@@ -22,6 +22,9 @@ export function GameRoot() {
   const salesStartFn = useServerFn(aiSalesStart);
   const salesTurnFn = useServerFn(aiSalesTurn);
   const chatFn = useServerFn(aiChat);
+  const dailyConvosFn = useServerFn(aiDailyConvos);
+  const dailyMissionsFn = useServerFn(aiDailyMissions);
+  const chatImpactFn = useServerFn(aiChatImpact);
 
   useEffect(() => {
     game.ai = {
@@ -40,9 +43,24 @@ export function GameRoot() {
         if (!r.ok) throw new Error(r.error);
         return r.reply;
       },
+      dailyConvos: async (input) => {
+        const r = await dailyConvosFn({ data: input });
+        if (!r.ok) throw new Error(r.error);
+        return r.conversations;
+      },
+      dailyMissions: async (input) => {
+        const r = await dailyMissionsFn({ data: input });
+        if (!r.ok) throw new Error(r.error);
+        return r.missions;
+      },
+      chatImpact: async (input) => {
+        const r = await chatImpactFn({ data: input });
+        if (!r.ok) throw new Error(r.error);
+        return r.impact;
+      },
     };
     game.emit();
-  }, [game, salesStartFn, salesTurnFn, chatFn]);
+  }, [game, salesStartFn, salesTurnFn, chatFn, dailyConvosFn, dailyMissionsFn, chatImpactFn]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -62,7 +80,11 @@ export function GameRoot() {
     resize();
     window.addEventListener("resize", resize);
 
-    const cam = { x: game.player.x - vw / 2, y: game.player.y - vh / 2 };
+    const cam = {
+      x: game.player.x - vw / 2,
+      y: game.player.y - vh / 2,
+      zoom: Math.max(0.8, Math.min(1.25, Math.min(vw / 1150, vh / 820))),
+    };
     let last = performance.now();
     let raf = 0;
     let frame = 0;
@@ -70,11 +92,17 @@ export function GameRoot() {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       game.update(dt);
-      const zoom = Math.max(0.8, Math.min(1.25, Math.min(vw / 1150, vh / 820)));
+      const baseZoom = Math.max(0.8, Math.min(1.25, Math.min(vw / 1150, vh / 820)));
+      const targetZoom = game.isCinematic ? Math.min(1.75, baseZoom * 1.42) : baseZoom;
+      cam.zoom += (targetZoom - cam.zoom) * Math.min(1, dt * 6);
+      const zoom = cam.zoom;
       const viewW = vw / zoom;
       const viewH = vh / zoom;
-      const tx = Math.max(0, Math.min(WORLD.w - viewW, game.player.x - viewW / 2));
-      const ty = Math.max(0, Math.min(WORLD.h - viewH, game.player.y - viewH / 2));
+      const michael = game.isCinematic ? game.npcs.find((n) => n.def.id === "michael") : undefined;
+      const focusX = michael ? (game.player.x + michael.x) / 2 : game.player.x;
+      const focusY = michael ? (game.player.y + michael.y) / 2 + 12 : game.player.y;
+      const tx = Math.max(0, Math.min(WORLD.w - viewW, focusX - viewW / 2));
+      const ty = Math.max(0, Math.min(WORLD.h - viewH, focusY - viewH / 2));
       const k = Math.min(1, dt * 8);
       cam.x += (tx - cam.x) * k;
       cam.y += (ty - cam.y) * k;
@@ -128,13 +156,14 @@ export function GameRoot() {
       <h1 className="sr-only">The Office: Scranton — juego de oficina</h1>
       <canvas ref={canvasRef} className="block h-full w-full" aria-label="Oficina de Dunder Mifflin Scranton" />
       {ui.phase === "playing" && <Hud ui={ui} game={game} minimapRef={minimapRef} />}
+      <CinematicOverlay ui={ui} game={game} />
       <Toasts ui={ui} />
       <DialogBox ui={ui} game={game} costume={portraitCostume} />
       <FreeChat ui={ui} game={game} costume={chatCostume} />
       <Computer ui={ui} game={game} />
       <Journal ui={ui} game={game} />
       <PauseScreen ui={ui} game={game} />
-      {ui.phase === "start" && <StartScreen onStart={(d) => game.start(d)} />}
+      {ui.phase === "start" && <StartScreen onStart={(d, ep) => game.start(d, ep)} />}
       <EndScreen ui={ui} />
     </main>
   );

@@ -1,5 +1,20 @@
-import type { CharacterDef, ConversationDef, Facing } from "../types";
+import type { ChatImpactKind, NpcMemory } from "../ai";
+import type { CharacterDef, ConversationDef, CostumeKind, Facing, Look } from "../types";
 import type { Approach, Client, SaleOption, SaleOutcome } from "../data/sales";
+
+export interface ChatLogEntry {
+  role: "user" | "assistant" | "note";
+  content: string;
+  clock: string;
+}
+
+export interface NPCOverride {
+  action: string;
+  spot: string;
+  until: number;
+  reactionLine: string;
+  memoryId?: string | undefined;
+}
 
 export interface NPC {
   def: CharacterDef;
@@ -13,6 +28,7 @@ export interface NPC {
   target: { x: number; y: number };
   action: string;
   faceTo?: Facing | undefined;
+  override?: NPCOverride | undefined;
 }
 
 export interface Player {
@@ -31,6 +47,16 @@ export interface ConvoRuntime {
   line: number;
   lineT: number;
   arrived: boolean;
+  heardLines?: number | undefined;
+  dynamic?: boolean | undefined;
+  seekBy?: string | undefined;
+  seekTarget?: string | undefined;
+  kind?: ChatImpactKind | undefined;
+  prepSpot?: string | undefined;
+  prepDone?: boolean | undefined;
+  prepTimer?: number | undefined;
+  memoryId?: string | undefined;
+  targetAction?: string | undefined;
 }
 
 export interface DialogOption {
@@ -129,10 +155,25 @@ export interface EndSummary {
   awardLine: string;
 }
 
+export interface CinematicUI {
+  sceneId: string;
+  sceneNumber: number;
+  totalScenes: number;
+  title: string;
+  category: string;
+  costume?: CostumeKind | undefined;
+  speaker: string;
+  line: string;
+  step: 0 | 1 | 2;
+  choices: { label: string }[];
+}
+
 export interface UIState {
   phase: "start" | "playing" | "ended";
   paused: boolean;
   journal: boolean;
+  playerLook: Look;
+  cinematic: CinematicUI | null;
   clock: string;
   mins: number;
   money: number;
@@ -141,10 +182,27 @@ export interface UIState {
   sales: number;
   dateLabel: string;
   event: { id: string; name: string; emoji: string; description: string } | null;
+  episode: { id: string; epLabel: string; title: string; officeState: string; castCount: number } | null;
+  activeCharIds: string[];
+  episodeContext: string | null;
   missions: MissionUI[];
   inventory: { id: string; name: string; emoji: string; count: number; edible: boolean }[];
   dialog: DialogUI | null;
-  chat: { id: string; name: string; role: string; intro: string } | null;
+  chat: {
+    id: string;
+    name: string;
+    role: string;
+    intro: string;
+    history: ChatLogEntry[];
+    memories: NpcMemory[];
+  } | null;
+  chatRecords: {
+    id: string;
+    name: string;
+    role: string;
+    messages: ChatLogEntry[];
+    memories: NpcMemory[];
+  }[];
   aiEnabled: boolean;
   pc: PcUI | null;
   toasts: Toast[];

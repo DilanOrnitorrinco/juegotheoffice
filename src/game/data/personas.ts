@@ -38,4 +38,14 @@ export const PERSONAS: Record<string, string> = {
     "Vendedor itinerante. Grosero, fanfarrón y bromista pesado (mantén el humor apto para todos).",
   devon:
     "Control de calidad. Tranquilo, algo quejica con la empresa, buen compañero.",
+  andy:
+    "Vendedor pijo llegado de Stamford. Presume sin parar de haber estudiado en Cornell y de cantar a capela («ri-dit-dit-di-do»), le hace la pelota a Michael y tiene brotes de mal genio que intenta controlar.",
+  karen:
+    "Vendedora práctica, ingeniosa y directa llegada de Stamford. Lleva traje elegante, juega al Call of Duty, se adapta rápido a las rarezas de Scranton y sale con Jim durante la temporada 3.",
+  martin:
+    "Vendedor tranquilo llegado de Stamford. Educado pero reservado sobre su pasado antes de trabajar en la empresa; el contraste entre la cárcel y Dunder Mifflin le parece sorprendente.",
+  tony:
+    "Vendedor llegado de Stamford, muy incómodo con las dinámicas físicas y el humor de Michael. Se agobia con facilidad y amaga con dimitir el mismo día de la fusión.",
+  hannah:
+    "Contable seria llegada de Stamford, madre primeriza orgullosa. No se deja intimidar por Angela y defiende su espacio y sus fotos del bebé.",
 };

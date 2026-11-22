@@ -1,11 +1,13 @@
-import { CHARACTERS, charById } from "../data/characters";
+import { CHARACTERS, CLASSIC_CAST_IDS, charById } from "../data/characters";
 import { CONVERSATIONS } from "../data/conversations";
+import { EPISODE_CONVERSATIONS, EPISODE_MISSIONS, episodeById } from "../data/episodes";
 import { eventForDate, formatLongDate, parseLocalDate } from "../data/events";
 import { BASE_MAILS, EVENT_MAILS } from "../data/mails";
-import { spotAt } from "../data/map";
-import { ITEMS, MISSIONS, missionById } from "../data/missions";
+import { getActiveFurniture, setActiveFurniture, spotAt } from "../data/map";
+import { ITEMS, MISSIONS } from "../data/missions";
+import { WELCOME_SCENES, type WelcomeScene } from "../data/welcome";
 import { pick } from "../random";
-import type { GameAi } from "../ai";
+import { homeSpotFor, type ChatMessage, type GameAi, type NpcMemory } from "../ai";
 import { DUNDIES, OBJECTS, OBJ_BY_ID, SERVICES, SHOP } from "../data/objects";
 import {
   CLIENTS,
@@ -22,12 +24,26 @@ import {
   type SaleOption,
 } from "../data/sales";
 import { DAY_END, DAY_START, formatClock } from "../time";
-import type { ConversationDef, EventDef, Facing, MissionDef, MissionStatus, ObjectDef, ServiceDef } from "../types";
+import type {
+  ConversationDef,
+  CostumeKind,
+  EpisodeDef,
+  EventDef,
+  Facing,
+  HairStyle,
+  Look,
+  MissionDef,
+  MissionStatus,
+  ObjectDef,
+  ServiceDef,
+} from "../types";
 import { blockedAt } from "./collision";
-import { findPath, walkableTarget } from "./pathfinding";
+import { findPath, resetNavGrid, walkableTarget } from "./pathfinding";
 import type {
   CallSnapshot,
   CallState,
+  ChatLogEntry,
+  CinematicUI,
   ConvoRuntime,
   DialogOption,
   EndSummary,
@@ -40,11 +56,88 @@ import type {
   UIState,
 } from "./state";
 
+const LOOK_STORAGE_KEY = "dm_player_look";
+const WELCOME_STORAGE_KEY = "dm_welcome_seen";
+
+export const DEFAULT_PLAYER_LOOK: Look = {
+  skin: "#e6b48e",
+  shirt: "#3f78a8",
+  pants: "#2c3540",
+  hair: "#3b2a20",
+  hairStyle: "short",
+  tie: "#f2c14e",
+  glasses: false,
+  beard: false,
+  dress: false,
+};
+
+const HAIR_STYLES: HairStyle[] = ["short", "side", "wavy", "spiky", "buzz", "curly", "bob", "bun", "long", "bald"];
+const SKIN_TONES = ["#f2ccb0", "#e6b48e", "#d4986a", "#a86d42", "#6b4228"];
+const HAIR_COLORS = ["#1e1b18", "#3b2a20", "#6e472b", "#b87a3d", "#d8b45c", "#a33c26", "#9a9ea4"];
+const SHIRT_COLORS = ["#3f78a8", "#e8eef2", "#b8453d", "#3d7a5a", "#6e528f", "#c97b36", "#2c3540", "#c46c92"];
+const PANTS_COLORS = ["#2c3540", "#1f242b", "#4a433d", "#33475c", "#5c4d3c"];
+const TIE_COLORS = ["#f2c14e", "#b83b36", "#2f6b8e", "#3d7a5a", "#6e528f", "#242830", ""];
+
+function loadPlayerLook(): Look {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return { ...DEFAULT_PLAYER_LOOK };
+    const raw = window.localStorage.getItem(LOOK_STORAGE_KEY);
+    if (!raw) return { ...DEFAULT_PLAYER_LOOK };
+    const parsed = JSON.parse(raw) as Partial<Look>;
+    const style = HAIR_STYLES.includes(parsed.hairStyle as HairStyle) ? (parsed.hairStyle as HairStyle) : DEFAULT_PLAYER_LOOK.hairStyle;
+    const isHex = (v: unknown): v is string => typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v);
+    const resolvedTie = parsed.tie === "" || parsed.tie === undefined ? undefined : isHex(parsed.tie) ? parsed.tie : DEFAULT_PLAYER_LOOK.tie;
+    return {
+      skin: isHex(parsed.skin) ? parsed.skin : DEFAULT_PLAYER_LOOK.skin,
+      shirt: isHex(parsed.shirt) ? parsed.shirt : DEFAULT_PLAYER_LOOK.shirt,
+      pants: isHex(parsed.pants) ? parsed.pants : DEFAULT_PLAYER_LOOK.pants,
+      hair: isHex(parsed.hair) ? parsed.hair : DEFAULT_PLAYER_LOOK.hair,
+      hairStyle: style,
+      ...(resolvedTie ? { tie: resolvedTie } : {}),
+      glasses: !!parsed.glasses,
+      beard: !!parsed.beard,
+      dress: !!parsed.dress,
+    };
+  } catch {
+    return { ...DEFAULT_PLAYER_LOOK };
+  }
+}
+
+function savePlayerLook(look: Look) {
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      window.localStorage.setItem(LOOK_STORAGE_KEY, JSON.stringify(look));
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function hasSeenWelcome(): boolean {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return true;
+    return window.localStorage.getItem(WELCOME_STORAGE_KEY) === "1";
+  } catch {
+    return true;
+  }
+}
+
+function markWelcomeSeen() {
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      window.localStorage.setItem(WELCOME_STORAGE_KEY, "1");
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
 export const PLAYER_RADIUS = 12;
 const TALK_RADIUS = 62;
 const OBJECT_RADIUS = 56;
 const HEAR_RADIUS = 210;
 const NPC_SPEED = 92;
+const URGENT_NPC_SPEED = 138;
 const WALK_SPEED = 165;
 const RUN_SPEED = 265;
 const MINUTES_PER_SECOND = 1;
@@ -67,9 +160,14 @@ const HAPPENINGS: { at: number; text: string }[] = [
 
 export class Game {
   // world
-  player: Player = { x: 730, y: 600, facing: "up", moving: false, walkT: 0 };
+  player: Player = { x: 685, y: 582, facing: "up", moving: false, walkT: 0 };
   npcs: NPC[] = [];
   convos: ConvoRuntime[] = [];
+  episode: EpisodeDef | null = null;
+  activeCharIds: string[] = [...CLASSIC_CAST_IDS];
+  seatOverrides: Record<string, string> = {};
+  roleOverrides: Record<string, string> = {};
+  introOverrides: Record<string, string> = {};
   event: EventDef | null = null;
   date: Date = new Date();
   mins = DAY_START;
@@ -86,6 +184,7 @@ export class Game {
   coffeeReadyAt = 0;
   pingpongReadyAt = 0;
   inventory: Record<string, number> = {};
+  missions: MissionDef[] = [...MISSIONS];
   missionStatus: Record<string, MissionStatus> = {};
   missionStep: Record<string, number> = {};
   missionBase: Record<string, { sales: number; gossip: number }> = {};
@@ -99,12 +198,18 @@ export class Game {
   phase: UIState["phase"] = "start";
   paused = false;
   journal = false;
+  playerLook: Look = loadPlayerLook();
+  private cinematicState: { scene: WelcomeScene; sceneNumber: number; step: 0 | 1 | 2; reactionText: string } | null = null;
   dialog: { speaker: string; role: string; portrait: string | null; line: string; options: DialogOption[] } | null = null;
   dialogHistory: { line: string; options: DialogOption[] }[] = [];
   pc: PcUI | null = null;
   call: CallState | null = null;
   /** NPC id of the free (AI) chat currently open. */
   chatWith: string | null = null;
+  chatLogs: Record<string, ChatLogEntry[]> = {};
+  memories: Record<string, NpcMemory[]> = {};
+  private sessionChatMessages: ChatMessage[] = [];
+  private sessionBaseLen = 0;
   /** Client reactions of the current AI call, by step (fed back as context). */
   private aiReactions: (string | null)[] = [];
   /** AI provider plugged in by the UI; null = classic content only. */
@@ -115,6 +220,7 @@ export class Game {
   private snapshot: UIState;
   private lastEmitMinute = -1;
   private talkingTo: string | null = null;
+  private startRunId = 0;
 
   constructor() {
     this.snapshot = this.buildSnapshot();
@@ -131,11 +237,201 @@ export class Game {
     this.listeners.forEach((l) => l());
   }
 
+  // ---------- player look & welcome cinematic ----------
+  get isCinematic(): boolean {
+    return !!this.cinematicState;
+  }
+
+  get cinematicCostume(): CostumeKind | undefined {
+    return this.cinematicState?.scene.costume;
+  }
+
+  setPlayerLook = (patch: Partial<Look> & { tie?: string | undefined }) => {
+    const { tie, ...rest } = patch;
+    const next: Look = { ...this.playerLook, ...rest };
+    if ("tie" in patch) {
+      if (tie) next.tie = tie;
+      else delete next.tie;
+    }
+    this.playerLook = next;
+    savePlayerLook(this.playerLook);
+    this.emit();
+  };
+
+  resetPlayerLook = () => {
+    this.playerLook = { ...DEFAULT_PLAYER_LOOK };
+    savePlayerLook(this.playerLook);
+    this.emit();
+  };
+
+  randomizePlayerLook = () => {
+    const tieChoice = pick(TIE_COLORS);
+    this.setPlayerLook({
+      skin: pick(SKIN_TONES),
+      hair: pick(HAIR_COLORS),
+      hairStyle: pick(HAIR_STYLES),
+      shirt: pick(SHIRT_COLORS),
+      pants: pick(PANTS_COLORS),
+      tie: tieChoice,
+      glasses: Math.random() < 0.3,
+      beard: Math.random() < 0.25,
+      dress: Math.random() < 0.25,
+    });
+  };
+
+  private beginWelcomeCinematic(avoidId?: string) {
+    const michael = this.npcById("michael");
+    if (!michael || WELCOME_SCENES.length === 0) return;
+    let idx = Math.floor(Math.random() * WELCOME_SCENES.length);
+    if (avoidId && WELCOME_SCENES.length > 1 && WELCOME_SCENES[idx]!.id === avoidId) {
+      idx = (idx + 1 + Math.floor(Math.random() * (WELCOME_SCENES.length - 1))) % WELCOME_SCENES.length;
+    }
+    const scene = WELCOME_SCENES[idx]!;
+    this.player = { x: 285, y: 425, facing: "right", moving: false, walkT: 0 };
+    const mStart = walkableTarget(425, 315);
+    michael.x = mStart.x;
+    michael.y = mStart.y;
+    michael.facing = "down";
+    michael.moving = true;
+    michael.path = [];
+    michael.target = { x: 365, y: 425 };
+    michael.targetKey = "welcome_cinematic";
+    michael.action = "Dándote la bienvenida";
+    this.cinematicState = { scene, sceneNumber: idx + 1, step: 0, reactionText: "" };
+  }
+
+  private finishCinematic(showIntroToast = true) {
+    if (!this.cinematicState) return;
+    this.cinematicState = null;
+    markWelcomeSeen();
+    const michael = this.npcById("michael");
+    if (michael) {
+      michael.moving = false;
+      michael.path = [];
+      michael.targetKey = "";
+      michael.facing = "down";
+    }
+    if (showIntroToast && this.missionStatus["intro"] === "active") {
+      this.toast(`Pam: «${this.missionById("intro").offer}»`, "mission");
+    }
+    this.emit();
+  }
+
+  cinematicNext = () => {
+    const c = this.cinematicState;
+    if (!c) return;
+    if (c.step === 0) {
+      c.step = 1;
+      this.emit();
+      return;
+    }
+    if (c.step === 2) {
+      this.finishCinematic(true);
+    }
+  };
+
+  cinematicChoose = (index: number) => {
+    const c = this.cinematicState;
+    if (!c || c.step !== 1) return;
+    const reply = c.scene.replies[index];
+    if (!reply) return;
+    c.reactionText = `${reply.reaction} ${c.scene.closing}`;
+    c.step = 2;
+    this.emit();
+  };
+
+  skipCinematic = () => {
+    this.finishCinematic(true);
+  };
+
+  replayWelcome = () => {
+    if (this.phase !== "playing") return;
+    this.paused = false;
+    this.journal = false;
+    this.dialog = null;
+    this.dialogHistory = [];
+    this.pc = null;
+    this.chatWith = null;
+    this.beginWelcomeCinematic(this.cinematicState?.scene.id);
+    this.emit();
+  };
+
   // ---------- setup ----------
-  start(dateISO: string) {
-    this.date = parseLocalDate(dateISO);
+  private homeSpotForNpc(id: string): string {
+    return this.seatOverrides[id] ?? homeSpotFor(id);
+  }
+
+  roleOf(id: string): string {
+    return this.roleOverrides[id] ?? charById(id).role;
+  }
+
+  private introOf(id: string): string {
+    return this.introOverrides[id] ?? charById(id).intro;
+  }
+
+  private episodeContextText(): string | null {
+    if (!this.episode) return null;
+    return `${this.episode.epLabel} «${this.episode.title}» (${this.episode.dateLabel}): ${this.episode.officeState}. ${this.episode.summary}`.slice(0, 750);
+  }
+
+  private isMissionCompatible(m: MissionDef, activeSet: Set<string>): boolean {
+    if (!activeSet.has(m.giver)) return false;
+    for (const s of m.steps) {
+      if (s.kind === "talk" && !activeSet.has(s.target)) return false;
+    }
+    return true;
+  }
+
+  start(dateISO: string, episodeId?: string | null, opts?: { forceWelcome?: boolean; skipWelcome?: boolean }) {
+    const runId = ++this.startRunId;
+    const ep = episodeById(episodeId ?? null);
+    this.episode = ep;
+    this.date = parseLocalDate(ep ? ep.dateISO : dateISO);
     this.event = eventForDate(this.date);
-    this.npcs = CHARACTERS.map((def) => {
+    this.activeCharIds = ep ? [...ep.castIds] : [...CLASSIC_CAST_IDS];
+    const activeSet = new Set(this.activeCharIds);
+    this.seatOverrides = { ...(ep?.seatOverrides ?? {}) };
+    this.roleOverrides = { ...(ep?.roleOverrides ?? {}) };
+    this.introOverrides = { ...(ep?.introOverrides ?? {}) };
+
+    setActiveFurniture(ep?.extraDesks ?? []);
+    resetNavGrid();
+
+    this.player = { x: 685, y: 582, facing: "up", moving: false, walkT: 0 };
+    this.mins = DAY_START;
+    this.money = 10;
+    this.rep = 0;
+    this.energy = 100;
+    this.sales = 0;
+    this.calls = 0;
+    this.coffeeReadyAt = 0;
+    this.pingpongReadyAt = 0;
+    this.inventory = {};
+    this.heard = [];
+    this.dundiesFound = [];
+    this.readMails = new Set<string>();
+    this.happeningsShown = new Set<number>();
+    this.lowEnergyWarned = false;
+    this.paused = false;
+    this.journal = false;
+    this.cinematicState = null;
+    this.dialog = null;
+    this.dialogHistory = [];
+    this.pc = null;
+    this.call = null;
+
+    this.npcs = CHARACTERS.filter((def) => activeSet.has(def.id)).map((rawDef) => {
+      const ownSeat = `seat_${rawDef.id}`;
+      const assignedSeat = this.seatOverrides[rawDef.id];
+      const def =
+        assignedSeat || this.roleOverrides[rawDef.id] || this.introOverrides[rawDef.id]
+          ? {
+              ...rawDef,
+              role: this.roleOverrides[rawDef.id] ?? rawDef.role,
+              intro: this.introOverrides[rawDef.id] ?? rawDef.intro,
+              routine: rawDef.routine.map((r) => (assignedSeat && r.spot === ownSeat ? { ...r, spot: assignedSeat } : r)),
+            }
+          : rawDef;
       const first = def.routine[0]!;
       const pos = walkableTarget(spotAt(first.spot).x, spotAt(first.spot).y);
       return {
@@ -151,38 +447,132 @@ export class Game {
         action: first.action,
       };
     });
-    this.convos = this.scheduleConvos().map((def) => ({ def, state: "pending", line: 0, lineT: 0, arrived: false }));
-    for (const m of MISSIONS) this.missionStatus[m.id] = "locked";
+
+    const epConvos = ep ? (EPISODE_CONVERSATIONS[ep.id] ?? []) : [];
+    const baseConvos = [...epConvos, ...CONVERSATIONS].filter((c) => c.who.every((w) => activeSet.has(w)));
+    this.convos = this.scheduleConvos(baseConvos).map((def) => ({ def, state: "pending", line: 0, lineT: 0, arrived: false }));
+
+    const epMissions = ep ? (EPISODE_MISSIONS[ep.id] ?? []) : [];
+    const compatibleMissions = [...MISSIONS, ...epMissions]
+      .filter((m) => this.isMissionCompatible(m, activeSet))
+      .map((m) => ({ ...m }));
+    const activeById = new Set(compatibleMissions.map((m) => m.id));
+    this.missions = compatibleMissions.filter((m) => !m.requires || m.requires.every((req) => activeById.has(req)));
+    const finalM = this.missions.find((m) => m.id === "final");
+    if (finalM) {
+      const regCount = this.missions.filter((m) => m.id !== "intro" && m.id !== "final" && !m.event).length;
+      finalM.requiresCount = Math.min(8, Math.max(3, Math.floor(regCount * 0.5)));
+    }
+
+    this.missionStatus = {};
+    this.missionStep = {};
+    this.missionBase = {};
+    for (const m of this.missions) this.missionStatus[m.id] = "locked";
+    this.chatWith = null;
+    this.chatLogs = {};
+    this.memories = {};
+    this.sessionChatMessages = [];
+    this.sessionBaseLen = 0;
     this.phase = "playing";
     this.activateMission("intro", true);
-    this.toast(`Pam: «${missionById("intro").offer}»`, "mission");
+    const shouldWelcome = !opts?.skipWelcome && (opts?.forceWelcome || !hasSeenWelcome()) && !!this.npcById("michael");
+    if (shouldWelcome) {
+      this.beginWelcomeCinematic();
+    } else {
+      this.toast(`Pam: «${this.missionById("intro").offer}»`, "mission");
+    }
+    if (ep) this.toast(ep.openingToast, "event");
     if (this.event) this.toast(`${this.event.emoji} Hoy es ${this.event.name}: ${this.event.description}`, "event");
+    this.emit();
+    if (this.ai) void this.loadAiDayContent(runId);
+  }
+
+  private async loadAiDayContent(runId: number) {
+    if (!this.ai) return;
+    const activeSet = new Set(this.activeCharIds);
+    const input = {
+      dateLabel: formatLongDate(this.date),
+      eventId: this.event?.id ?? null,
+      eventName: this.event?.name ?? null,
+      eventDesc: this.event?.description ?? null,
+      activeCharIds: this.activeCharIds,
+      episodeContext: this.episodeContextText(),
+    };
+    const [convosRes, missionsRes] = await Promise.allSettled([this.ai.dailyConvos(input), this.ai.dailyMissions(input)]);
+    if (this.startRunId !== runId || this.phase !== "playing") return;
+
+    if (convosRes.status === "fulfilled" && convosRes.value.length >= 3) {
+      const kept = this.convos.filter((c) => c.dynamic || c.state !== "pending");
+      const validAiConvos = convosRes.value.filter((c) => c.who.every((w) => activeSet.has(w)));
+      const scheduledAi = this.scheduleConvos(validAiConvos, kept.map((k) => k.def)).filter(
+        (c) => c.at + c.duration > this.mins + 2,
+      );
+      if (scheduledAi.length > 0) {
+        this.convos = [
+          ...kept,
+          ...scheduledAi.map((def) => ({ def, state: "pending" as const, line: 0, lineT: 0, arrived: false })),
+        ];
+      }
+    }
+
+    if (missionsRes.status === "fulfilled" && missionsRes.value.length >= 4) {
+      const kept = this.missions.filter(
+        (m) =>
+          m.id === "intro" ||
+          m.id === "final" ||
+          m.id.startsWith("ep_") ||
+          !!m.event ||
+          this.missionStatus[m.id] === "active" ||
+          this.missionStatus[m.id] === "done",
+      );
+      const activeRegularGivers = new Set(kept.filter((m) => m.id !== "intro" && m.id !== "final" && !m.event).map((m) => m.giver));
+      const fresh = missionsRes.value.filter((m) => !activeRegularGivers.has(m.giver) && this.isMissionCompatible(m, activeSet));
+      const finalM = kept.find((m) => m.id === "final");
+      if (finalM && this.missionStatus["final"] === "locked") {
+        finalM.requiresCount = Math.min(8, Math.max(3, Math.floor((fresh.length + activeRegularGivers.size) * 0.55)));
+      }
+      for (const m of fresh) this.missionStatus[m.id] = "locked";
+      this.missions = [...kept, ...fresh];
+    }
+
     this.emit();
   }
 
-  /** Event conversations first, then regular ones that don't clash with anybody's schedule. */
-  private scheduleConvos(): ConversationDef[] {
+  /** Episode and event conversations first, then regular ones that don't clash with anybody's schedule. */
+  private scheduleConvos(source: ConversationDef[], existing: ConversationDef[] = []): ConversationDef[] {
+    const activeSet = new Set(this.activeCharIds);
+    const eligible = source.filter((c) => c.who.every((w) => activeSet.has(w)));
     const pool = [
-      ...CONVERSATIONS.filter((c) => c.event && c.event === this.event?.id),
-      ...CONVERSATIONS.filter((c) => !c.event),
+      ...eligible.filter((c) => c.id.startsWith("ep_")),
+      ...eligible.filter((c) => !c.id.startsWith("ep_") && c.event && c.event === this.event?.id),
+      ...eligible.filter((c) => !c.id.startsWith("ep_") && !c.event),
     ];
-    const chosen: ConversationDef[] = [];
+    const chosen: ConversationDef[] = [...existing];
+    const added: ConversationDef[] = [];
     for (const c of pool) {
       const clash = chosen.some(
         (o) => o.who.some((w) => c.who.includes(w)) && c.at < o.at + o.duration && o.at < c.at + c.duration,
       );
-      if (!clash) chosen.push(c);
+      if (!clash) {
+        chosen.push(c);
+        added.push(c);
+      }
     }
-    return chosen.sort((a, b) => a.at - b.at);
+    return added.sort((a, b) => a.at - b.at);
   }
 
   get frozen() {
-    return this.phase !== "playing" || this.paused || this.journal || !!this.dialog || !!this.pc || !!this.chatWith;
+    return this.phase !== "playing" || this.paused || !!this.cinematicState || this.journal || !!this.dialog || !!this.pc || !!this.chatWith;
   }
 
   // ---------- loop ----------
   update(dt: number) {
     this.time += dt;
+    if (this.cinematicState && !this.paused && this.phase === "playing") {
+      this.player.moving = false;
+      this.updateCinematicActors(dt);
+      return;
+    }
     if (this.frozen) {
       this.player.moving = false;
       return;
@@ -215,6 +605,29 @@ export class Game {
       this.lastEmitMinute = Math.floor(this.mins);
       this.emit();
     }
+  }
+
+  private updateCinematicActors(dt: number) {
+    const michael = this.npcById("michael");
+    if (!michael) return;
+    const tx = 365;
+    const ty = 425;
+    const dx = tx - michael.x;
+    const dy = ty - michael.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist <= 3) {
+      michael.x = tx;
+      michael.y = ty;
+      michael.moving = false;
+      michael.facing = "left";
+      return;
+    }
+    const step = Math.min(dist, 120 * dt);
+    michael.x += (dx / dist) * step;
+    michael.y += (dy / dist) * step;
+    michael.moving = true;
+    michael.walkT += dt * 9;
+    michael.facing = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up";
   }
 
   private isRunning() {
@@ -264,9 +677,18 @@ export class Game {
 
   private activeConvoFor(id: string): ConvoRuntime | null {
     for (const c of this.convos) {
-      if (c.state === "done") continue;
+      if (!c.dynamic || c.state === "done") continue;
       if (!c.def.who.includes(id)) continue;
-      if (this.mins >= c.def.at && this.mins < c.def.at + c.def.duration) return c;
+      if (this.mins >= c.def.at && this.mins < c.def.at + c.def.duration + 15 && (c.state === "playing" || this.mins < c.def.at + c.def.duration)) {
+        return c;
+      }
+    }
+    for (const c of this.convos) {
+      if (c.dynamic || c.state === "done") continue;
+      if (!c.def.who.includes(id)) continue;
+      if (this.mins >= c.def.at && this.mins < c.def.at + c.def.duration + 15 && (c.state === "playing" || this.mins < c.def.at + c.def.duration)) {
+        return c;
+      }
     }
     return null;
   }
@@ -277,18 +699,97 @@ export class Game {
     return walkableTarget(base.x + side * 24, base.y);
   }
 
+  private seekPosNextTo(seeker: NPC, targetNpc: NPC): { x: number; y: number } {
+    const offsets = [
+      [-38, 0],
+      [38, 0],
+      [0, 38],
+      [0, -38],
+      [-52, 0],
+      [52, 0],
+      [0, 52],
+      [0, -52],
+    ] as const;
+    let best: { x: number; y: number } | null = null;
+    let bestD = Infinity;
+    for (const [ox, oy] of offsets) {
+      const cx = targetNpc.x + ox;
+      const cy = targetNpc.y + oy;
+      if (blockedAt(cx, cy, 11)) continue;
+      const d = Math.hypot(cx - seeker.x, cy - seeker.y);
+      if (d < bestD) {
+        bestD = d;
+        best = { x: cx, y: cy };
+      }
+    }
+    return best ?? walkableTarget(targetNpc.x + 38, targetNpc.y);
+  }
+
+  private faceTowards(a: NPC, bx: number, by: number): Facing {
+    const dx = bx - a.x;
+    const dy = by - a.y;
+    return Math.abs(dx) > Math.abs(dy) ? (dx >= 0 ? "right" : "left") : dy >= 0 ? "down" : "up";
+  }
+
   private updateNPCs(dt: number) {
     for (const n of this.npcs) {
+      if (n.override && this.mins >= n.override.until) n.override = undefined;
       let key: string;
       let target: { x: number; y: number };
       let action: string;
       n.faceTo = undefined;
       const convo = this.activeConvoFor(n.def.id);
-      if (convo) {
+      if (convo?.dynamic && convo.seekBy && convo.seekTarget) {
+        const seeker = this.npcById(convo.seekBy);
+        const targetNpc = this.npcById(convo.seekTarget);
+        if (seeker && targetNpc && n.def.id === convo.seekBy) {
+          if (convo.state === "playing") {
+            key = "dynplay:" + convo.def.id;
+            target = { x: n.x, y: n.y };
+            n.path = [];
+            action = convo.kind === "prank" ? "Ejecutando broma" : "Charlando";
+            n.faceTo = this.faceTowards(n, targetNpc.x, targetNpc.y);
+          } else if (convo.prepSpot && !convo.prepDone) {
+            key = `dynprep:${convo.def.id}:${convo.prepSpot}`;
+            const s = spotAt(convo.prepSpot);
+            target = walkableTarget(s.x, s.y);
+            action = convo.kind === "prank" ? "Preparando broma" : (n.override?.action ?? "Preparando");
+          } else {
+            const cellKey = `${Math.round(targetNpc.x / 40)},${Math.round(targetNpc.y / 40)}`;
+            key = `seek:${convo.def.id}:${cellKey}`;
+            target = this.seekPosNextTo(seeker, targetNpc);
+            action = convo.kind === "prank" ? `Broma a ${targetNpc.def.name.split(" ")[0]}` : `Buscando a ${targetNpc.def.name.split(" ")[0]}`;
+            n.faceTo = this.faceTowards(n, targetNpc.x, targetNpc.y);
+          }
+        } else if (
+          seeker &&
+          targetNpc &&
+          n.def.id === convo.seekTarget &&
+          (convo.state === "playing" || ((!convo.prepSpot || convo.prepDone) && Math.hypot(seeker.x - targetNpc.x, seeker.y - targetNpc.y) < 120))
+        ) {
+          key = "dynwait:" + convo.def.id;
+          target = { x: n.x, y: n.y };
+          n.path = [];
+          action = convo.state === "playing" ? "Charlando" : n.action;
+          n.faceTo = this.faceTowards(n, seeker.x, seeker.y);
+        } else {
+          let r = n.def.routine[0]!;
+          for (const e of n.def.routine) if (this.mins >= e.at) r = e;
+          key = r.spot;
+          const s = spotAt(r.spot);
+          target = walkableTarget(s.x, s.y);
+          action = r.action;
+        }
+      } else if (convo) {
         key = "convo:" + convo.def.id;
         target = this.convoPos(convo, n.def.id);
         action = "Charlando";
         n.faceTo = convo.def.who[0] === n.def.id ? "right" : "left";
+      } else if (n.override) {
+        key = `override:${n.override.spot}:${n.override.action}`;
+        const s = spotAt(n.override.spot);
+        target = walkableTarget(s.x, s.y);
+        action = n.override.action;
       } else {
         let r = n.def.routine[0]!;
         for (const e of n.def.routine) if (this.mins >= e.at) r = e;
@@ -300,7 +801,9 @@ export class Game {
       if (key !== n.targetKey) {
         n.targetKey = key;
         n.target = target;
-        n.path = findPath(n.x, n.y, target.x, target.y);
+        if (!key.startsWith("dynplay:") && !key.startsWith("dynwait:")) {
+          n.path = findPath(n.x, n.y, target.x, target.y);
+        }
       }
       n.action = action;
       if (n.path.length) {
@@ -308,7 +811,8 @@ export class Game {
         const dx = wp.x - n.x;
         const dy = wp.y - n.y;
         const d = Math.hypot(dx, dy);
-        const step = NPC_SPEED * dt;
+        const urgent = !!(convo?.dynamic && convo.seekBy === n.def.id && convo.state !== "playing");
+        const step = (urgent ? URGENT_NPC_SPEED : NPC_SPEED) * dt;
         if (d <= step) {
           n.x = wp.x;
           n.y = wp.y;
@@ -318,32 +822,111 @@ export class Game {
           n.y += (dy / d) * step;
         }
         n.moving = true;
-        n.walkT += dt * 9;
+        n.walkT += dt * (urgent ? 12 : 9);
         if (Math.abs(dx) > Math.abs(dy)) n.facing = dx > 0 ? "right" : "left";
         else n.facing = dy > 0 ? "down" : "up";
       } else {
         n.moving = false;
         if (n.faceTo) n.facing = n.faceTo;
-        else if (n.targetKey.startsWith("seat_")) {
-          n.facing = n.def.id === "pam" || n.def.id === "michael" ? "down" : "up";
+        else if (n.targetKey.startsWith("seat_") || n.targetKey.startsWith("override:seat_")) {
+          const seatKey = n.targetKey.startsWith("override:") ? n.targetKey.slice("override:".length) : n.targetKey;
+          const seatOwner = seatKey.startsWith("seat_") ? seatKey.slice("seat_".length) : n.def.id;
+          const seat = getActiveFurniture().find((f) => f.owner === seatOwner)?.seat;
+          n.facing = seat === "north" ? "down" : seat === "west" ? "right" : seat === "east" ? "left" : "up";
         }
       }
     }
   }
 
+  private finishDynamicConvo(c: ConvoRuntime, completed: boolean) {
+    if (!c.dynamic) return;
+    if (c.seekBy) {
+      const seeker = this.npcById(c.seekBy);
+      if (seeker?.override && (!c.memoryId || seeker.override.memoryId === c.memoryId)) {
+        seeker.override = undefined;
+      }
+      const mem = (this.memories[c.seekBy] ?? []).find((m) => m.id === c.memoryId);
+      if (mem) mem.status = completed ? "completada" : "recordada";
+      if (completed) {
+        this.appendChatNote(
+          c.seekBy,
+          c.kind === "prank" ? `🎭 Broma ejecutada: ${c.def.title}` : `✅ Acción completada: ${c.def.title}`,
+        );
+        if (c.kind === "prank") {
+          this.rep += 1;
+          this.toast(`🎭 ¡Broma completada! ${c.def.title} (+1 ★)`, "event");
+        }
+        if (c.seekTarget) {
+          const victim = this.npcById(c.seekTarget);
+          const lastLine = c.def.lines[c.def.lines.length - 1]?.text ?? c.def.title;
+          if (victim) {
+            victim.override = {
+              action: c.targetAction ?? (c.kind === "prank" ? "Víctima de broma" : "Pensativo"),
+              spot: this.homeSpotForNpc(c.seekTarget),
+              until: this.mins + 18,
+              reactionLine: lastLine,
+            };
+          }
+          if (c.kind === "prank") {
+            const vList = (this.memories[c.seekTarget] ??= []);
+            vList.push({
+              id: `mem_v_${c.def.id}`,
+              atClock: formatClock(this.mins),
+              summary: `Broma sufrida: ${c.def.title}`,
+              kind: "prank",
+              status: "completada",
+              targetId: c.seekBy,
+              reactionLine: lastLine,
+            });
+            this.appendChatNote(c.seekTarget, `🎭 Broma recibida: ${c.def.title}`);
+          }
+        }
+      } else {
+        this.appendChatNote(c.seekBy, `⏳ Quedó pendiente en memoria: ${c.def.title}`);
+      }
+    }
+    this.emit();
+  }
+
   private updateConvos(dt: number) {
     for (const c of this.convos) {
       if (c.state === "done") continue;
-      const inWindow = this.mins >= c.def.at && this.mins < c.def.at + c.def.duration;
+      const pastWindow = this.mins >= c.def.at + c.def.duration;
+      const hardExpired = this.mins >= c.def.at + c.def.duration + 15;
+      const inWindow = this.mins >= c.def.at && !hardExpired && (c.state === "playing" || !pastWindow);
       if (!inWindow) {
-        if (this.mins >= c.def.at + c.def.duration) c.state = "done";
+        if ((c.state === "pending" && pastWindow) || hardExpired) {
+          c.state = "done";
+          this.finishDynamicConvo(c, false);
+        }
         continue;
       }
       const a = this.npcById(c.def.who[0]);
       const b = this.npcById(c.def.who[1]);
       if (!a || !b) continue;
       if (!c.arrived) {
-        if (!a.moving && !b.moving && a.targetKey.startsWith("convo:") && b.targetKey.startsWith("convo:")) {
+        if (c.dynamic && c.seekBy && c.seekTarget) {
+          if (c.prepSpot && !c.prepDone) {
+            c.prepTimer = (c.prepTimer ?? 0) + dt;
+            const seeker = c.seekBy === a.def.id ? a : b;
+            const p = walkableTarget(spotAt(c.prepSpot).x, spotAt(c.prepSpot).y);
+            if (Math.hypot(seeker.x - p.x, seeker.y - p.y) <= 28 || c.prepTimer >= 6) {
+              c.prepDone = true;
+            }
+            continue;
+          }
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if (dist <= 68 && ((!a.moving && !b.moving) || dist <= 52)) {
+            a.path = [];
+            b.path = [];
+            a.moving = false;
+            b.moving = false;
+            a.facing = this.faceTowards(a, b.x, b.y);
+            b.facing = this.faceTowards(b, a.x, a.y);
+            c.arrived = true;
+            c.state = "playing";
+          } else continue;
+        } else if (!a.moving && !b.moving && a.targetKey.startsWith("convo:") && b.targetKey.startsWith("convo:")) {
           c.arrived = true;
           c.state = "playing";
         } else continue;
@@ -351,20 +934,28 @@ export class Game {
       const mx = (a.x + b.x) / 2;
       const my = (a.y + b.y) / 2;
       const near = Math.hypot(this.player.x - mx, this.player.y - my) < HEAR_RADIUS;
-      if (!near) continue;
-      c.lineT += dt;
+      if (!near && pastWindow && !c.dynamic) {
+        c.state = "done";
+        continue;
+      }
+      if (near) c.heardLines = Math.max(c.heardLines ?? 0, 1);
+      c.lineT += dt * (near ? 1 : 0.85);
       const line = c.def.lines[c.line]!;
       const dur = 2.4 + line.text.length * 0.045;
       if (c.lineT >= dur) {
         c.lineT = 0;
+        if (near) c.heardLines = (c.heardLines ?? 0) + 1;
         c.line++;
         if (c.line >= c.def.lines.length) {
           c.state = "done";
-          if (!this.heard.includes(c.def.id)) {
+          const listened = near || (c.heardLines ?? 0) >= Math.ceil(c.def.lines.length / 2);
+          if (listened && !this.heard.includes(c.def.id)) {
             this.heard.push(c.def.id);
             this.rep += 1;
             this.toast(`🗣️ Cotilleo escuchado: ${c.def.title} (+1 ★)`, "gossip");
+            this.emit();
           }
+          if (c.dynamic) this.finishDynamicConvo(c, true);
         }
       }
     }
@@ -393,12 +984,18 @@ export class Game {
   }
 
   // ---------- missions ----------
+  private missionById(id: string): MissionDef {
+    const m = this.missions.find((x) => x.id === id) ?? MISSIONS.find((x) => x.id === id);
+    if (!m) throw new Error(`Unknown mission ${id}`);
+    return m;
+  }
+
   missionsDoneCount(excludeFinal = true) {
-    return MISSIONS.filter((m) => this.missionStatus[m.id] === "done" && (!excludeFinal || m.id !== "final")).length;
+    return this.missions.filter((m) => this.missionStatus[m.id] === "done" && (!excludeFinal || m.id !== "final")).length;
   }
 
   private dayMissions(): MissionDef[] {
-    return MISSIONS.filter((m) => !m.event || m.event === this.event?.id);
+    return this.missions.filter((m) => !m.event || m.event === this.event?.id);
   }
 
   isAvailable(m: MissionDef): boolean {
@@ -415,7 +1012,7 @@ export class Game {
   }
 
   currentStep(id: string) {
-    const m = missionById(id);
+    const m = this.missionById(id);
     if (this.missionStatus[id] !== "active") return null;
     return m.steps[this.missionStep[id] ?? 0] ?? null;
   }
@@ -424,11 +1021,11 @@ export class Game {
     this.missionStatus[id] = "active";
     this.missionStep[id] = 0;
     this.missionBase[id] = { sales: this.sales, gossip: this.heard.length };
-    if (!silent) this.toast(`📋 Nueva misión: ${missionById(id).title}`, "mission");
+    if (!silent) this.toast(`📋 Nueva misión: ${this.missionById(id).title}`, "mission");
   }
 
   private advanceMission(id: string) {
-    const m = missionById(id);
+    const m = this.missionById(id);
     const next = (this.missionStep[id] ?? 0) + 1;
     this.missionStep[id] = next;
     if (next >= m.steps.length) {
@@ -450,7 +1047,7 @@ export class Game {
   }
 
   private checkAutoSteps() {
-    for (const m of MISSIONS) {
+    for (const m of this.missions) {
       const s = this.currentStep(m.id);
       if (!s) continue;
       const base = this.missionBase[m.id] ?? { sales: 0, gossip: 0 };
@@ -463,7 +1060,7 @@ export class Game {
   /** Object ids that some active mission currently points to. */
   targetedObjects(): Set<string> {
     const out = new Set<string>();
-    for (const m of MISSIONS) {
+    for (const m of this.missions) {
       const s = this.currentStep(m.id);
       if (s?.kind === "object") out.add(s.target);
     }
@@ -472,7 +1069,7 @@ export class Game {
 
   targetedNPCs(): Set<string> {
     const out = new Set<string>();
-    for (const m of MISSIONS) {
+    for (const m of this.missions) {
       const s = this.currentStep(m.id);
       if (s?.kind === "talk") out.add(s.target);
     }
@@ -582,7 +1179,7 @@ export class Game {
   }
 
   private useObject(id: string) {
-    for (const m of MISSIONS) {
+    for (const m of this.missions) {
       const s = this.currentStep(m.id);
       if (s?.kind === "object" && s.target === id) {
         if (s.gives) this.addItem(s.gives);
@@ -629,7 +1226,7 @@ export class Game {
   private useService(id: ServiceDef["id"]) {
     if (id === "pc") return this.openPC();
     if (id === "coffee") {
-      for (const m of MISSIONS) {
+      for (const m of this.missions) {
         const s = this.currentStep(m.id);
         if (s?.kind === "object" && s.target === "coffee") return this.useObject("coffee");
       }
@@ -714,21 +1311,30 @@ export class Game {
     const dy = this.player.y - n.y;
     n.facing = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up";
     const convo = this.activeConvoFor(id);
-    let line = n.def.intro;
+    const mems = this.memories[id] ?? [];
+    const lastMem = mems[mems.length - 1];
+    let line = this.introOf(id);
     if (convo && convo.state === "playing") {
       const other = charById(convo.def.who.find((w) => w !== id)!);
       line = `Estoy hablando con ${other.name.split(" ")[0]}, pero dime.`;
+    } else if (n.override && this.mins < n.override.until && n.override.reactionLine) {
+      line = n.override.reactionLine;
+    } else if (lastMem) {
+      line =
+        lastMem.status === "completada"
+          ? `Me acuerdo de lo de hoy (${lastMem.atClock}): ${lastMem.reactionLine ?? lastMem.summary}`
+          : `Sigo teniendo presente lo nuestro (${lastMem.atClock}): ${lastMem.summary}`;
     } else if (this.event && n.def.eventLines?.[this.event.id] && Math.random() < 0.5) {
       line = n.def.eventLines[this.event.id]!;
     }
-    this.openDialog(n.def.name, n.def.role, id, line, this.npcOptions(id));
+    this.openDialog(n.def.name, this.roleOf(id), id, line, this.npcOptions(id));
   }
 
   private npcOptions(id: string): DialogOption[] {
     const n = charById(id);
     const opts: DialogOption[] = [];
     // Deliveries first
-    for (const m of MISSIONS) {
+    for (const m of this.missions) {
       const s = this.currentStep(m.id);
       if (s?.kind !== "talk" || s.target !== id) continue;
       if (s.needs && !this.inventory[s.needs]) {
@@ -783,7 +1389,8 @@ export class Game {
       });
     }
     n.topics.forEach((tp) => opts.push({ label: tp.q, tag: "topic", act: () => this.setDialog(tp.a, this.npcOptions(id)) }));
-    if ((id === "darryl" || id === "roy") && Math.hypot(this.player.x - 1330, this.player.y - 1175) < 200) {
+    const pp = spotAt("pingpong");
+    if ((id === "darryl" || id === "roy") && Math.hypot(this.player.x - pp.x, this.player.y - pp.y) < 200) {
       opts.push({ label: "🏓 ¿Una partida de ping-pong?", tag: "game", act: () => this.startPingPong(id) });
     }
     if (this.ai) opts.push({ label: "💬 Charlar libremente (escribe tú)", tag: "chat", act: () => this.openChat(id) });
@@ -794,19 +1401,123 @@ export class Game {
   openChat(id: string) {
     this.dialog = null;
     this.dialogHistory = [];
+    this.sessionBaseLen = (this.chatLogs[id] ?? []).length;
+    this.sessionChatMessages = [];
     this.chatWith = id;
     this.emit();
   }
 
-  closeChat = () => {
-    this.chatWith = null;
-    this.talkingTo = null;
+  appendChatMessage = (id: string, msg: ChatMessage) => {
+    const log = (this.chatLogs[id] ??= []);
+    log.push({ role: msg.role, content: msg.content, clock: formatClock(this.mins) });
+    if (this.chatWith === id) this.sessionChatMessages.push(msg);
     this.emit();
   };
 
+  private appendChatNote(id: string, content: string) {
+    const log = (this.chatLogs[id] ??= []);
+    log.push({ role: "note", content, clock: formatClock(this.mins) });
+  }
+
+  recordChatMessages = (messages: ChatMessage[]) => {
+    this.sessionChatMessages = messages;
+    if (this.chatWith) {
+      const base = (this.chatLogs[this.chatWith] ?? []).slice(0, this.sessionBaseLen);
+      const clock = formatClock(this.mins);
+      this.chatLogs[this.chatWith] = [...base, ...messages.map((m) => ({ role: m.role, content: m.content, clock }))];
+      this.emit();
+    }
+  };
+
+  closeChat = () => {
+    const id = this.chatWith;
+    const msgs = this.sessionChatMessages;
+    this.chatWith = null;
+    this.talkingTo = null;
+    this.sessionChatMessages = [];
+    this.sessionBaseLen = 0;
+    this.emit();
+    if (id && this.ai && msgs.some((m) => m.role === "user")) {
+      void this.analyzeChatImpact(id, msgs);
+    }
+  };
+
+  private async analyzeChatImpact(id: string, messages: ChatMessage[]) {
+    if (!this.ai) return;
+    try {
+      const memList = this.memories[id] ?? [];
+      const impact = await this.ai.chatImpact({
+        characterId: id,
+        messages: messages.slice(-18).map((m) => ({ role: m.role, content: m.content.slice(0, 750) })),
+        eventName: this.event?.name ?? null,
+        clock: formatClock(this.mins),
+        memories: memList.slice(-20).map((m) => `[${m.status}] ${m.summary}`.slice(0, 280)),
+        activeCharIds: this.activeCharIds,
+        episodeContext: this.episodeContextText(),
+        speakerRole: this.roleOf(id),
+      });
+      if (!impact.important || this.phase !== "playing") return;
+      const npc = this.npcById(id);
+      if (!npc) return;
+
+      const kind = impact.kind ?? "alert";
+      const hasTarget = !!(impact.seekTargetId && impact.convoLines.length >= 2 && this.npcById(impact.seekTargetId));
+      const memId = `mem_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+      memList.push({
+        id: memId,
+        atClock: formatClock(this.mins),
+        summary: impact.summary,
+        kind,
+        status: hasTarget ? "en_marcha" : "recordada",
+        targetId: hasTarget ? impact.seekTargetId : null,
+        reactionLine: impact.reactionLine,
+      });
+      this.memories[id] = memList;
+      this.appendChatNote(id, `⚡ ${impact.summary}`);
+
+      npc.override = {
+        action: impact.newAction,
+        spot: impact.behaviorSpot,
+        until: this.mins + (hasTarget ? 35 : 40),
+        reactionLine: impact.reactionLine,
+        memoryId: memId,
+      };
+      this.toast(`⚡ ${impact.summary}`, "event");
+      if (hasTarget && impact.seekTargetId) {
+        this.convos.push({
+          def: {
+            id: `dyn_${Date.now()}_${id}_${impact.seekTargetId}`,
+            title: impact.convoTitle,
+            who: [id, impact.seekTargetId],
+            spot: impact.behaviorSpot,
+            at: this.mins + 0.5,
+            duration: 38,
+            lines: impact.convoLines,
+          },
+          state: "pending",
+          line: 0,
+          lineT: 0,
+          arrived: false,
+          dynamic: true,
+          seekBy: id,
+          seekTarget: impact.seekTargetId,
+          kind,
+          prepSpot: impact.prepSpot ?? undefined,
+          prepDone: !impact.prepSpot,
+          prepTimer: 0,
+          memoryId: memId,
+          targetAction: impact.targetAction ?? undefined,
+        });
+      }
+      this.emit();
+    } catch {
+      // Silently ignore AI failure on background impact check.
+    }
+  }
+
   private noTaskLine(id: string): string {
     const pending = this.dayMissions().find((m) => m.giver === id && this.missionStatus[m.id] === "locked");
-    const active = MISSIONS.find((m) => m.giver === id && this.missionStatus[m.id] === "active");
+    const active = this.missions.find((m) => m.giver === id && this.missionStatus[m.id] === "active");
     if (active) return `Aún estás con «${active.title}». Termina eso primero.`;
     if (pending) {
       if (pending.minTime && this.mins < pending.minTime) return `Ahora mismo no. Pásate a partir de las ${formatClock(pending.minTime)}.`;
@@ -836,7 +1547,8 @@ export class Game {
 
   // ---------- ping-pong mini game ----------
   private openPingPong() {
-    const opp = this.npcs.find((n) => (n.def.id === "darryl" || n.def.id === "roy") && Math.hypot(n.x - 1330, n.y - 1175) < 160);
+    const pp = spotAt("pingpong");
+    const opp = this.npcs.find((n) => (n.def.id === "darryl" || n.def.id === "roy") && Math.hypot(n.x - pp.x, n.y - pp.y) < 160);
     if (!opp) {
       this.toast("🏓 No hay nadie para jugar. Darryl y Roy juegan a la hora de comer (12:00).", "info");
       return;
@@ -1140,8 +1852,19 @@ export class Game {
     this.paused = !this.paused;
     this.emit();
   };
+  returnToMenu = () => {
+    this.startRunId++;
+    this.phase = "start";
+    this.paused = false;
+    this.journal = false;
+    this.cinematicState = null;
+    this.dialog = null;
+    this.pc = null;
+    this.chatWith = null;
+    this.emit();
+  };
   toggleJournal = () => {
-    if (this.phase !== "playing" || this.dialog || this.pc || this.chatWith) return;
+    if (this.phase !== "playing" || this.cinematicState || this.dialog || this.pc || this.chatWith) return;
     this.journal = !this.journal;
     this.emit();
   };
@@ -1151,6 +1874,22 @@ export class Game {
     this.keys[k] = down;
     if (!down) return;
     if (this.phase !== "playing") return;
+    if (this.cinematicState && !this.paused) {
+      if (k === "Escape") {
+        this.skipCinematic();
+        return;
+      }
+      if (/^[1-3]$/.test(k) && this.cinematicState.step === 1) {
+        this.cinematicChoose(Number(k) - 1);
+        return;
+      }
+      if (k === " " || k === "Enter" || k === "e") {
+        if (this.cinematicState.step === 1) this.cinematicChoose(0);
+        else this.cinematicNext();
+        return;
+      }
+      return;
+    }
     if (/^[1-9]$/.test(k) && (this.dialog || this.pc)) {
       this.choose(Number(k) - 1);
       return;
@@ -1233,10 +1972,27 @@ export class Game {
         available: this.phase === "playing" && this.isAvailable(m),
       };
     });
+    const cin = this.cinematicState;
+    const cinematic: CinematicUI | null = cin
+      ? {
+          sceneId: cin.scene.id,
+          sceneNumber: cin.sceneNumber,
+          totalScenes: WELCOME_SCENES.length,
+          title: cin.scene.title,
+          category: cin.scene.category,
+          costume: cin.scene.costume,
+          speaker: "Michael Scott",
+          line: cin.step === 0 ? cin.scene.opening : cin.step === 1 ? cin.scene.prompt : cin.reactionText,
+          step: cin.step,
+          choices: cin.step === 1 ? cin.scene.replies.map((r) => ({ label: r.label })) : [],
+        }
+      : null;
     return {
       phase: this.phase,
       paused: this.paused,
       journal: this.journal,
+      playerLook: { ...this.playerLook },
+      cinematic,
       clock: formatClock(this.mins),
       mins: this.mins,
       money: this.money,
@@ -1245,6 +2001,17 @@ export class Game {
       sales: this.sales,
       dateLabel: formatLongDate(this.date),
       event: this.event ? { id: this.event.id, name: this.event.name, emoji: this.event.emoji, description: this.event.description } : null,
+      episode: this.episode
+        ? {
+            id: this.episode.id,
+            epLabel: this.episode.epLabel,
+            title: this.episode.title,
+            officeState: this.episode.officeState,
+            castCount: this.activeCharIds.length,
+          }
+        : null,
+      activeCharIds: this.activeCharIds,
+      episodeContext: this.episodeContextText(),
       missions,
       inventory: Object.entries(this.inventory).map(([id, count]) => ({
         id,
@@ -1266,9 +2033,23 @@ export class Game {
       chat: this.chatWith
         ? (() => {
             const c = charById(this.chatWith);
-            return { id: c.id, name: c.name, role: c.role, intro: c.intro };
+            return {
+              id: c.id,
+              name: c.name,
+              role: this.roleOf(c.id),
+              intro: this.introOf(c.id),
+              history: [...(this.chatLogs[c.id] ?? [])],
+              memories: [...(this.memories[c.id] ?? [])],
+            };
           })()
         : null,
+      chatRecords: CHARACTERS.filter((c) => (this.chatLogs[c.id]?.length ?? 0) > 0 || (this.memories[c.id]?.length ?? 0) > 0).map((c) => ({
+        id: c.id,
+        name: c.name,
+        role: this.roleOf(c.id),
+        messages: [...(this.chatLogs[c.id] ?? [])],
+        memories: [...(this.memories[c.id] ?? [])],
+      })),
       aiEnabled: !!this.ai,
       pc: this.pc,
       toasts: this.toasts,
