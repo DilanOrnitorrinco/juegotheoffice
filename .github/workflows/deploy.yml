@@ -14,14 +14,17 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install
       - run: bun run build -- --base=/juegotheoffice/
-      - name: Check output folder
-        id: check
+      - name: Prepare Pages folder
         run: |
-          if [ -d "dist" ]; then echo "dir=dist" >> $GITHUB_OUTPUT;
-          elif [ -d ".output/public" ]; then echo "dir=.output/public" >> $GITHUB_OUTPUT;
-          else echo "dir=build" >> $GITHUB_OUTPUT; fi
+          mkdir -p pages_out
+          if [ -d "dist/client" ]; then cp -r dist/client/* pages_out/;
+          elif [ -d "dist" ]; then cp -r dist/* pages_out/;
+          elif [ -d ".output/public" ]; then cp -r .output/public/* pages_out/; fi
+          if [ ! -f "pages_out/index.html" ] && [ -f "pages_out/_shell.html" ]; then
+            cp pages_out/_shell.html pages_out/index.html
+          fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: ${{ steps.check.outputs.dir }}
+          path: pages_out
       - uses: actions/deploy-pages@v4
