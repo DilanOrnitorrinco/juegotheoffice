@@ -13,11 +13,15 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - run: npm install
       - run: npm run build -- --base=/juegotheoffice/
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
+      - name: Check output folder
+        id: check
+        run: |
+          if [ -d "dist" ]; then echo "dir=dist" >> $GITHUB_OUTPUT; else echo "dir=build" >> $GITHUB_OUTPUT; fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
         with:
-          path: './dist'
+          path: ${{ steps.check.outputs.dir }}
       - uses: actions/deploy-pages@v4
