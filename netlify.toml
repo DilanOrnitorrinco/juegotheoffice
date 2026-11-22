@@ -1,0 +1,6 @@
+# On Netlify, Nitro (bundled by @lovable.dev/vite-tanstack-config) auto-selects its
+# `netlify` preset: static assets go to `dist/` and the SSR server function goes to
+# `.netlify/functions-internal/`, which Netlify picks up automatically.
+[build]
+  command = "bun run build"
+  publish = "dist"
