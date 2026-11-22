@@ -11,15 +11,15 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: npm install
-      - run: npm run build -- --base=/juegotheoffice/
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun run build -- --base=/juegotheoffice/
       - name: Check output folder
         id: check
         run: |
-          if [ -d "dist" ]; then echo "dir=dist" >> $GITHUB_OUTPUT; else echo "dir=build" >> $GITHUB_OUTPUT; fi
+          if [ -d "dist" ]; then echo "dir=dist" >> $GITHUB_OUTPUT;
+          elif [ -d ".output/public" ]; then echo "dir=.output/public" >> $GITHUB_OUTPUT;
+          else echo "dir=build" >> $GITHUB_OUTPUT; fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
