@@ -12,6 +12,7 @@ import { FreeChat } from "./FreeChat";
 import { Hud } from "./Hud";
 import { Journal } from "./Journal";
 import { EndScreen, PauseScreen, CinematicOverlay, Toasts } from "./Overlays";
+import { PingPong } from "./PingPong";
 import { StartScreen } from "./StartScreen";
 
 export function GameRoot() {
@@ -161,6 +162,7 @@ export function GameRoot() {
       <DialogBox ui={ui} game={game} costume={portraitCostume} />
       <FreeChat ui={ui} game={game} costume={chatCostume} />
       <Computer ui={ui} game={game} />
+      <PingPong ui={ui} game={game} />
       <Journal ui={ui} game={game} />
       <PauseScreen ui={ui} game={game} />
       {ui.phase === "start" && <StartScreen onStart={(d, ep) => game.start(d, ep)} />}

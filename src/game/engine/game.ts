@@ -51,6 +51,7 @@ import type {
   MissionUI,
   NPC,
   PcUI,
+  PingPongUI,
   Player,
   Toast,
   UIState,
@@ -183,6 +184,22 @@ export class Game {
   calls = 0;
   coffeeReadyAt = 0;
   pingpongReadyAt = 0;
+  pingpong: {
+    oppId: string;
+    me: number;
+    them: number;
+    target: number;
+    ball: { x: number; y: number; vx: number; vy: number };
+    playerY: number;
+    aiY: number;
+    paddleH: number;
+    fieldW: number;
+    fieldH: number;
+    status: "playing" | "point" | "ended";
+    flash: string | null;
+    pointTimer: number;
+    serveDir: number;
+  } | null = null;
   inventory: Record<string, number> = {};
   missions: MissionDef[] = [...MISSIONS];
   missionStatus: Record<string, MissionStatus> = {};
@@ -406,6 +423,7 @@ export class Game {
     this.calls = 0;
     this.coffeeReadyAt = 0;
     this.pingpongReadyAt = 0;
+    this.pingpong = null;
     this.inventory = {};
     this.heard = [];
     this.dundiesFound = [];
@@ -562,7 +580,7 @@ export class Game {
   }
 
   get frozen() {
-    return this.phase !== "playing" || this.paused || !!this.cinematicState || this.journal || !!this.dialog || !!this.pc || !!this.chatWith;
+    return this.phase !== "playing" || this.paused || !!this.cinematicState || this.journal || !!this.dialog || !!this.pc || !!this.chatWith || !!this.pingpong;
   }
 
   // ---------- loop ----------
@@ -575,6 +593,7 @@ export class Game {
     }
     if (this.frozen) {
       this.player.moving = false;
+      if (this.pingpong) this.updatePingPong(dt);
       return;
     }
     this.updatePlayer(dt);
@@ -1554,7 +1573,7 @@ export class Game {
       return;
     }
     this.talkingTo = null;
-    this.openDialog(opp.def.name, "Ping-pong", opp.def.id, "¿Una partida rápida? Al mejor de tres puntos.", [
+    this.openDialog(opp.def.name, "Ping-pong", opp.def.id, "¿Una partida rápida? Al mejor de 5 puntos. Mueve tu pala con W/S o ↑/↓.", [
       { label: "🏓 ¡Vamos!", tag: "game", act: () => this.startPingPong(opp.def.id) },
       { label: "Mejor no", tag: "leave", act: this.closeDialog },
     ]);
@@ -1565,47 +1584,188 @@ export class Game {
       this.setDialog(`Ya hemos jugado. Revancha a las ${formatClock(this.pingpongReadyAt)}.`, this.dialog!.options);
       return;
     }
-    const state = { me: 0, them: 0 };
-    const shots = ["Remate fuerte", "Con efecto", "Dejada suave"] as const;
-    const beats: Record<string, string> = { "Remate fuerte": "Dejada suave", "Dejada suave": "Con efecto", "Con efecto": "Remate fuerte" };
-    const round = (msg: string) => {
-      if (state.me === 2 || state.them === 2) {
-        const won = state.me === 2;
-        this.pingpongReadyAt = this.mins + 60;
-        this.skipTime(10);
-        if (won) {
-          this.rep += 2;
-          this.money += 5;
-        }
-        this.setDialog(
-          `${msg} ${won ? `¡Ganas ${state.me}-${state.them}! +2 ★ y $5 de apuesta.` : `Pierdes ${state.me}-${state.them}. «Buen intento, novato.»`}`,
-          [{ label: "Seguir", tag: "leave", act: this.closeDialog }],
-        );
-        return;
-      }
-      this.setDialog(
-        `${msg} Marcador: ${state.me}-${state.them}. ¿Qué golpe haces?`,
-        shots.map((s) => ({
-          label: s,
-          tag: "game" as const,
-          act: () => {
-            const opp = pick(shots);
-            let res: string;
-            if (opp === s) res = `Los dos hacéis «${s}». Punto repetido.`;
-            else if (beats[s] === opp) {
-              state.me++;
-              res = `Tu «${s}» supera su «${opp}». ¡Punto!`;
-            } else {
-              state.them++;
-              res = `Su «${opp}» supera tu «${s}». Punto para ${charById(oppId).name.split(" ")[0]}.`;
-            }
-            round(res);
-          },
-        })),
-        false,
-      );
+    const fieldW = 640;
+    const fieldH = 380;
+    const paddleH = 92;
+    const paddleW = 12;
+    const ballSpeed = 300;
+    const serveDir = Math.random() < 0.5 ? 1 : -1;
+    this.dialog = null;
+    this.dialogHistory = [];
+    this.keys = {};
+    this.pingpong = {
+      oppId,
+      me: 0,
+      them: 0,
+      target: 5,
+      ball: {
+        x: fieldW / 2,
+        y: fieldH / 2,
+        vx: serveDir * ballSpeed,
+        vy: (Math.random() * 2 - 1) * 140,
+      },
+      playerY: fieldH / 2,
+      aiY: fieldH / 2,
+      paddleH,
+      fieldW,
+      fieldH,
+      status: "point",
+      flash: "¡Saca!",
+      pointTimer: 1.2,
+      serveDir,
     };
-    round("¡Saca!");
+    this.emit();
+  }
+
+  closePingPong = () => {
+    const pp = this.pingpong;
+    if (!pp) return;
+    if (pp.status === "ended") {
+      this.pingpong = null;
+      this.keys = {};
+      this.emit();
+      return;
+    }
+    this.pingpong = null;
+    this.keys = {};
+    this.toast("🏓 Has dejado la partida a medias.", "warn");
+    this.emit();
+  };
+
+  pingPongRestart = () => {
+    const pp = this.pingpong;
+    if (!pp) return;
+    const oppId = pp.oppId;
+    this.pingpong = null;
+    this.startPingPong(oppId);
+  };
+
+  private updatePingPong(dt: number) {
+    const pp = this.pingpong;
+    if (!pp) return;
+    const paddleSpeed = 420;
+    const aiPaddleSpeed = 300;
+    const paddleW = 12;
+    const ballR = 8;
+    const wallPad = 18;
+
+    if (pp.status === "ended") return;
+
+    if (pp.status === "point") {
+      pp.pointTimer -= dt;
+      if (pp.pointTimer <= 0) {
+        pp.status = "playing";
+        pp.flash = null;
+        const dir = pp.serveDir;
+        const speed = 300;
+        pp.ball = {
+          x: pp.fieldW / 2,
+          y: pp.fieldH / 2,
+          vx: dir * speed,
+          vy: (Math.random() * 2 - 1) * 150,
+        };
+      }
+      this.emit();
+      return;
+    }
+
+    const up = this.keys["w"] || this.keys["ArrowUp"];
+    const down = this.keys["s"] || this.keys["ArrowDown"];
+    if (up) pp.playerY -= paddleSpeed * dt;
+    if (down) pp.playerY += paddleSpeed * dt;
+    pp.playerY = Math.max(wallPad + pp.paddleH / 2, Math.min(pp.fieldH - wallPad - pp.paddleH / 2, pp.playerY));
+
+    const ball = pp.ball;
+    const prevX = ball.x;
+    ball.x += ball.vx * dt;
+    ball.y += ball.vy * dt;
+
+    if (ball.y - ballR < wallPad) {
+      ball.y = wallPad + ballR;
+      ball.vy = Math.abs(ball.vy);
+    }
+    if (ball.y + ballR > pp.fieldH - wallPad) {
+      ball.y = pp.fieldH - wallPad - ballR;
+      ball.vy = -Math.abs(ball.vy);
+    }
+
+    const playerPaddleX = wallPad + paddleW;
+    const aiPaddleX = pp.fieldW - wallPad - paddleW;
+    if (ball.vx < 0 && prevX - ballR >= playerPaddleX && ball.x - ballR <= playerPaddleX) {
+      const pTop = pp.playerY - pp.paddleH / 2;
+      const pBot = pp.playerY + pp.paddleH / 2;
+      if (ball.y >= pTop && ball.y <= pBot) {
+        ball.x = playerPaddleX + ballR;
+        ball.vx = Math.abs(ball.vx) * 1.06;
+        const rel = (ball.y - pp.playerY) / (pp.paddleH / 2);
+        ball.vy = rel * 240 + ball.vy * 0.15;
+        const maxV = 520;
+        ball.vx = Math.min(maxV, ball.vx);
+        pp.serveDir = 1;
+      }
+    }
+    if (ball.vx > 0 && prevX + ballR <= aiPaddleX && ball.x + ballR >= aiPaddleX) {
+      const aiTop = pp.aiY - pp.paddleH / 2;
+      const aiBot = pp.aiY + pp.paddleH / 2;
+      if (ball.y >= aiTop && ball.y <= aiBot) {
+        ball.x = aiPaddleX - ballR;
+        ball.vx = -Math.abs(ball.vx) * 1.06;
+        const rel = (ball.y - pp.aiY) / (pp.paddleH / 2);
+        ball.vy = rel * 240 + ball.vy * 0.15;
+        const maxV = 520;
+        ball.vx = Math.max(-maxV, ball.vx);
+        pp.serveDir = -1;
+      }
+    }
+
+    if (ball.x < -ballR) {
+      pp.them++;
+      pp.status = "point";
+      pp.flash = `Punto para ${charById(pp.oppId).name.split(" ")[0]}`;
+      pp.pointTimer = 1.2;
+      pp.serveDir = -1;
+      this.checkPingPongEnd();
+      this.emit();
+      return;
+    }
+    if (ball.x > pp.fieldW + ballR) {
+      pp.me++;
+      pp.status = "point";
+      pp.flash = "¡Punto para ti!";
+      pp.pointTimer = 1.2;
+      pp.serveDir = 1;
+      this.checkPingPongEnd();
+      this.emit();
+      return;
+    }
+
+    const aiTargetY = ball.vx > 0 ? ball.y : pp.fieldH / 2;
+    const aiCenter = pp.aiY;
+    const aiDiff = aiTargetY - aiCenter;
+    const aiMove = Math.max(-aiPaddleSpeed * dt, Math.min(aiPaddleSpeed * dt, aiDiff));
+    pp.aiY += aiMove;
+    pp.aiY = Math.max(wallPad + pp.paddleH / 2, Math.min(pp.fieldH - wallPad - pp.paddleH / 2, pp.aiY));
+
+    this.emit();
+  }
+
+  private checkPingPongEnd() {
+    const pp = this.pingpong;
+    if (!pp) return;
+    if (pp.me >= pp.target || pp.them >= pp.target) {
+      pp.status = "ended";
+      const won = pp.me > pp.them;
+      this.pingpongReadyAt = this.mins + 60;
+      this.skipTime(10);
+      if (won) {
+        this.rep += 2;
+        this.money += 5;
+        this.toast(`🏓 ¡Ganas ${pp.me}-${pp.them}! +2 ★ y $5 de apuesta.`, "event");
+      } else {
+        this.toast(`🏓 Pierdes ${pp.me}-${pp.them} contra ${charById(pp.oppId).name.split(" ")[0]}.`, "warn");
+      }
+      this.checkAutoSteps();
+    }
   }
 
   // ---------- PC & sales ----------
@@ -1861,6 +2021,7 @@ export class Game {
     this.dialog = null;
     this.pc = null;
     this.chatWith = null;
+    this.pingpong = null;
     this.emit();
   };
   toggleJournal = () => {
@@ -1895,6 +2056,7 @@ export class Game {
       return;
     }
     if (k === "Escape") {
+      if (this.pingpong) return this.closePingPong();
       if (this.dialog) return this.closeDialog();
       if (this.chatWith) return this.closeChat();
       if (this.pc) return this.closePC();
@@ -2052,6 +2214,23 @@ export class Game {
       })),
       aiEnabled: !!this.ai,
       pc: this.pc,
+      pingpong: this.pingpong
+        ? {
+            opponentId: this.pingpong.oppId,
+            opponentName: charById(this.pingpong.oppId).name,
+            me: this.pingpong.me,
+            them: this.pingpong.them,
+            target: this.pingpong.target,
+            ball: { ...this.pingpong.ball },
+            playerY: this.pingpong.playerY,
+            aiY: this.pingpong.aiY,
+            paddleH: this.pingpong.paddleH,
+            fieldW: this.pingpong.fieldW,
+            fieldH: this.pingpong.fieldH,
+            status: this.pingpong.status,
+            flash: this.pingpong.flash,
+          }
+        : null,
       toasts: this.toasts,
       gossip: {
         heard: this.heard.map((id) => ({ title: this.convos.find((c) => c.def.id === id)?.def.title ?? id })),

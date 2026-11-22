@@ -168,6 +168,22 @@ export interface CinematicUI {
   choices: { label: string }[];
 }
 
+export interface PingPongUI {
+  opponentId: string;
+  opponentName: string;
+  me: number;
+  them: number;
+  target: number;
+  ball: { x: number; y: number; vx: number; vy: number };
+  playerY: number;
+  aiY: number;
+  paddleH: number;
+  fieldW: number;
+  fieldH: number;
+  status: "playing" | "point" | "ended";
+  flash: string | null;
+}
+
 export interface UIState {
   phase: "start" | "playing" | "ended";
   paused: boolean;
@@ -205,6 +221,7 @@ export interface UIState {
   }[];
   aiEnabled: boolean;
   pc: PcUI | null;
+  pingpong: PingPongUI | null;
   toasts: Toast[];
   gossip: { heard: { title: string }[]; total: number };
   dundies: { found: string[]; total: number };
