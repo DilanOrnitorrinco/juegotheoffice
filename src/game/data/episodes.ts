@@ -42,10 +42,12 @@ export const EPISODES: EpisodeDef[] = [
     ],
     extraDesks: [],
     introOverrides: {
-      michael: "¡Bienvenidos al documental! Soy Michael Scott, guía espiritual y mejor jefe del mundo.",
+      michael:
+        "¡Bienvenidos al documental! Soy Michael Scott, guía espiritual y mejor jefe del mundo.",
       ryan: "Es mi primer día de temporal. Todavía no sé dónde está la trituradora y nadie me lo explica.",
     },
-    openingToast: "🎬 T1·E01 «Piloto»: primer día con las cámaras del documental en Scranton (19 empleados).",
+    openingToast:
+      "🎬 T1·E01 «Piloto»: primer día con las cámaras del documental en Scranton (19 empleados).",
   },
   {
     id: "s1e2",
@@ -79,10 +81,12 @@ export const EPISODES: EpisodeDef[] = [
     extraDesks: [],
     decor: "diversity",
     introOverrides: {
-      michael: "Hoy celebramos el Día de la Diversidad. He preparado tarjetas con razas para pegar en la frente.",
+      michael:
+        "Hoy celebramos el Día de la Diversidad. He preparado tarjetas con razas para pegar en la frente.",
       pam: "Michael va a dar otro seminario improvisado. Sálvese quien pueda.",
     },
-    openingToast: "🎬 T1·E02 «Día de la Diversidad»: seminario eterno en la sala de reuniones (17 empleados).",
+    openingToast:
+      "🎬 T1·E02 «Día de la Diversidad»: seminario eterno en la sala de reuniones (17 empleados).",
   },
   {
     id: "s1e4",
@@ -93,7 +97,8 @@ export const EPISODES: EpisodeDef[] = [
     dateLabel: "12 abr 2005",
     summary:
       "Crece el miedo a los despidos y Dwight propone una alianza secreta a Jim, mientras Michael intenta organizar una fiesta para Meredith… un mes antes.",
-    officeState: "Tensión por los despidos · Devon aún en su puesto · Caja para la fiesta de Meredith",
+    officeState:
+      "Tensión por los despidos · Devon aún en su puesto · Caja para la fiesta de Meredith",
     castIds: [
       "michael",
       "dwight",
@@ -115,10 +120,12 @@ export const EPISODES: EpisodeDef[] = [
     ],
     extraDesks: [],
     introOverrides: {
-      dwight: "La sucursal podría reducirse. He formado una alianza táctica. No se lo digas a nadie.",
+      dwight:
+        "La sucursal podría reducirse. He formado una alianza táctica. No se lo digas a nadie.",
       meredith: "Mi cumpleaños fue hace semanas… ¿por qué Michael busca una tarta enorme?",
     },
-    openingToast: "🎬 T1·E04 «La Alianza»: pactos secretos en Ventas ante los rumores de recorte (17 empleados).",
+    openingToast:
+      "🎬 T1·E04 «La Alianza»: pactos secretos en Ventas ante los rumores de recorte (17 empleados).",
   },
   {
     id: "s2e5",
@@ -129,7 +136,8 @@ export const EPISODES: EpisodeDef[] = [
     dateLabel: "31 oct 2005",
     summary:
       "Día de disfraces en la oficina y fecha límite de RRHH para despedir a alguien antes de fin de mes. El puesto de Devon pende de un hilo frente a Creed.",
-    officeState: "Oficina decorada de Halloween · Todo el personal disfrazado · Último día de Devon",
+    officeState:
+      "Oficina decorada de Halloween · Todo el personal disfrazado · Último día de Devon",
     castIds: [
       "michael",
       "dwight",
@@ -154,7 +162,8 @@ export const EPISODES: EpisodeDef[] = [
       devon: "Me han dicho que hoy alguien va a la calle. Estoy intentando pasar desapercibido.",
       creed: "He convencido a Michael de que el problema de Control de Calidad es otro. Guiño.",
     },
-    openingToast: "🎬 T2·E05 «Halloween»: disfraces por toda Scranton y un despido inminente (17 empleados).",
+    openingToast:
+      "🎬 T2·E05 «Halloween»: disfraces por toda Scranton y un despido inminente (17 empleados).",
   },
   {
     id: "s2e10",
@@ -189,7 +198,8 @@ export const EPISODES: EpisodeDef[] = [
       jim: "He pasado semanas preparando la tetera de Pam para el amigo invisible. Nadie va a estropearlo.",
       michael: "El límite eran 20 dólares, así que compré un iPod. ¡Que empiece el Yankee Swap!",
     },
-    openingToast: "🎬 T2·E10 «Fiesta de Navidad»: árbol, amigo invisible y Devon ya fuera de la plantilla (16 empleados).",
+    openingToast:
+      "🎬 T2·E10 «Fiesta de Navidad»: árbol, amigo invisible y Devon ya fuera de la plantilla (16 empleados).",
   },
   {
     id: "s2e22",
@@ -226,7 +236,8 @@ export const EPISODES: EpisodeDef[] = [
       kevin: "Hoy jugamos por caridad en el almacén. Tengo mi cara de póquer preparada.",
       jim: "Pam se casa pronto… pero esta noche quiero decirle lo que siento.",
     },
-    openingToast: "🎬 T2·E22 «Noche de Casino»: mesas de juego en el almacén y Jan en la sucursal (17 empleados).",
+    openingToast:
+      "🎬 T2·E22 «Noche de Casino»: mesas de juego en el almacén y Jan en la sucursal (17 empleados).",
   },
   {
     id: "s3e1",
@@ -279,7 +290,8 @@ export const EPISODES: EpisodeDef[] = [
     dateLabel: "16 nov 2006",
     summary:
       "Cierra Stamford y sus cinco empleados desembarcan en Scranton con Jim de vuelta. Oscar está de baja pagada, así que Andy se sienta en Contabilidad y Tony Gardner dura horas.",
-    officeState: "21 personas · Llegan Andy, Karen, Martin Nash, Tony Gardner y Hannah · Sin Oscar (de baja)",
+    officeState:
+      "21 personas · Llegan Andy, Karen, Martin Nash, Tony Gardner y Hannah · Sin Oscar (de baja)",
     castIds: [
       "michael",
       "dwight",
@@ -325,7 +337,8 @@ export const EPISODES: EpisodeDef[] = [
     dateLabel: "30 nov 2006",
     summary:
       "Tony Gardner ya ha dimitido y se descubre que Martin Nash estuvo en prisión. Michael responde encerrando al personal en la sala de reuniones como «Prison Mike».",
-    officeState: "Sin Tony ni Oscar · Siguen Karen, Andy, Martin Nash y Hannah · Sesión «Prison Mike»",
+    officeState:
+      "Sin Tony ni Oscar · Siguen Karen, Andy, Martin Nash y Hannah · Sesión «Prison Mike»",
     castIds: [
       "michael",
       "dwight",
@@ -354,7 +367,8 @@ export const EPISODES: EpisodeDef[] = [
     decor: "convict",
     introOverrides: {
       michael: "Soy Prison Mike. En la cárcel solo se come gachas y lo peor eran… ¡los Dementores!",
-      martin: "Sí, estuve por fraude financiero, pero eso no significa que la oficina sea mejor que la cárcel.",
+      martin:
+        "Sí, estuve por fraude financiero, pero eso no significa que la oficina sea mejor que la cárcel.",
       hannah: "Estoy harta de estas reuniones obligatorias. ¿Cuándo podemos simplemente trabajar?",
     },
     openingToast:
@@ -369,7 +383,8 @@ export const EPISODES: EpisodeDef[] = [
     dateLabel: "18 ene 2007",
     summary:
       "Dwight ha dimitido para trabajar en Staples. Oscar regresa tras su baja y Andy toma el escritorio de Dwight mientras Jim conspira contra su móvil oculto.",
-    officeState: "Sin Dwight (en Staples), Martin ni Hannah · Oscar vuelve · Andy en la mesa de Dwight",
+    officeState:
+      "Sin Dwight (en Staples), Martin ni Hannah · Oscar vuelve · Andy en la mesa de Dwight",
     castIds: [
       "michael",
       "jim",
@@ -395,7 +410,8 @@ export const EPISODES: EpisodeDef[] = [
     },
     decor: "return",
     introOverrides: {
-      oscar: "He vuelto tras tres meses de vacaciones pagadas. Esto sigue exactamente igual de raro.",
+      oscar:
+        "He vuelto tras tres meses de vacaciones pagadas. Esto sigue exactamente igual de raro.",
       andy: "Ahora ocupo la mesa de Dwight frente a Jim. Por cierto… ¿alguien ha visto mi móvil?",
       jim: "Dwight se ha ido a Staples y Andy no para de hacer «ri-dit-dit-di-do». Hay que actuar.",
     },
@@ -475,9 +491,11 @@ export const EPISODES: EpisodeDef[] = [
     },
     decor: "funrun",
     introOverrides: {
-      michael: "Esta mañana atropellé a Meredith… ¡pero fue para salvarle la vida y descubrir que tiene rabia!",
+      michael:
+        "Esta mañana atropellé a Meredith… ¡pero fue para salvarle la vida y descubrir que tiene rabia!",
       jim: "Pam y yo por fin salimos juntos. Y sí, Karen se mudó a Utica y Ryan manda en Nueva York.",
-      meredith: "Una pequeña fractura de pelvis no va a impedir que termine un batido… digo, la carrera.",
+      meredith:
+        "Una pequeña fractura de pelvis no va a impedir que termine un batido… digo, la carrera.",
       angela: "Mi gato Sprinkles está en el congelador. No me hagas hablar con Dwight hoy.",
     },
     openingToast:
@@ -485,7 +503,9 @@ export const EPISODES: EpisodeDef[] = [
   },
 ];
 
-export const EPISODE_BY_ID: Record<string, EpisodeDef> = Object.fromEntries(EPISODES.map((e) => [e.id, e]));
+export const EPISODE_BY_ID: Record<string, EpisodeDef> = Object.fromEntries(
+  EPISODES.map((e) => [e.id, e]),
+);
 
 export function episodeById(id: string | null | undefined): EpisodeDef | null {
   return id ? (EPISODE_BY_ID[id] ?? null) : null;
@@ -501,113 +521,242 @@ function EC(
   duration: number,
   lines: L[],
 ): ConversationDef {
-  return { id, title, who, spot, at: t(at), duration, lines: lines.map(([w, text]) => ({ who: w, text })) };
+  return {
+    id,
+    title,
+    who,
+    spot,
+    at: t(at),
+    duration,
+    lines: lines.map(([w, text]) => ({ who: w, text })),
+  };
 }
 
 export const EPISODE_CONVERSATIONS: Record<string, ConversationDef[]> = {
   s1e2: [
-    EC("ep_s1e2_div", "Michael y Oscar en el seminario", ["michael", "oscar"], "conf_s1", "09:40", 35, [
-      ["michael", "Oscar, con total sinceridad: ¿hay algún término que prefieras?"],
-      ["oscar", "Mi nombre. Oscar. Llevo años trabajando contigo, Michael."],
-      ["michael", "Ya, pero por si quieres una etiqueta más festiva. Como «latino picante»."],
-      ["oscar", "Me voy a mi mesa."],
-    ]),
+    EC(
+      "ep_s1e2_div",
+      "Michael y Oscar en el seminario",
+      ["michael", "oscar"],
+      "conf_s1",
+      "09:40",
+      35,
+      [
+        ["michael", "Oscar, con total sinceridad: ¿hay algún término que prefieras?"],
+        ["oscar", "Mi nombre. Oscar. Llevo años trabajando contigo, Michael."],
+        ["michael", "Ya, pero por si quieres una etiqueta más festiva. Como «latino picante»."],
+        ["oscar", "Me voy a mi mesa."],
+      ],
+    ),
   ],
   s1e4: [
-    EC("ep_s1e4_ally", "La alianza de Dwight y Jim", ["dwight", "jim"], "bullpen_mid", "10:15", 35, [
-      ["dwight", "Jim, tú y yo formamos la última línea de defensa frente a los despidos."],
-      ["jim", "Totalmente de acuerdo. Propongo que vigiles el pasillo escondido en una caja."],
-      ["dwight", "Una caja de cartón doble. Genial. Nadie sospechará de ella."],
-      ["jim", "Nadie en absoluto, Dwight."],
-    ]),
+    EC(
+      "ep_s1e4_ally",
+      "La alianza de Dwight y Jim",
+      ["dwight", "jim"],
+      "bullpen_mid",
+      "10:15",
+      35,
+      [
+        ["dwight", "Jim, tú y yo formamos la última línea de defensa frente a los despidos."],
+        ["jim", "Totalmente de acuerdo. Propongo que vigiles el pasillo escondido en una caja."],
+        ["dwight", "Una caja de cartón doble. Genial. Nadie sospechará de ella."],
+        ["jim", "Nadie en absoluto, Dwight."],
+      ],
+    ),
   ],
   s2e5: [
-    EC("ep_s2e5_devon", "Creed convence a Michael sobre Devon", ["creed", "devon"], "copier", "11:15", 35, [
-      ["devon", "¿Has oído eso? RRHH exige que alguien sea despedido hoy mismo."],
-      ["creed", "Una pena tremenda. Yo ya tengo 80 años, bueno, casi. Me da igual."],
-      ["devon", "Michael acaba de decirme que pase a su despacho después de comer…"],
-      ["creed", "Ánimo, chaval. Te llevaré siempre en el corazón."],
-    ]),
+    EC(
+      "ep_s2e5_devon",
+      "Creed convence a Michael sobre Devon",
+      ["creed", "devon"],
+      "copier",
+      "11:15",
+      35,
+      [
+        ["devon", "¿Has oído eso? RRHH exige que alguien sea despedido hoy mismo."],
+        ["creed", "Una pena tremenda. Yo ya tengo 80 años, bueno, casi. Me da igual."],
+        ["devon", "Michael acaba de decirme que pase a su despacho después de comer…"],
+        ["creed", "Ánimo, chaval. Te llevaré siempre en el corazón."],
+      ],
+    ),
   ],
   s2e22: [
-    EC("ep_s2e22_casino", "Kevin prepara su mesa de póquer", ["kevin", "jim"], "warehouse_a", "10:25", 35, [
-      ["kevin", "Esta noche en la Noche de Casino voy a ganarles a todos al Texas Hold'em."],
-      ["jim", "Ganaste un brazalete en Las Vegas, Kevin. Confío en ti."],
-      ["kevin", "Solo necesito que Michael no reparta las cartas mirando los espejos."],
-      ["jim", "Eso no lo puedo prometer."],
-    ]),
+    EC(
+      "ep_s2e22_casino",
+      "Kevin prepara su mesa de póquer",
+      ["kevin", "jim"],
+      "warehouse_a",
+      "10:25",
+      35,
+      [
+        ["kevin", "Esta noche en la Noche de Casino voy a ganarles a todos al Texas Hold'em."],
+        ["jim", "Ganaste un brazalete en Las Vegas, Kevin. Confío en ti."],
+        ["kevin", "Solo necesito que Michael no reparta las cartas mirando los espejos."],
+        ["jim", "Eso no lo puedo prometer."],
+      ],
+    ),
   ],
   s3e1: [
-    EC("ep_s3e1_ryan", "Ryan y Dwight estrenan mesa vecina", ["dwight", "ryan"], "bullpen_mid", "09:35", 35, [
-      ["dwight", "Escucha bien, chaval: que te sientes en la mesa de Jim no te convierte en Jim."],
-      ["ryan", "Por suerte para mí. Solo quiero vender papel y terminar mi máster."],
-      ["dwight", "No pongas bolígrafos en mi lado de la línea imaginaria."],
-      ["ryan", "No pensaba ni mirarte, Dwight."],
-    ]),
+    EC(
+      "ep_s3e1_ryan",
+      "Ryan y Dwight estrenan mesa vecina",
+      ["dwight", "ryan"],
+      "bullpen_mid",
+      "09:35",
+      35,
+      [
+        [
+          "dwight",
+          "Escucha bien, chaval: que te sientes en la mesa de Jim no te convierte en Jim.",
+        ],
+        ["ryan", "Por suerte para mí. Solo quiero vender papel y terminar mi máster."],
+        ["dwight", "No pongas bolígrafos en mi lado de la línea imaginaria."],
+        ["ryan", "No pensaba ni mirarte, Dwight."],
+      ],
+    ),
   ],
   s3e8: [
-    EC("ep_s3e8_tony", "Tony Gardner aguanta la bienvenida", ["michael", "tony"], "conf_s1", "09:40", 35, [
-      ["michael", "¡Arriba ese ánimo, Stamford! Tony, sube a la mesa para que te vean todos."],
-      ["tony", "Michael, no voy a subirme a esa mesa. Me duele la espalda y acabo de llegar."],
-      ["michael", "¡Dwight, ayúdame a levantarle! ¡Es trabajo en equipo!"],
-      ["tony", "Bájame ahora mismo o recojo mi caja y me vuelvo a Connecticut."],
-    ]),
-    EC("ep_s3e8_andy_dwight", "Andy imita a Dwight", ["andy", "dwight"], "bullpen_mid", "11:00", 35, [
-      ["andy", "Oye, tío, tú y yo somos los dos gallos del corral. Cornell clase del 95."],
-      ["dwight", "Falso. En un gallinero solo hay un macho dominante, y soy yo."],
-      ["andy", "Exacto, técnica del espejo. Me gustas, bigote."],
-      ["dwight", "No tengo bigote."],
-    ]),
+    EC(
+      "ep_s3e8_tony",
+      "Tony Gardner aguanta la bienvenida",
+      ["michael", "tony"],
+      "conf_s1",
+      "09:40",
+      35,
+      [
+        ["michael", "¡Arriba ese ánimo, Stamford! Tony, sube a la mesa para que te vean todos."],
+        ["tony", "Michael, no voy a subirme a esa mesa. Me duele la espalda y acabo de llegar."],
+        ["michael", "¡Dwight, ayúdame a levantarle! ¡Es trabajo en equipo!"],
+        ["tony", "Bájame ahora mismo o recojo mi caja y me vuelvo a Connecticut."],
+      ],
+    ),
+    EC(
+      "ep_s3e8_andy_dwight",
+      "Andy imita a Dwight",
+      ["andy", "dwight"],
+      "bullpen_mid",
+      "11:00",
+      35,
+      [
+        ["andy", "Oye, tío, tú y yo somos los dos gallos del corral. Cornell clase del 95."],
+        ["dwight", "Falso. En un gallinero solo hay un macho dominante, y soy yo."],
+        ["andy", "Exacto, técnica del espejo. Me gustas, bigote."],
+        ["dwight", "No tengo bigote."],
+      ],
+    ),
   ],
   s3e9: [
-    EC("ep_s3e9_prison", "Martin charla con Kevin tras Prison Mike", ["martin", "kevin"], "kitchen_mid", "10:30", 35, [
-      ["kevin", "Martin, ¿de verdad en prisión no hay patatas fritas de máquina?"],
-      ["martin", "Kevin, la oficina tiene peor comida que el módulo B. En serio."],
-      ["kevin", "Guau. ¿Y también tienen un jefe con pañuelo morado?"],
-      ["martin", "Por suerte no. Prison Mike es único en el país."],
-    ]),
-    EC("ep_s3e9_hannah", "Hannah choca con Angela", ["hannah", "angela"], "accounting_mid", "13:15", 35, [
-      ["angela", "Tus fotos familiares ocupan espacio reglamentario en nuestra zona."],
-      ["hannah", "Es una foto de mi hijo, Angela. Tú tienes dieciséis calendarios de gatos."],
-      ["angela", "Los gatos guardan silencio y no interrumpen las auditorías."],
-      ["hannah", "A ver si aguantas todo el trimestre mirándome mal."],
-    ]),
+    EC(
+      "ep_s3e9_prison",
+      "Martin charla con Kevin tras Prison Mike",
+      ["martin", "kevin"],
+      "kitchen_mid",
+      "10:30",
+      35,
+      [
+        ["kevin", "Martin, ¿de verdad en prisión no hay patatas fritas de máquina?"],
+        ["martin", "Kevin, la oficina tiene peor comida que el módulo B. En serio."],
+        ["kevin", "Guau. ¿Y también tienen un jefe con pañuelo morado?"],
+        ["martin", "Por suerte no. Prison Mike es único en el país."],
+      ],
+    ),
+    EC(
+      "ep_s3e9_hannah",
+      "Hannah choca con Angela",
+      ["hannah", "angela"],
+      "accounting_mid",
+      "13:15",
+      35,
+      [
+        ["angela", "Tus fotos familiares ocupan espacio reglamentario en nuestra zona."],
+        ["hannah", "Es una foto de mi hijo, Angela. Tú tienes dieciséis calendarios de gatos."],
+        ["angela", "Los gatos guardan silencio y no interrumpen las auditorías."],
+        ["hannah", "A ver si aguantas todo el trimestre mirándome mal."],
+      ],
+    ),
   ],
   s3e13: [
-    EC("ep_s3e13_phone", "Jim y Pam traman la broma del techo", ["jim", "pam"], "reception_front", "09:35", 35, [
-      ["jim", "Tengo el móvil de Andy en mi mano y lo he puesto en modo vibración con un rock estridente."],
-      ["pam", "¿Dónde lo piensas esconder esta vez? ¿En el baño?"],
-      ["jim", "Justo encima de su mesa… dentro de las placas del falso techo."],
-      ["pam", "Andy lleva dos días al borde de un ataque. Esto va a ser épico."],
-    ]),
-    EC("ep_s3e13_oscar", "Oscar vuelve y saluda a Kevin", ["oscar", "kevin"], "accounting_mid", "10:55", 30, [
-      ["kevin", "¡Oscar! Creía que te habías comprado una casa en Europa con la empresa."],
-      ["oscar", "Solo estuve tres meses fuera, Kevin. ¿Quién está sentado en la mesa de Dwight?"],
-      ["kevin", "Andy. Dice «ri-dit-dit-di-do» cada cuatro minutos."],
-      ["oscar", "Casi prefiero la visita con Jan."],
-    ]),
+    EC(
+      "ep_s3e13_phone",
+      "Jim y Pam traman la broma del techo",
+      ["jim", "pam"],
+      "reception_front",
+      "09:35",
+      35,
+      [
+        [
+          "jim",
+          "Tengo el móvil de Andy en mi mano y lo he puesto en modo vibración con un rock estridente.",
+        ],
+        ["pam", "¿Dónde lo piensas esconder esta vez? ¿En el baño?"],
+        ["jim", "Justo encima de su mesa… dentro de las placas del falso techo."],
+        ["pam", "Andy lleva dos días al borde de un ataque. Esto va a ser épico."],
+      ],
+    ),
+    EC(
+      "ep_s3e13_oscar",
+      "Oscar vuelve y saluda a Kevin",
+      ["oscar", "kevin"],
+      "accounting_mid",
+      "10:55",
+      30,
+      [
+        ["kevin", "¡Oscar! Creía que te habías comprado una casa en Europa con la empresa."],
+        ["oscar", "Solo estuve tres meses fuera, Kevin. ¿Quién está sentado en la mesa de Dwight?"],
+        ["kevin", "Andy. Dice «ri-dit-dit-di-do» cada cuatro minutos."],
+        ["oscar", "Casi prefiero la visita con Jan."],
+      ],
+    ),
   ],
   s3e19: [
-    EC("ep_s3e19_drew", "Andy intenta que le llamen Drew", ["andy", "jim"], "bullpen_east", "10:15", 35, [
-      ["andy", "Jim, un nuevo comienzo: a partir de hoy me llamo Drew."],
-      ["jim", "No pienso llamarte así, Andy."],
-      ["andy", "Vale… no me enfado. Respiro hondo. Eso fue genial, progreso enorme."],
-      ["jim", "Suenas muy relajado, Andy."],
-    ]),
+    EC(
+      "ep_s3e19_drew",
+      "Andy intenta que le llamen Drew",
+      ["andy", "jim"],
+      "bullpen_east",
+      "10:15",
+      35,
+      [
+        ["andy", "Jim, un nuevo comienzo: a partir de hoy me llamo Drew."],
+        ["jim", "No pienso llamarte así, Andy."],
+        ["andy", "Vale… no me enfado. Respiro hondo. Eso fue genial, progreso enorme."],
+        ["jim", "Suenas muy relajado, Andy."],
+      ],
+    ),
   ],
   s4e1: [
-    EC("ep_s4e1_run", "Jim y Pam planean no correr demasiado", ["jim", "pam"], "reception_front", "09:40", 35, [
-      ["jim", "Michael nos acaba de apuntar a cinco kilómetros contra la rabia porque atropelló a Meredith."],
-      ["pam", "Mientras podamos parar a por un café por el camino, me apunto."],
-      ["jim", "He visto que Andy se ha puesto tiritas en el pecho para la carrera."],
-      ["pam", "Pobre Andy. Bueno, hoy celebramos nuestro aniversario de equipo."],
-    ]),
-    EC("ep_s4e1_angela", "Dwight intenta reconciliarse con Angela", ["dwight", "angela"], "fridge", "10:35", 35, [
-      ["angela", "No me hables después de lo que le hiciste a Sprinkles, Dwight."],
-      ["dwight", "Era un gato enfermo. Le di paz en el congelador junto a los guisantes."],
-      ["angela", "¡Eres un monstruo sin alma! Vuelve a tu mesa."],
-      ["dwight", "Le traje otro gato llamado Garbage del granero. Se parece mucho."],
-    ]),
+    EC(
+      "ep_s4e1_run",
+      "Jim y Pam planean no correr demasiado",
+      ["jim", "pam"],
+      "reception_front",
+      "09:40",
+      35,
+      [
+        [
+          "jim",
+          "Michael nos acaba de apuntar a cinco kilómetros contra la rabia porque atropelló a Meredith.",
+        ],
+        ["pam", "Mientras podamos parar a por un café por el camino, me apunto."],
+        ["jim", "He visto que Andy se ha puesto tiritas en el pecho para la carrera."],
+        ["pam", "Pobre Andy. Bueno, hoy celebramos nuestro aniversario de equipo."],
+      ],
+    ),
+    EC(
+      "ep_s4e1_angela",
+      "Dwight intenta reconciliarse con Angela",
+      ["dwight", "angela"],
+      "fridge",
+      "10:35",
+      35,
+      [
+        ["angela", "No me hables después de lo que le hiciste a Sprinkles, Dwight."],
+        ["dwight", "Era un gato enfermo. Le di paz en el congelador junto a los guisantes."],
+        ["angela", "¡Eres un monstruo sin alma! Vuelve a tu mesa."],
+        ["dwight", "Le traje otro gato llamado Garbage del granero. Se parece mucho."],
+      ],
+    ),
   ],
 };
 
@@ -618,11 +767,24 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "Tarjetas del Día de la Diversidad",
       giver: "michael",
       requires: ["intro"],
-      offer: "Necesito la nota de las tarjetas para el seminario de la sala de reuniones. Tráemela ya.",
+      offer:
+        "Necesito la nota de las tarjetas para el seminario de la sala de reuniones. Tráemela ya.",
       desc: "Recoge la nota del seminario en la sala de reuniones y llévasela a Michael.",
       steps: [
-        { kind: "object", target: "memo", gives: "memo", text: "Recoge la nota en la sala de reuniones", found: "Pone: «Recordatorio: escuchar al Sr. Brown… o hacer lo contrario»." },
-        { kind: "talk", target: "michael", needs: "memo", text: "Entrega la nota a Michael", line: "¡Fantástico! Vamos a abrir mentes hoy. Con humor y respeto." },
+        {
+          kind: "object",
+          target: "memo",
+          gives: "memo",
+          text: "Recoge la nota en la sala de reuniones",
+          found: "Pone: «Recordatorio: escuchar al Sr. Brown… o hacer lo contrario».",
+        },
+        {
+          kind: "talk",
+          target: "michael",
+          needs: "memo",
+          text: "Entrega la nota a Michael",
+          line: "¡Fantástico! Vamos a abrir mentes hoy. Con humor y respeto.",
+        },
       ],
       reward: { rep: 3 },
       doneLine: "Michael tiene su guion improvisado.",
@@ -634,11 +796,24 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "Preparar la Noche de Casino",
       giver: "kevin",
       requires: ["intro"],
-      offer: "Faltan fichas y adornos para montar el almacén de Noche de Casino. ¿Coges la caja de decoración?",
+      offer:
+        "Faltan fichas y adornos para montar el almacén de Noche de Casino. ¿Coges la caja de decoración?",
       desc: "Recoge la caja de decoración y llévasela a Darryl en el almacén.",
       steps: [
-        { kind: "object", target: "party_box", gives: "decor", text: "Coge la caja de decoración (comité de fiestas)", found: "Barajas de cartas, dados y billetes con la cara de Michael." },
-        { kind: "talk", target: "darryl", needs: "decor", text: "Lleva la caja a Darryl al almacén", line: "Perfecto. Esta noche convertimos el muelle en Las Vegas de Pensilvania." },
+        {
+          kind: "object",
+          target: "party_box",
+          gives: "decor",
+          text: "Coge la caja de decoración (comité de fiestas)",
+          found: "Barajas de cartas, dados y billetes con la cara de Michael.",
+        },
+        {
+          kind: "talk",
+          target: "darryl",
+          needs: "decor",
+          text: "Lleva la caja a Darryl al almacén",
+          line: "Perfecto. Esta noche convertimos el muelle en Las Vegas de Pensilvania.",
+        },
       ],
       reward: { rep: 3, money: 25 },
       doneLine: "El almacén ya huele a póquer.",
@@ -650,12 +825,25 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "Primer informe desde la mesa de Jim",
       giver: "ryan",
       requires: ["intro"],
-      offer: "Ahora que ocupo la mesa de Jim tengo que demostrar que vendo más que él. Imprime dos ventas y tráeme el informe.",
+      offer:
+        "Ahora que ocupo la mesa de Jim tengo que demostrar que vendo más que él. Imprime dos ventas y tráeme el informe.",
       desc: "Cierra 2 ventas, recoge el informe de la impresora y dáselo a Ryan.",
       steps: [
         { kind: "sales", count: 2, text: "Cierra 2 ventas en tu ordenador" },
-        { kind: "object", target: "report", gives: "report", text: "Recoge el informe en la impresora", found: "Informe trimestral. Ryan ha subrayado su nombre en rojo." },
-        { kind: "talk", target: "ryan", needs: "report", text: "Entrega el informe a Ryan", line: "Perfecto. Que nadie diga que echo de menos a Jim aquí delante." },
+        {
+          kind: "object",
+          target: "report",
+          gives: "report",
+          text: "Recoge el informe en la impresora",
+          found: "Informe trimestral. Ryan ha subrayado su nombre en rojo.",
+        },
+        {
+          kind: "talk",
+          target: "ryan",
+          needs: "report",
+          text: "Entrega el informe a Ryan",
+          line: "Perfecto. Que nadie diga que echo de menos a Jim aquí delante.",
+        },
       ],
       reward: { rep: 4, money: 20 },
       doneLine: "Ryan defiende su ascenso.",
@@ -667,12 +855,30 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "Bienvenida a Stamford",
       giver: "karen",
       requires: ["intro"],
-      offer: "Acabamos de mudarnos cinco personas desde Stamford y nadie sabe dónde está nada. Consíguenos bolígrafos y preséntate a Andy.",
+      offer:
+        "Acabamos de mudarnos cinco personas desde Stamford y nadie sabe dónde está nada. Consíguenos bolígrafos y preséntate a Andy.",
       desc: "Recoge material en recepción, preséntate a Andy en Contabilidad y avisa a Karen.",
       steps: [
-        { kind: "object", target: "pen", gives: "pen", text: "Coge el bolígrafo extra en recepción", found: "Un bolígrafo azul nuevo y una nota de Pam: «Ánimo con la mudanza»." },
-        { kind: "talk", target: "andy", needs: "pen", text: "Dale el bolígrafo a Andy (ahora sentado en Contabilidad)", line: "¡Un boli de recepción! Ri-dit-dit-di-do. Eres mi persona favorita de Scranton." },
-        { kind: "talk", target: "karen", text: "Confírmaselo a Karen", line: "Genial, gracias. Ya solo nos falta sobrevivir al vídeo de Michael." },
+        {
+          kind: "object",
+          target: "pen",
+          gives: "pen",
+          text: "Coge el bolígrafo extra en recepción",
+          found: "Un bolígrafo azul nuevo y una nota de Pam: «Ánimo con la mudanza».",
+        },
+        {
+          kind: "talk",
+          target: "andy",
+          needs: "pen",
+          text: "Dale el bolígrafo a Andy (ahora sentado en Contabilidad)",
+          line: "¡Un boli de recepción! Ri-dit-dit-di-do. Eres mi persona favorita de Scranton.",
+        },
+        {
+          kind: "talk",
+          target: "karen",
+          text: "Confírmaselo a Karen",
+          line: "Genial, gracias. Ya solo nos falta sobrevivir al vídeo de Michael.",
+        },
       ],
       reward: { rep: 4 },
       doneLine: "El equipo de Stamford ya tiene lo básico.",
@@ -682,10 +888,17 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "Calmar a Tony Gardner",
       giver: "tony",
       requires: ["intro"],
-      offer: "Si Michael vuelve a acercarse con otro discurso de bienvenida me da algo. Tráeme un refresco de la máquina antes de que dimita.",
+      offer:
+        "Si Michael vuelve a acercarse con otro discurso de bienvenida me da algo. Tráeme un refresco de la máquina antes de que dimita.",
       desc: "Compra un refresco de cola en las máquinas expendedoras y dáselo a Tony.",
       steps: [
-        { kind: "talk", target: "tony", needs: "soda", text: "Compra un refresco en la máquina y llévaselo a Tony", line: "Gracias… pero me temo que en cuanto diga otra palabra sobre mesas, cojo la puerta." },
+        {
+          kind: "talk",
+          target: "tony",
+          needs: "soda",
+          text: "Compra un refresco en la máquina y llévaselo a Tony",
+          line: "Gracias… pero me temo que en cuanto diga otra palabra sobre mesas, cojo la puerta.",
+        },
       ],
       reward: { rep: 3 },
       doneLine: "Tony agradece el detalle.",
@@ -697,11 +910,22 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "Investigación de Prison Mike",
       giver: "martin",
       requires: ["intro"],
-      offer: "Michael no para de preguntar qué se come en la cárcel. Coge la pizarra de la sala de reuniones para ver qué ha dibujado.",
+      offer:
+        "Michael no para de preguntar qué se come en la cárcel. Coge la pizarra de la sala de reuniones para ver qué ha dibujado.",
       desc: "Revisa la pizarra de la sala de reuniones y cuéntaselo a Martin.",
       steps: [
-        { kind: "object", target: "whiteboard", text: "Revisa la pizarra de la sala de reuniones", found: "Pone: «MENÚ PRISIÓN: Gachas. PELIGROS: Dementores»." },
-        { kind: "talk", target: "martin", text: "Cuéntaselo a Martin Nash", line: "Lo que faltaba… Dementores. Al menos en la cárcel nadie hacía PowerPoints." },
+        {
+          kind: "object",
+          target: "whiteboard",
+          text: "Revisa la pizarra de la sala de reuniones",
+          found: "Pone: «MENÚ PRISIÓN: Gachas. PELIGROS: Dementores».",
+        },
+        {
+          kind: "talk",
+          target: "martin",
+          text: "Cuéntaselo a Martin Nash",
+          line: "Lo que faltaba… Dementores. Al menos en la cárcel nadie hacía PowerPoints.",
+        },
       ],
       reward: { rep: 3 },
       doneLine: "Martin confirma que Prison Mike no tiene remedio.",
@@ -713,11 +937,24 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "El móvil oculto de Andy",
       giver: "jim",
       requires: ["intro"],
-      offer: "Andy está sentado en el escritorio de Dwight y no para de cantar. Coge cinta o notas en la sala de reuniones para nuestra trampa.",
+      offer:
+        "Andy está sentado en el escritorio de Dwight y no para de cantar. Coge cinta o notas en la sala de reuniones para nuestra trampa.",
       desc: "Recoge la nota de la sala de reuniones y dásela a Jim para completar la broma del techo.",
       steps: [
-        { kind: "object", target: "memo", gives: "memo", text: "Coge la nota de trucos en la sala de reuniones", found: "Instrucciones de Jim: «1. Llamar al móvil. 2. Mirar al techo con cara inocente»." },
-        { kind: "talk", target: "jim", needs: "memo", text: "Lleva la nota a Jim", line: "¡Justo a tiempo! Acaba de empezar a sonar el falso techo y Andy está mirando los tubos." },
+        {
+          kind: "object",
+          target: "memo",
+          gives: "memo",
+          text: "Coge la nota de trucos en la sala de reuniones",
+          found: "Instrucciones de Jim: «1. Llamar al móvil. 2. Mirar al techo con cara inocente».",
+        },
+        {
+          kind: "talk",
+          target: "jim",
+          needs: "memo",
+          text: "Lleva la nota a Jim",
+          line: "¡Justo a tiempo! Acaba de empezar a sonar el falso techo y Andy está mirando los tubos.",
+        },
       ],
       reward: { rep: 4 },
       doneLine: "«¿Quién ha escondido mi móvil en el techo?!»",
@@ -729,11 +966,24 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "Paz para «Drew»",
       giver: "andy",
       requires: ["intro"],
-      offer: "Quiero demostrar que ya controlo mis nervios. Ayúdame llevando el formulario de seguimiento a Toby sin perder la calma.",
+      offer:
+        "Quiero demostrar que ya controlo mis nervios. Ayúdame llevando el formulario de seguimiento a Toby sin perder la calma.",
       desc: "Coge el formulario del anexo y entrégaselo a Toby.",
       steps: [
-        { kind: "object", target: "form", gives: "form", text: "Coge el formulario de RRHH en el anexo", found: "Certificado de «Gestión de la Ira — Superado con éxito (Drew)»." },
-        { kind: "talk", target: "toby", needs: "form", text: "Entrega el formulario a Toby", line: "Bien, Andy… perdón, Drew. Lo archivaré junto a la foto del agujero en la pared." },
+        {
+          kind: "object",
+          target: "form",
+          gives: "form",
+          text: "Coge el formulario de RRHH en el anexo",
+          found: "Certificado de «Gestión de la Ira — Superado con éxito (Drew)».",
+        },
+        {
+          kind: "talk",
+          target: "toby",
+          needs: "form",
+          text: "Entrega el formulario a Toby",
+          line: "Bien, Andy… perdón, Drew. Lo archivaré junto a la foto del agujero en la pared.",
+        },
       ],
       reward: { rep: 3 },
       doneLine: "Drew mantiene la respiración tranquila.",
@@ -745,11 +995,25 @@ export const EPISODE_MISSIONS: Record<string, MissionDef[]> = {
       title: "Dorsales del Fun Run",
       giver: "pam",
       requires: ["intro"],
-      offer: "Michael quiere correr 5 kilómetros ahora mismo contra la rabia. Trae la caja de decoración para repartir los dorsales y un agua para Meredith.",
+      offer:
+        "Michael quiere correr 5 kilómetros ahora mismo contra la rabia. Trae la caja de decoración para repartir los dorsales y un agua para Meredith.",
       desc: "Recoge los dorsales en el comité de fiestas y llévaselos a Pam en recepción.",
       steps: [
-        { kind: "object", target: "party_box", gives: "decor", text: "Coge los dorsales y cintas (comité de fiestas)", found: "Dorsales con un texto larguísimo: «Dunder Mifflin Scranton Meredith Palmer Memorial…»." },
-        { kind: "talk", target: "pam", needs: "decor", text: "Lleva los dorsales a Pam", line: "¡Gracias! A ver quién aguanta sin vomitar pasta con salsa Alfredo." },
+        {
+          kind: "object",
+          target: "party_box",
+          gives: "decor",
+          text: "Coge los dorsales y cintas (comité de fiestas)",
+          found:
+            "Dorsales con un texto larguísimo: «Dunder Mifflin Scranton Meredith Palmer Memorial…».",
+        },
+        {
+          kind: "talk",
+          target: "pam",
+          needs: "decor",
+          text: "Lleva los dorsales a Pam",
+          line: "¡Gracias! A ver quién aguanta sin vomitar pasta con salsa Alfredo.",
+        },
       ],
       reward: { rep: 4 },
       doneLine: "Todo listo para la Carrera contra la Rabia.",

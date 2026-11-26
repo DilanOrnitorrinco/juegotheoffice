@@ -35,8 +35,12 @@ const RAW: RawScene[] = [
     "Jefe",
     "¡Alto todo el mundo! Ya ha llegado la persona nueva. Mírame a los ojos y dime qué ves.",
     "Exacto: ves al «World's Best Boss». La taza me la compré yo mismo en Spencer Gifts, pero la intención es lo que cuenta.",
-    ["Es un honor, señor.", "¡Eso suena genial!", "¿Viene con café gratis?", ],
-    ["No me llames señor, llámame Michael… o capitán.", "¡Esa es la actitud! Vamos a ser mejores amigos.", "El café cuesta sudor… bueno no, está en la cocina."],
+    ["Es un honor, señor.", "¡Eso suena genial!", "¿Viene con café gratis?"],
+    [
+      "No me llames señor, llámame Michael… o capitán.",
+      "¡Esa es la actitud! Vamos a ser mejores amigos.",
+      "El café cuesta sudor… bueno no, está en la cocina.",
+    ],
     "Bienvenido a Dunder Mifflin Scranton. Aquí no vendemos papel: vendemos sueños en paquetes de 500 hojas.",
   ],
   [
@@ -46,7 +50,11 @@ const RAW: RawScene[] = [
     "Pregunta rápida de primer día, sin presiones: ¿preferirías ser temido o amado?",
     "Fácil. Quiero que la gente tenga miedo de lo mucho que me quiere. Lo aprendí viendo documentales de tiburones.",
     ["Que me teman un poco.", "Que me quieran mucho.", "Solo quiero cobrar a fin de mes."],
-    ["Uy, energía de Dwight. Me das respeto y un poco de escalofrío.", "Igual que yo. Prepárate para abrazos incómodos.", "Stanley te va a adorar. Ya sois almas gemelas."],
+    [
+      "Uy, energía de Dwight. Me das respeto y un poco de escalofrío.",
+      "Igual que yo. Prepárate para abrazos incómodos.",
+      "Stanley te va a adorar. Ya sois almas gemelas.",
+    ],
     "Tu mesa está en Ventas. Si necesitas algo, grita «¡Michael!» o envíame un meme.",
   ],
   [
@@ -56,7 +64,11 @@ const RAW: RawScene[] = [
     "¡PARKOUR! ¡Acabo de saltar por encima de la fotocopiadora imaginaria para darte la bienvenida!",
     "En Dunder Mifflin nos movemos rápido. De la recepción a la sala de reuniones… ¡PARKOUR!",
     ["¡Parkour!", "Ten cuidado con la espalda.", "¿Eso entra en riesgos laborales?"],
-    ["¡SÍ! ¡Ya eres de los nuestros! ¡Parkour!", "Los jefes jóvenes como yo no tenemos lumbago. A veces.", "Toby dice que no, así que definitivamente sí."],
+    [
+      "¡SÍ! ¡Ya eres de los nuestros! ¡Parkour!",
+      "Los jefes jóvenes como yo no tenemos lumbago. A veces.",
+      "Toby dice que no, así que definitivamente sí.",
+    ],
     "Ponte cómodo, pero no demasiado, que luego toca hacer llamadas de verdad.",
   ],
   [
@@ -66,7 +78,11 @@ const RAW: RawScene[] = [
     "Bienvenido al paraíso del papel. Antes de enseñarte tu mesa, tenemos que hablar de la única plaga del edificio.",
     "Se llama Toby Flenderson, vive en el Anexo y es de Recursos Humanos. Si te ofrece ayuda, corre.",
     ["¿Tan malo es?", "Intentaré no hablarle mucho.", "¿Y si necesito una baja?"],
-    ["Es como intentar hacerse amigo de un caracol triste.", "Perfecto. Ya has aprobado el noventa por ciento del primer día.", "Me lo pides a mí y te receto dos tiritas y un chiste."],
+    [
+      "Es como intentar hacerse amigo de un caracol triste.",
+      "Perfecto. Ya has aprobado el noventa por ciento del primer día.",
+      "Me lo pides a mí y te receto dos tiritas y un chiste.",
+    ],
     "Ahora sí: respira hondo, huele a tóner fresco y empieza a brillar.",
   ],
   [
@@ -76,7 +92,11 @@ const RAW: RawScene[] = [
     "¡Por fin llegas! Me alegra verte entrar por esa puerta. Es grande, sólida y cuesta un poco abrirla al principio.",
     "…That's what she said. Perdón, era imposible dejarla pasar en tu primer día.",
     ["Muy bueno, Michael.", "Creo que RRHH nos está mirando.", "Anotado para la reunión."],
-    ["¡Gracias! Sabía que tendrías buen sentido del humor.", "Que mire Toby, total no tiene nada mejor que hacer.", "Así me gusta, espíritu corporativo y comedia fina."],
+    [
+      "¡Gracias! Sabía que tendrías buen sentido del humor.",
+      "Que mire Toby, total no tiene nada mejor que hacer.",
+      "Así me gusta, espíritu corporativo y comedia fina.",
+    ],
     "Ve a tu escritorio y demuestra que tienes tanto ingenio como yo.",
   ],
   [
@@ -86,7 +106,11 @@ const RAW: RawScene[] = [
     "Escúchame bien, novato. Aquí fuera parezco un jefe majo, pero también puedo ser… ¡PRISON MIKE!",
     "¡He sobrevivido a los dementores y a las gachas! ¿Sabes por qué no me atraparon? Porque vendía papel.",
     ["Qué miedo, Prison Mike.", "¿Dementores en Scranton?", "Prometo portarme bien."],
-    ["Más te vale. Aquí el respeto se gana con grapadoras.", "¡Volaban por todo el patio! ¡Chupaban el alma!", "Eso esperaba oír. Ahora quítate el miedo y saluda."],
+    [
+      "Más te vale. Aquí el respeto se gana con grapadoras.",
+      "¡Volaban por todo el patio! ¡Chupaban el alma!",
+      "Eso esperaba oír. Ahora quítate el miedo y saluda.",
+    ],
     "Vuelvo a ser Michael Scott. Si algún día alguien se pasa, ya sabes a quién llamar.",
     "partyHat",
   ],
@@ -97,7 +121,11 @@ const RAW: RawScene[] = [
     "¡No te muevas! Tienes justo la mirada que busco para el agente secundario de mi superproducción.",
     "Estoy rodando «Threat Level Midnight». Yo soy Michael Scarn. ¿Sabes hacer cara de explosión a cámara lenta?",
     ["Puedo intentarlo.", "Solo si hay catering.", "¿Dwight sale en la película?"],
-    ["¡Contratado para el papel de «Oficinista que sobrevive»!", "Hay un pretzel seco de ayer en la cocina, ¿sirve?", "Es mi fiel robot Samuel. Lo hace demasiado bien."],
+    [
+      "¡Contratado para el papel de «Oficinista que sobrevive»!",
+      "Hay un pretzel seco de ayer en la cocina, ¿sirve?",
+      "Es mi fiel robot Samuel. Lo hace demasiado bien.",
+    ],
     "Primero vende un par de resmas y luego hablamos de tu contrato de Hollywood.",
   ],
   [
@@ -107,7 +135,11 @@ const RAW: RawScene[] = [
     "¿Ves algún trofeo dorado brillando por los rincones? ¡Son los legendarios Premios Dundie!",
     "Cada año entrego premios tan prestigiosos como «Zapatos más blancos» o «Mejor sonrisa sin motivo».",
     ["Quiero ganar uno hoy.", "¿Dónde se celebran?", "¿Hay trofeos escondidos?"],
-    ["Si te esfuerzas, igual te cae el de «Mejor novato con pulso».", "En el Chili's, templo sagrado de la alta gastronomía.", "He escondido varios por la oficina. Búscalos luego."],
+    [
+      "Si te esfuerzas, igual te cae el de «Mejor novato con pulso».",
+      "En el Chili's, templo sagrado de la alta gastronomía.",
+      "He escondido varios por la oficina. Búscalos luego.",
+    ],
     "Empieza tu leyenda hoy mismo, futura estrella del Chili's.",
   ],
   [
@@ -117,7 +149,11 @@ const RAW: RawScene[] = [
     "¿Ves a ese hombre de camisa mostaza y gafas? Se llama Dwight. Cree que es mi mano derecha.",
     "En realidad es muy útil para asustar a los proveedores pesados y vigilar el microondas.",
     ["Parece muy intenso.", "¿Cultiva remolachas?", "Me llevaré bien con él."],
-    ["Es intensidad en estado puro. Como un halcón con corbata.", "Sí, y a veces las trae en bolsas sospechosas.", "Ten cuidado o te nombrará su asistente del asistente."],
+    [
+      "Es intensidad en estado puro. Como un halcón con corbata.",
+      "Sí, y a veces las trae en bolsas sospechosas.",
+      "Ten cuidado o te nombrará su asistente del asistente.",
+    ],
     "Si te pregunta por osos, dile que el oso negro es el mejor y ya te lo ganas.",
   ],
   [
@@ -127,7 +163,11 @@ const RAW: RawScene[] = [
     "¿Sabes cuál es el secreto de una empresa rentable? No son los números. Es la mesa de ping-pong del almacén.",
     "Si estás atascado con una venta, bajas, echas una partida y subes siendo un tiburón.",
     ["¿Darryl nos deja bajar?", "Soy bastante bueno.", "Mejor trabajo primero."],
-    ["Darryl dice que es suya, pero yo pago el sueldo… bueno, contabilidad.", "¡Reto aceptado para el descanso de las cuatro!", "Responsabilidad. Qué aburrido… pero me gusta."],
+    [
+      "Darryl dice que es suya, pero yo pago el sueldo… bueno, contabilidad.",
+      "¡Reto aceptado para el descanso de las cuatro!",
+      "Responsabilidad. Qué aburrido… pero me gusta.",
+    ],
     "Aquí abajo también pasan cosas grandes. No te quedes pegado a la silla.",
   ],
   [
@@ -137,7 +177,11 @@ const RAW: RawScene[] = [
     "¡SILENCIO EN RECEPCIÓN! Solo quería decirte que nuestra sucursal está financieramente sanísima.",
     "Por si escuchas rumores: gritar «¡Declaro la bancarrota!» en voz alta NO tiene validez legal. Comprobado.",
     ["Me quedo más tranquilo.", "¿Cuándo pasó eso?", "Oscar debe sufrir contigo."],
-    ["Bien, porque tu nómina está cien por cien asegurada… casi.", "La semana pasada, después de comprar un juego de magia.", "Oscar siempre hace «Actually…». Es agotador."],
+    [
+      "Bien, porque tu nómina está cien por cien asegurada… casi.",
+      "La semana pasada, después de comprar un juego de magia.",
+      "Oscar siempre hace «Actually…». Es agotador.",
+    ],
     "¡A vender papel se ha dicho, que hay que pagar la máquina de refrescos!",
   ],
   [
@@ -147,7 +191,11 @@ const RAW: RawScene[] = [
     "Consejo vital de primer día: si ves a Kevin caminando despacio con una olla gigante, apártate.",
     "Hace el mejor chili de Scranton, pero la moqueta todavía guarda traumas de la última vez.",
     ["Gracias por el aviso.", "¿Puedo probarlo si trae?", "Pobre moqueta."],
-    ["De nada. Un buen jefe salva vidas y pantalones.", "Si llega intacto a la mesa, estás invitado.", "La moqueta ha visto cosas peores que un chili."],
+    [
+      "De nada. Un buen jefe salva vidas y pantalones.",
+      "Si llega intacto a la mesa, estás invitado.",
+      "La moqueta ha visto cosas peores que un chili.",
+    ],
     "Anda, date una vuelta y conoce a Contabilidad antes de que sea mediodía.",
   ],
   [
@@ -157,7 +205,11 @@ const RAW: RawScene[] = [
     "A veces empiezo una frase y ni siquiera sé adónde va. Simplemente confío en encontrar el final por el camino.",
     "Como ahora mismo con tu bienvenida: tú acabas de llegar, yo soy el jefe, y… ¡boom! Ya te sientes en casa.",
     ["Ha funcionado bastante bien.", "Poesía pura.", "¿Tienes guion para hoy?"],
-    ["¿Lo ves? Improvisación nivel máster.", "Shakespeare vendería papel si pudiera.", "El guion soy yo. Y hoy improvisamos éxito."],
+    [
+      "¿Lo ves? Improvisación nivel máster.",
+      "Shakespeare vendería papel si pudiera.",
+      "El guion soy yo. Y hoy improvisamos éxito.",
+    ],
     "Ve hacia tu escritorio y escribe tu propia historia… o al menos un par de pedidos.",
   ],
   [
@@ -167,7 +219,11 @@ const RAW: RawScene[] = [
     "¿Has visto a Ryan? Es tan moderno, tiene barba cuidada y fue a la escuela de negocios.",
     "Algún día escribirán libros sobre su estilo. Tú intenta aprender de él, pero sin quitarme mi sitio de mejor amigo.",
     ["Es todo tuyo.", "¿No es becario?", "Parece ocupado mirando el móvil."],
-    ["Así se habla. La lealtad es sexy.", "Fue becario, luego joven promesa… es como una estrella del pop.", "Seguro que está inventando la próxima gran idea."],
+    [
+      "Así se habla. La lealtad es sexy.",
+      "Fue becario, luego joven promesa… es como una estrella del pop.",
+      "Seguro que está inventando la próxima gran idea.",
+    ],
     "En fin, no le distraigas mucho o se pondrá misterioso.",
   ],
   [
@@ -177,7 +233,11 @@ const RAW: RawScene[] = [
     "Escucha con atención: si alguna vez ves a Stanley sonriendo de oreja a oreja, solo puede significar una cosa.",
     "O es el Día del Pretzel o ha encontrado un crucigrama con pistas fáciles.",
     ["¿Tan serio es Stanley?", "Me apunto a los pretzels.", "No le molestaré entonces."],
-    ["Es el hombre más serio de Pensilvania salvo con masa salada gratis.", "Todos nos apuntamos. Es sagrado en este edificio.", "Sabia decisión. Déjale con su crucigrama en paz."],
+    [
+      "Es el hombre más serio de Pensilvania salvo con masa salada gratis.",
+      "Todos nos apuntamos. Es sagrado en este edificio.",
+      "Sabia decisión. Déjale con su crucigrama en paz.",
+    ],
     "Tu mejor baza para caerle bien: no preguntarle si está listo para la reunión.",
   ],
   [
@@ -187,7 +247,11 @@ const RAW: RawScene[] = [
     "Encantado de conocerte. Hoy soy el director, pero los viernes por la tarde me transformo en… Date Mike.",
     "Guiño incluido. «Encantado de conocerte. ¿Cómo te gusta tomarte tus huevos… o tus pedidos de papel?»",
     ["Qué clase, Date Mike.", "Me da un poco de miedo.", "¿Tienes gorra de Kangol?"],
-    ["Lo sé, es un don natural difícil de controlar.", "Es el efecto del carisma puro en dosis altas.", "En el coche. Solo la saco en ocasiones legendarias."],
+    [
+      "Lo sé, es un don natural difícil de controlar.",
+      "Es el efecto del carisma puro en dosis altas.",
+      "En el coche. Solo la saco en ocasiones legendarias.",
+    ],
     "Bueno, deja que el profesionalismo vuelva a la sala. ¡A trabajar!",
   ],
   [
@@ -197,7 +261,11 @@ const RAW: RawScene[] = [
     "¡Qué bien que llegas! Acabo de convocar una reunión urgente en la sala de conferencias para dentro de luego.",
     "¿De qué trata? Todavía no lo he decidido, pero habrá sillas en círculo y mucha emoción.",
     ["Ahí estaré.", "¿Puedo llevar café?", "¿No tenemos llamadas que hacer?"],
-    ["Me gusta esa puntualidad anticipada.", "Claro, y si ves a Kevin, que traiga galletas.", "Las llamadas pueden esperar; el espíritu de equipo no."],
+    [
+      "Me gusta esa puntualidad anticipada.",
+      "Claro, y si ves a Kevin, que traiga galletas.",
+      "Las llamadas pueden esperar; el espíritu de equipo no.",
+    ],
     "Cuando oigas gritar desde el despacho, ya sabes que toca improvisar.",
   ],
   [
@@ -207,7 +275,11 @@ const RAW: RawScene[] = [
     "Esta es Pam, la reina de recepción y mi secretaria ejecutiva de confianza.",
     "Pam, enséñale dónde están los clips buenos. Los malos son para Toby.",
     ["Encantado, Pam.", "¿Tú también pintas?", "¿Hay clips especiales?"],
-    ["Pam es un encanto, aunque a veces me cuelga el teléfono interno.", "Tiene cuadros preciosos. Hasta uno del edificio.", "Los de colores son nivel VIP. Acabas de desbloquearlos."],
+    [
+      "Pam es un encanto, aunque a veces me cuelga el teléfono interno.",
+      "Tiene cuadros preciosos. Hasta uno del edificio.",
+      "Los de colores son nivel VIP. Acabas de desbloquearlos.",
+    ],
     "Cualquier duda con el ordenador o los recados, pregunta por aquí.",
   ],
   [
@@ -217,7 +289,11 @@ const RAW: RawScene[] = [
     "Una advertencia: si oyes a alguien discutir sobre «Osos, remolachas y Battlestar Galactica», no intervengas.",
     "Es Jim imitando a Dwight. Llevan años así y a mí me sigue haciendo gracia cada vez.",
     ["Quiero verlo en directo.", "¿Quién gana normalmente?", "¿Puedo gastar bromas?"],
-    ["Quédate cerca de sus mesas y lo verás enseguida.", "Jim en comedia, Dwight en supervivencia rural.", "Si hablas con Jim, igual te mete en algún lío divertido."],
+    [
+      "Quédate cerca de sus mesas y lo verás enseguida.",
+      "Jim en comedia, Dwight en supervivencia rural.",
+      "Si hablas con Jim, igual te mete en algún lío divertido.",
+    ],
     "Solo recuerda: si ves una grapadora dentro de gelatina, yo no he visto nada.",
   ],
   [
@@ -227,7 +303,11 @@ const RAW: RawScene[] = [
     "En otras empresas te dan un manual de bienvenida de ochenta páginas. Qué frialdad.",
     "Aquí te doy un apretón de manos demasiado largo y te adopto oficialmente como hijo o primo laboral.",
     ["Gracias, papá Michael.", "Prefiero el apretón normal.", "¿Hay paga semanal?"],
-    ["¡Oh, eso ha llegado al corazón! Voy a llorar un poco.", "Vale, apretón estándar. Pero con contacto visual intenso.", "Si vendes bien hoy, quizás un vale del Chili's."],
+    [
+      "¡Oh, eso ha llegado al corazón! Voy a llorar un poco.",
+      "Vale, apretón estándar. Pero con contacto visual intenso.",
+      "Si vendes bien hoy, quizás un vale del Chili's.",
+    ],
     "Pasa, respira el aire acondicionado de Scranton y haz magia.",
   ],
   [
@@ -237,7 +317,11 @@ const RAW: RawScene[] = [
     "¡Observa mis manos! No hay nada aquí, no hay nada allá… ¡y tampoco encuentro las llaves de tus esposas de broma!",
     "Estaba preparando un truco de escapismo para darte la bienvenida, pero creo que la llave se cayó en el almacén.",
     ["¿Necesitas ayuda luego?", "Mejor sin esposas hoy.", "¿Houdini vendía papel?"],
-    ["Igual sí, pregúntame más tarde si sigo atascado.", "Qué conservador eres para tu primer día.", "Si hubiera vendido papel A4, aún seguiría vivo."],
+    [
+      "Igual sí, pregúntame más tarde si sigo atascado.",
+      "Qué conservador eres para tu primer día.",
+      "Si hubiera vendido papel A4, aún seguiría vivo.",
+    ],
     "Bueno, haz como que has visto aparecer una paloma y pasa a tu mesa.",
   ],
   [
@@ -247,7 +331,11 @@ const RAW: RawScene[] = [
     "¿Ves esa mesa tan ordenada en Contabilidad? Es Angela. Tiene más gatos que paciencia.",
     "Si hablas de fiestas, ella manda en el Comité de Planificación de Fiestas. No le lleves la contraria con el color del mantel.",
     ["Tomado nota.", "¿Cómo se llaman sus gatos?", "Me gustan los gatos."],
-    ["Buena memoria. Hay gente que sigue buscando las servilletas verdes.", "Bandido, Sprinkles, Princesa… es todo un imperio felino.", "Entonces dile que los manteles beige son elegantes y triunfas."],
+    [
+      "Buena memoria. Hay gente que sigue buscando las servilletas verdes.",
+      "Bandido, Sprinkles, Princesa… es todo un imperio felino.",
+      "Entonces dile que los manteles beige son elegantes y triunfas.",
+    ],
     "Sonríe mucho en Contabilidad, que les cuesta soltarse.",
   ],
   [
@@ -257,7 +345,11 @@ const RAW: RawScene[] = [
     "Tranquilo, hoy NO hay fuego en la oficina. De momento.",
     "La última vez Dwight cerró las puertas para probar nuestros reflejos y Stanley casi rompe una máquina expendedora.",
     ["¿En serio pasó eso?", "¿Dónde está el extintor?", "Espero que hoy sea tranquilo."],
-    ["Totalmente. Yo tiré un proyector por la ventana pidiendo socorro.", "Detrás de Contabilidad, aunque nadie sabe usarlo bien.", "En Scranton «tranquilo» dura unos veinte minutos."],
+    [
+      "Totalmente. Yo tiré un proyector por la ventana pidiendo socorro.",
+      "Detrás de Contabilidad, aunque nadie sabe usarlo bien.",
+      "En Scranton «tranquilo» dura unos veinte minutos.",
+    ],
     "Si oyes la alarma, recuerda: cada uno por su cuenta no, todos detrás de mí.",
   ],
   [
@@ -267,7 +359,11 @@ const RAW: RawScene[] = [
     "¡Hola! Soy Ping. Bueno, no, soy Michael haciendo mi personaje estrella de la oficina.",
     "Todo el mundo adora a Ping. ¿Verdad que te ha alegrado la mañana? No contestes, ya veo en tu cara que sí.",
     ["Muy… original.", "¿Sale en los Dundies?", "Prefiero a Michael."],
-    ["¡Ves! Sabía que el arte escénico te llegaría dentro.", "Es el presentador no oficial cuando falla el micrófono.", "Qué halago. El original siempre supera al mito."],
+    [
+      "¡Ves! Sabía que el arte escénico te llegaría dentro.",
+      "Es el presentador no oficial cuando falla el micrófono.",
+      "Qué halago. El original siempre supera al mito.",
+    ],
     "Pasa al bullpen antes de que Toby me vea haciendo personajes.",
   ],
   [
@@ -277,7 +373,11 @@ const RAW: RawScene[] = [
     "Acabo de tener una idea brillante como Willy Wonka: meter boletos dorados en cinco cajas de papel.",
     "Si algún cliente llama diciendo que ha ganado un diez por ciento de descuento acumulado cinco veces… hazte el sueco.",
     ["Suena arriesgado.", "¿Y si toca al mismo cliente?", "Me encanta el chocolate."],
-    ["Los genios vivimos al borde del precipicio contable.", "Le echamos la culpa a Dwight y asunto arreglado.", "A mí también. En el fondo somos almas dulces."],
+    [
+      "Los genios vivimos al borde del precipicio contable.",
+      "Le echamos la culpa a Dwight y asunto arreglado.",
+      "A mí también. En el fondo somos almas dulces.",
+    ],
     "Anda, enciende tu ordenador y vende sin regalar la empresa todavía.",
   ],
   [
@@ -287,7 +387,11 @@ const RAW: RawScene[] = [
     "Si ves el suelo un poco húmedo por el vestíbulo, no mires abajo.",
     "Ayer me caí en un estanque de peces koi… bueno, no me caí, me empujó Jim mentalmente. Y no hagas chistes de peces.",
     ["Prometido.", "¿Sobrevivió el pez?", "Te ves bastante seco hoy."],
-    ["Gracias. El silencio es un gran valor corporativo.", "Están investigando mi zapato por daños emocionales.", "Es traje nuevo. Bueno, lavado en seco con mucha prisa."],
+    [
+      "Gracias. El silencio es un gran valor corporativo.",
+      "Están investigando mi zapato por daños emocionales.",
+      "Es traje nuevo. Bueno, lavado en seco con mucha prisa.",
+    ],
     "Cero comentarios sobre carpas japonesas y seremos grandes colegas.",
   ],
   [
@@ -297,7 +401,11 @@ const RAW: RawScene[] = [
     "¡Hola, soy Michael Clump! ¡Digo «¡Hola, novato!» con voz grave y pasos de gigante!",
     "Es un personaje sobre inclusión, autoestima y hacer mucho ruido cerca de la mesa de Stanley.",
     ["¡Hola, Michael Clump!", "Eres todo un actor.", "¿Crees que Stanley se ría?"],
-    ["¡Ja, ja, ja! ¡Bienvenido a Dunder Mifflin, pequeño mortal!", "Estudié teatro en mi mente durante tres veranos.", "Nunca, pero lo intento igual todos los martes."],
+    [
+      "¡Ja, ja, ja! ¡Bienvenido a Dunder Mifflin, pequeño mortal!",
+      "Estudié teatro en mi mente durante tres veranos.",
+      "Nunca, pero lo intento igual todos los martes.",
+    ],
     "Bueno, voy a descansar la garganta. ¡Disfruta de tu primer día!",
   ],
   [
@@ -307,7 +415,11 @@ const RAW: RawScene[] = [
     "Aquel señor del fondo con cara de haber visto demasiado es Creed Bratton. Nadie sabe exactamente cuál es su puesto.",
     "Se supone que hace Control de Calidad. O algo con «quabity assuance». Nunca le mires mucho si está con brotes de soja.",
     ["¿Huelen raro sus brotes?", "¿Lleva muchos años aquí?", "No haré preguntas."],
-    ["Huelen a muerte nutritiva. Dice que es muy sano.", "Nadie recuerda si estaba aquí antes que el edificio.", "La mejor política con Creed: asentir y seguir caminando."],
+    [
+      "Huelen a muerte nutritiva. Dice que es muy sano.",
+      "Nadie recuerda si estaba aquí antes que el edificio.",
+      "La mejor política con Creed: asentir y seguir caminando.",
+    ],
     "Eso sí, para historias locas en el descanso no tiene rival.",
   ],
   [
@@ -317,7 +429,11 @@ const RAW: RawScene[] = [
     "Oye, antes de empezar: huele muchísimo a «updog» por aquí, ¿no te parece?",
     "Venga, pregúntame «¿Qué es updog?» para que pueda hacer el mejor chiste del trimestre.",
     ["¿Qué es updog?", "No voy a caer en esa.", "¡Huele a éxito!"],
-    ["¡Nada, tío! ¿Y tú qué tal? ¡JA! ¡Lo conseguí al fin!", "Aw, aguafiestas… algún día caerás.", "Ooh, me has robado el remate. Tienes futuro aquí."],
+    [
+      "¡Nada, tío! ¿Y tú qué tal? ¡JA! ¡Lo conseguí al fin!",
+      "Aw, aguafiestas… algún día caerás.",
+      "Ooh, me has robado el remate. Tienes futuro aquí.",
+    ],
     "Con esa chispa vamos a superar la cuota de ventas antes de las doce.",
   ],
   [
@@ -327,7 +443,11 @@ const RAW: RawScene[] = [
     "Regla número uno de supervivencia: la cafetera de la cocina da energía, pero sabe a agua caliente con recuerdos de café.",
     "Si quieres algo mejor, las máquinas de la sala de descanso son tu templo. Y guarda monedas.",
     ["Voy a necesitar mucho café.", "¿Hay té verde?", "¿Tú cuántos tomas?"],
-    ["El café es la gasolina del papel. Bebe sin miedo.", "Pregúntale a Oscar o Angela, son la élite de las infusiones.", "Tres tazas de crema y azúcar con unas gotas de café."],
+    [
+      "El café es la gasolina del papel. Bebe sin miedo.",
+      "Pregúntale a Oscar o Angela, son la élite de las infusiones.",
+      "Tres tazas de crema y azúcar con unas gotas de café.",
+    ],
     "Si ves que te baja la energía, ya sabes dónde recargar pilas.",
   ],
   [
@@ -337,7 +457,11 @@ const RAW: RawScene[] = [
     "¡Te prometo hoy mismo que dentro de diez años te pagaré un máster en ventas si llegas a fin de mes!",
     "Es broma… bueno, medio en broma. En realidad solo puedo ofrecerte pilas de portátil de repuesto. Es un clásico mío.",
     ["Prefiero el sueldo normal.", "Acepto las pilas.", "¿Ya hiciste esa promesa antes?"],
-    ["Muy sensato. Mucho más que un grupo entero de instituto.", "Las de litio son caras, ¿eh? Qué visión tienes.", "No hablemos de ese episodio de mi vida, por favor."],
+    [
+      "Muy sensato. Mucho más que un grupo entero de instituto.",
+      "Las de litio son caras, ¿eh? Qué visión tienes.",
+      "No hablemos de ese episodio de mi vida, por favor.",
+    ],
     "Céntrate en las ventas de hoy y dejemos el futuro para mañana.",
   ],
   [
@@ -347,7 +471,11 @@ const RAW: RawScene[] = [
     "Si ves mi coche aparcado un poco raro fuera, es porque el GPS me dijo que girase a la derecha… y había un lago.",
     "Yo confié en la tecnología. ¡La máquina lo sabía! Pero al parecer los peces no compran papel.",
     ["La culpa es del GPS.", "¿Está bien el coche?", "¿Dwight iba contigo?"],
-    ["¡Exacto! ¡Una conspiración de los satélites contra Dunder Mifflin!", "Sobrevivió. Y recuperamos las cestas de regalo.", "Sí, gritando que era una trampa. Qué dramatismo."],
+    [
+      "¡Exacto! ¡Una conspiración de los satélites contra Dunder Mifflin!",
+      "Sobrevivió. Y recuperamos las cestas de regalo.",
+      "Sí, gritando que era una trampa. Qué dramatismo.",
+    ],
     "Por suerte hoy trabajas dentro, lejos de cualquier lago.",
   ],
   [
@@ -357,7 +485,11 @@ const RAW: RawScene[] = [
     "¡Cuidado, pasa el balón! Estaba calentando para un partido contra los chicos del almacén.",
     "Tengo un tiro en suspensión que llaman «el secreto de Scranton». Aunque la última vez di a una lámpara.",
     ["¿Quién gana siempre?", "Me apunto a jugar.", "¿Darryl sabe tirar?"],
-    ["Nosotros, moralmente. El marcador suele favorecerles un poco.", "Genial. Necesitamos piernas nuevas para el partido.", "Darryl tira demasiado bien. Es casi injusto."],
+    [
+      "Nosotros, moralmente. El marcador suele favorecerles un poco.",
+      "Genial. Necesitamos piernas nuevas para el partido.",
+      "Darryl tira demasiado bien. Es casi injusto.",
+    ],
     "Hoy toca encestar llamadas, que también suman puntos.",
   ],
   [
@@ -367,7 +499,11 @@ const RAW: RawScene[] = [
     "No abras los ojos todavía… ¡soy Blind Guy McSqueezy! El tipo ciego que va chocando con todas las sillas.",
     "En mi clase de impro me prohibieron hacerlo, pero aquí soy el jefe y mi arte es libre.",
     ["Cuidado con la planta.", "Muy valiente como comedia.", "¿Te has hecho daño?"],
-    ["¡No me digas dónde están las cosas, rompe el personaje!", "Lo sé. Soy un incomprendido del humor físico.", "Solo en la espinilla. Pero el espectáculo continúa."],
+    [
+      "¡No me digas dónde están las cosas, rompe el personaje!",
+      "Lo sé. Soy un incomprendido del humor físico.",
+      "Solo en la espinilla. Pero el espectáculo continúa.",
+    ],
     "Ya veo perfectamente. Vamos a enseñarte el lado serio de la empresa.",
   ],
   [
@@ -377,7 +513,11 @@ const RAW: RawScene[] = [
     "Esta mañana me quemé ligeramente el pie con mi parrilla George Foreman junto a la cama.",
     "Me gusta despertarme con olor a bacon crujiente. Soy un visionario doméstico, aunque hoy camino un poco cojo.",
     ["¿Necesitas hielo?", "Yo quiero esa parrilla.", "Qué peligroso suena eso."],
-    ["¿Me traes un poco del congelador? No, mejor quédate trabajando.", "Te la enseño cuando salga un modelo para la oficina.", "El éxito siempre exige pequeñas ampollas."],
+    [
+      "¿Me traes un poco del congelador? No, mejor quédate trabajando.",
+      "Te la enseño cuando salga un modelo para la oficina.",
+      "El éxito siempre exige pequeñas ampollas.",
+    ],
     "No hace falta que me ayudes a andar… bueno, solo un poco hasta mi despacho.",
   ],
   [
@@ -387,7 +527,11 @@ const RAW: RawScene[] = [
     "La gente dice que el futuro es digital, las pantallas, la nube… ¡Mentira!",
     "No puedes hacer un avión de papel con un correo electrónico. Bueno, puedes imprimirlo, ¡y ahí entramos nosotros!",
     ["Qué gran argumento.", "El papel es eterno.", "Voy a usarlo en mis llamadas."],
-    ["Lo voy a registrar como eslogan oficial esta tarde.", "Exacto. Como los árboles, pero más útil en carpetas.", "¡Sí! Díselo al primer cliente que te hable de PDF."],
+    [
+      "Lo voy a registrar como eslogan oficial esta tarde.",
+      "Exacto. Como los árboles, pero más útil en carpetas.",
+      "¡Sí! Díselo al primer cliente que te hable de PDF.",
+    ],
     "Tu ordenador de ventas ya está encendido. ¡Demuéstrales el poder de la celulosa!",
   ],
   [
@@ -397,7 +541,11 @@ const RAW: RawScene[] = [
     "Si hoy pasa por aquí Jan Levinson, nuestra jefa de Nueva York, tú actúa como si trabajásemos sin parar.",
     "Bueno, y como si yo estuviese dando una charla magistral de productividad. Sin mirar el reloj.",
     ["Actuación de Óscar.", "¿Es muy estricta?", "¿Pongo cara de ocupado?"],
-    ["De Óscar no, de Meryl Streep vendiendo folios.", "Es… intensa. Pero tenemos una conexión especial en la empresa.", "Cara de ocupado y escribe cosas rápidas en un cuaderno."],
+    [
+      "De Óscar no, de Meryl Streep vendiendo folios.",
+      "Es… intensa. Pero tenemos una conexión especial en la empresa.",
+      "Cara de ocupado y escribe cosas rápidas en un cuaderno.",
+    ],
     "En el peor de los casos, nos escondemos todos en el almacén.",
   ],
   [
@@ -407,7 +555,11 @@ const RAW: RawScene[] = [
     "Primer paso si alguien se desmaya aquí: canta «Ah, ah, ah, ah, stayin' alive» mientras haces compresiones.",
     "¿Al ritmo de 100 por minuto? Claro. ¿Por qué? Porque si sobrevive, luego tendrá que comprar papel.",
     ["At first I was afraid…", "Qué útil saberlo.", "Espero no usarlo hoy."],
-    ["¡Esa es otra canción! ¡Pero me encanta tu entusiasmo!", "La formación en primeros auxilios nunca sobra.", "Yo tampoco, sobre todo con el muñeco de prácticas."],
+    [
+      "¡Esa es otra canción! ¡Pero me encanta tu entusiasmo!",
+      "La formación en primeros auxilios nunca sobra.",
+      "Yo tampoco, sobre todo con el muñeco de prácticas.",
+    ],
     "Tienes el corazón latiendo al ritmo adecuado. ¡Adelante!",
   ],
   [
@@ -417,7 +569,11 @@ const RAW: RawScene[] = [
     "Te voy a dar una frase de libro para conquistar clientes hoy: «¿Acaso tu padre es impresora? Porque eres puro papel».",
     "Vale, quizá suena mejor en mi cabeza. Mejor limítate al guion del ordenador.",
     ["Voy a usar la frase.", "Mejor el guion, sí.", "Tienes talento para el romance."],
-    ["Si cierras una venta con eso, te doblo la reputación.", "Buena elección. Es menos probable que nos demanden.", "Soy un romántico incomprendido de Scranton."],
+    [
+      "Si cierras una venta con eso, te doblo la reputación.",
+      "Buena elección. Es menos probable que nos demanden.",
+      "Soy un romántico incomprendido de Scranton.",
+    ],
     "Ve a hacer llamadas antes de que se me ocurra otra frase peor.",
   ],
   [
@@ -427,7 +583,11 @@ const RAW: RawScene[] = [
     "Aviso importante: el tarro de caramelos de la recepción y los M&Ms de Kevin NO son lo mismo.",
     "Los de recepción son para todo el mundo. Los de Kevin los cuenta por colores cada mañana.",
     ["No tocaré los de Kevin.", "¿Me das uno de recepción?", "¿Meredith también tiene snacks?"],
-    ["Te acabas de ahorrar una mirada muy seria de Contabilidad.", "Coge dos o tres, que hoy estás de estreno.", "Meredith guarda cosas misteriosas en el cajón. Mejor no mires."],
+    [
+      "Te acabas de ahorrar una mirada muy seria de Contabilidad.",
+      "Coge dos o tres, que hoy estás de estreno.",
+      "Meredith guarda cosas misteriosas en el cajón. Mejor no mires.",
+    ],
     "Disfruta de los dulces oficiales mientras exploras la planta.",
   ],
   [
@@ -437,7 +597,11 @@ const RAW: RawScene[] = [
     "Silencio. Estoy en personaje. Acabo de esquivar siete balas de Goldenface para llegar a darte la mano.",
     "Necesito que hoy mantengas el ojo abierto por si algún espía intenta robar nuestra fórmula secreta de papel reciclado.",
     ["Misión aceptada, Scarn.", "¿Quién es Goldenface?", "¿Tenemos fórmula secreta?"],
-    ["Sabía que podía confiar en un agente recién reclutado.", "Un villano terrible. Con la cara sospechosamente parecida a Jim.", "Es papel normal, pero suena muchísimo más épico así."],
+    [
+      "Sabía que podía confiar en un agente recién reclutado.",
+      "Un villano terrible. Con la cara sospechosamente parecida a Jim.",
+      "Es papel normal, pero suena muchísimo más épico así.",
+    ],
     "Mantén la cobertura y finge que solo trabajas en Ventas.",
   ],
   [
@@ -447,7 +611,11 @@ const RAW: RawScene[] = [
     "¡Bienvenido! Hoy celebramos lo distintos que somos todos. Por ejemplo, yo soy extraordinario y vosotros sois… normales.",
     "Es broma. En esta oficina cabe todo el mundo. Menos Toby, que ocupa espacio emocional innecesario.",
     ["¡Viva la diversidad!", "Qué discurso tan bonito.", "Prometo respetar a todos."],
-    ["¡Ese es el espíritu de Dunder Mifflin!", "Me salió del alma. Debería dar charlas TED.", "A todos menos a las impresoras atascadas. A esas ni agua."],
+    [
+      "¡Ese es el espíritu de Dunder Mifflin!",
+      "Me salió del alma. Debería dar charlas TED.",
+      "A todos menos a las impresoras atascadas. A esas ni agua.",
+    ],
     "Pasa y descubre lo variopinta que es esta plantilla.",
   ],
   [
@@ -457,7 +625,11 @@ const RAW: RawScene[] = [
     "¿Ves a Phyllis en Ventas? Parece la tía dulce del barrio que te da galletas… y lo es.",
     "Pero si la haces enfadar, su marido es Bob Vance, de Vance Refrigeration. Y lo dice en todas las presentaciones.",
     ["Bob Vance, Vance Refrigeration.", "Le pediré consejos de venta.", "¿Vende papel o neveras?"],
-    ["¡Ya te sabes su frase! Llevas un minuto aquí y pareces veterano.", "Sabe mucho más de clientes de lo que aparenta.", "Papel. Nunca le preguntes por qué se casó con neveras."],
+    [
+      "¡Ya te sabes su frase! Llevas un minuto aquí y pareces veterano.",
+      "Sabe mucho más de clientes de lo que aparenta.",
+      "Papel. Nunca le preguntes por qué se casó con neveras.",
+    ],
     "Pórtate bien con ella y te invitará a tejer en los descansos.",
   ],
   [
@@ -467,7 +639,11 @@ const RAW: RawScene[] = [
     "Un detalle curioso sobre Oscar en Contabilidad: si dices cualquier dato un dos por ciento impreciso, aparecerá detrás de ti.",
     "Y empezará diciendo «Actually…». Es como un superpoder aburrido, pero nos mantiene lejos de la cárcel.",
     ["Actually, eso es útil.", "¿Sabe mucho de historia?", "Probaré a decir un dato falso."],
-    ["¡Eh! ¡No empieces tú también con el Actually!", "Lo sabe casi todo. Hasta pronunciar bien «espresso».", "Dile que China inventó el papel en 1995 y cronometra cuánto tarda."],
+    [
+      "¡Eh! ¡No empieces tú también con el Actually!",
+      "Lo sabe casi todo. Hasta pronunciar bien «espresso».",
+      "Dile que China inventó el papel en 1995 y cronometra cuánto tarda.",
+    ],
     "Si tienes lío con las cuentas, Oscar te salva el día.",
   ],
   [
@@ -477,7 +653,11 @@ const RAW: RawScene[] = [
     "Hoy todavía no hemos montado una discoteca junto a las máquinas de café, pero todo se andará.",
     "En Dunder Mifflin creemos en el equilibrio: ochenta por ciento trabajo y noventa por ciento diversión.",
     ["Eso suma 170 por ciento.", "¿Pones música tú?", "Me encanta bailar."],
-    ["Porque aquí damos el ciento setenta por ciento siempre.", "Tengo una lista con canciones de los 80 y «Mambo No. 5».", "Cuando nadie mire, hacemos un paso de moonwalk en el pasillo."],
+    [
+      "Porque aquí damos el ciento setenta por ciento siempre.",
+      "Tengo una lista con canciones de los 80 y «Mambo No. 5».",
+      "Cuando nadie mire, hacemos un paso de moonwalk en el pasillo.",
+    ],
     "Empieza a mover esos dedos por el teclado… ¡con ritmo!",
   ],
   [
@@ -487,7 +667,11 @@ const RAW: RawScene[] = [
     "¿Oíste un motor rugir en el aparcamiento al entrar? Es la furgoneta de Meredith.",
     "Es muy eficiente en relaciones con proveedores. No preguntes cómo consigue los descuentos de carne y papel.",
     ["Mejor no pregunto.", "Qué crack Meredith.", "¿Tiene descuentos hoy?"],
-    ["La ignorancia es una manta calentita y legal.", "Una leyenda viva de Scranton.", "Si ves vales de comida por ahí, igual son suyos."],
+    [
+      "La ignorancia es una manta calentita y legal.",
+      "Una leyenda viva de Scranton.",
+      "Si ves vales de comida por ahí, igual son suyos.",
+    ],
     "Salúdala si pasas por su mesa, suele estar de muy buen humor.",
   ],
   [
@@ -497,7 +681,11 @@ const RAW: RawScene[] = [
     "Escucha, si algún día encuentras tu grapadora flotando dentro de un bol de gelatina de limón…",
     "¡No es culpa mía! Es una tradición sagrada de iniciación. Bueno, solo pasa cerca de Jim.",
     ["¿Sabe bien la gelatina?", "Esconderé mi grapadora.", "¿Dwight cayó en esa?"],
-    ["Limón corporativo. Con un toque metálico.", "Muy listo. Así se protege el material de oficina.", "Más de una vez. Y siempre se enfada igual."],
+    [
+      "Limón corporativo. Con un toque metálico.",
+      "Muy listo. Así se protege el material de oficina.",
+      "Más de una vez. Y siempre se enfada igual.",
+    ],
     "Tu mesa ya viene con material básico. ¡Cuídalo con tu vida!",
   ],
   [
@@ -507,7 +695,11 @@ const RAW: RawScene[] = [
     "¿Sabes qué suena mejor que el mar? El ruido de la trituradora de papel comiéndose formularios de RRHH.",
     "Es música clásica para mis oídos. Pero no tritures los pedidos buenos, por favor.",
     ["Entendido, jefe.", "¿Alguna vez se atasca?", "Tengo ganas de usarla."],
-    ["Así me gusta. Obediencia y gusto musical.", "Siempre que intento meter tres lápices dentro. No me preguntes.", "Es muy relajante después de una llamada difícil."],
+    [
+      "Así me gusta. Obediencia y gusto musical.",
+      "Siempre que intento meter tres lápices dentro. No me preguntes.",
+      "Es muy relajante después de una llamada difícil.",
+    ],
     "Tu primera misión no es triturar cosas, es presentarte al equipo.",
   ],
   [
@@ -517,7 +709,11 @@ const RAW: RawScene[] = [
     "Contempla a tu monarca del papel. Hoy me he despertado sintiendo que llevo una corona invisible… bueno, hoy casi visible.",
     "Como nuevo súbdito, tu primera tarea real es sonreír y decir que mis chistes son brillantes.",
     ["Son brillantes, Majestad.", "¿Tendré tierras en el almacén?", "Vaya entrada triunfal."],
-    ["¡Ascendido a duque de las carpetas azules!", "Te concedo un metro cuadrado junto a la fuente de agua.", "Los reyes no entramos, hacemos apariciones estelares."],
+    [
+      "¡Ascendido a duque de las carpetas azules!",
+      "Te concedo un metro cuadrado junto a la fuente de agua.",
+      "Los reyes no entramos, hacemos apariciones estelares.",
+    ],
     "Ya puedes levantarte de tu reverencia imaginaria y empezar la jornada.",
     "crown",
   ],
@@ -528,7 +724,11 @@ const RAW: RawScene[] = [
     "Caminar rápido con una carpeta en la mano hace que todo el mundo crea que estás salvando la empresa.",
     "Es mi técnica secreta de liderazgo. Pruébalo cuando pase por delante de tu escritorio.",
     ["Lo pondré en práctica.", "¿Funciona con una taza?", "También pienso trabajar de verdad."],
-    ["Verás cómo hasta Stanley te respeta un segundo.", "Con taza vacía parece que acabas de cerrar un contrato.", "¡Mucho mejor! Eso sí que me sorprende gratamente."],
+    [
+      "Verás cómo hasta Stanley te respeta un segundo.",
+      "Con taza vacía parece que acabas de cerrar un contrato.",
+      "¡Mucho mejor! Eso sí que me sorprende gratamente.",
+    ],
     "Coge impulso y date una vuelta por la oficina para que te vean.",
   ],
   [
@@ -538,7 +738,11 @@ const RAW: RawScene[] = [
     "¡Bleh! ¡Soy el Conde Michael, he venido a chupar… toda la negatividad de tu primer día!",
     "¿Por qué? Porque los lunes en una empresa de papel hay que afrontarlos con colmillos… de humor.",
     ["¡Ajo contra los malos clientes!", "Muy teatral, Michael.", "¿Eso es una capa?"],
-    ["¡El ajo solo aleja a los clientes tacaños!", "Me preparé cinco minutos frente al espejo del coche.", "Es una chaqueta atada al cuello, pero funciona."],
+    [
+      "¡El ajo solo aleja a los clientes tacaños!",
+      "Me preparé cinco minutos frente al espejo del coche.",
+      "Es una chaqueta atada al cuello, pero funciona.",
+    ],
     "Vuelvo al mundo de los vivos. ¡Sal ahí y muerde el mercado!",
     "vampire",
   ],
@@ -549,7 +753,11 @@ const RAW: RawScene[] = [
     "Si ves notas amarillas pegadas por toda mi oficina, no es desorden. Es un mapa mental de genialidad.",
     "Bueno, una dice «comprar leche» y otra «no olvidar respirar», pero la mayoría son ideas millonarias.",
     ["Seguro que sí.", "¿Te ayudo a ordenarlas?", "¿Tienes una sobre papel?"],
-    ["Gracias por creer en mi método caótico.", "Ni se te ocurra tocarlas o perderé la idea del siglo.", "Tengo cinco. Ninguna con palabras reales, solo dibujos."],
+    [
+      "Gracias por creer en mi método caótico.",
+      "Ni se te ocurra tocarlas o perderé la idea del siglo.",
+      "Tengo cinco. Ninguna con palabras reales, solo dibujos.",
+    ],
     "En tu cuaderno con la tecla J puedes apuntar tus cosas de forma más normal.",
   ],
   [
@@ -559,7 +767,11 @@ const RAW: RawScene[] = [
     "Escucha al maestro: hay cuatro tipos de clientes. El cercano, el técnico, el tacaño y el bromista.",
     "¿Mi truco? Empezar con un chiste y luego hablar de papel hasta que cuelguen… o compren.",
     ["Tomando apuntes mentales.", "¿Y si me cuelgan?", "¿El precio importa mucho?"],
-    ["Vas a ser una máquina de cerrar tratos.", "Entonces dices «su pérdida» y llamas al siguiente.", "A los tacaños sí. A los bromistas les encanta reírse primero."],
+    [
+      "Vas a ser una máquina de cerrar tratos.",
+      "Entonces dices «su pérdida» y llamas al siguiente.",
+      "A los tacaños sí. A los bromistas les encanta reírse primero.",
+    ],
     "Cuando quieras probar, siéntate en tu mesa y abre el ordenador.",
   ],
   [
@@ -569,7 +781,11 @@ const RAW: RawScene[] = [
     "Dato curioso de la ciudad: por Scranton dicen que anda suelto un tal Estrangulador de Scranton.",
     "¡Pero aquí dentro estás totalmente a salvo! Tenemos a Dwight, que guarda armas ninja en lugares secretos.",
     ["¿Armas ninja en la oficina?", "Me siento… ¿seguro?", "Toby habla mucho de eso."],
-    ["Sí, no busques demasiado detrás de las plantas.", "Ese es el espíritu. Casi seguro.", "Porque Toby quiere ser famoso. ¡No le des cuerda!"],
+    [
+      "Sí, no busques demasiado detrás de las plantas.",
+      "Ese es el espíritu. Casi seguro.",
+      "Porque Toby quiere ser famoso. ¡No le des cuerda!",
+    ],
     "Tranquilo, hoy el único peligro es quedarse sin papel en la impresora.",
   ],
   [
@@ -579,7 +795,11 @@ const RAW: RawScene[] = [
     "Te preguntarás por qué llevo tanta actitud hoy. Porque la gente guay no mira atrás cuando cierra una venta.",
     "Tampoco mira las estadísticas trimestrales, porque a veces deprimen. ¡Actitud ante todo!",
     ["¡Actitud al cien por cien!", "¿Dónde están las estadísticas?", "Me contagias la energía."],
-    ["¡Pum! ¡Ya casi huelo las comisiones!", "En un cajón muy profundo que no abrimos hasta mayo.", "Es mi superpoder. Eso y hacer imitación de Elvis."],
+    [
+      "¡Pum! ¡Ya casi huelo las comisiones!",
+      "En un cajón muy profundo que no abrimos hasta mayo.",
+      "Es mi superpoder. Eso y hacer imitación de Elvis.",
+    ],
     "Lleva esa misma chispa por los pasillos, estrella nueva.",
   ],
   [
@@ -589,7 +809,11 @@ const RAW: RawScene[] = [
     "¿Sabes qué? Hoy he intentado saludar hablando con las mínimas palabras posibles, estilo Kevin: «Hola. Tú nuevo. Bien».",
     "Pero no he aguantado ni cuatro segundos porque tengo demasiada sabiduría que compartir contigo.",
     ["Se agradece la charla.", "Ahorrar palabras ahorra tiempo.", "¿Kevin habla así?"],
-    ["Es mi don y mi condena: comunicar demasiado bien.", "«¿Por qué decir muchas palabras cuando pocas hacen truco?»", "Solo los martes cuando intenta parecer presidente."],
+    [
+      "Es mi don y mi condena: comunicar demasiado bien.",
+      "«¿Por qué decir muchas palabras cuando pocas hacen truco?»",
+      "Solo los martes cuando intenta parecer presidente.",
+    ],
     "En fin: ¡bienvenido, trabaja, diviértete, triunfa!",
   ],
   [
@@ -599,7 +823,11 @@ const RAW: RawScene[] = [
     "Si hoy vendemos mucho, igual celebramos en un japonés donde tiran camarones al aire.",
     "Aviso: si alguna vez ves a dos personas casi iguales en mi fiesta de Navidad, no preguntes.",
     ["¿Camarones al aire?", "Mejor vamos al Chili's.", "Eso suena a historia larga."],
-    ["Yo los atrapo con la boca nueve de cada diez veces… casi.", "El Chili's siempre será nuestro hogar espiritual.", "Larguísima. Pero hoy toca empezar una historia nueva."],
+    [
+      "Yo los atrapo con la boca nueve de cada diez veces… casi.",
+      "El Chili's siempre será nuestro hogar espiritual.",
+      "Larguísima. Pero hoy toca empezar una historia nueva.",
+    ],
     "Pasa adentro antes de que me entre hambre a las nueve de la mañana.",
   ],
   [
@@ -609,7 +837,11 @@ const RAW: RawScene[] = [
     "¿Estás preparado para caminar sobre brasas ardientes por un ascenso? Hoy no hace falta, pero ve mentalizándote.",
     "Algún día nos vamos todos a la playa a competir por ver quién merece más mi admiración.",
     ["Caminar sobre brasas… paso.", "¿Habrá perritos calientes?", "Pam sí que se atrevió."],
-    ["¿Ni por un puesto de subdirector? Bueno, eres honesto.", "Ocho cada uno en una carrera épica.", "Pam tiene más fuego dentro del que aparenta."],
+    [
+      "¿Ni por un puesto de subdirector? Bueno, eres honesto.",
+      "Ocho cada uno en una carrera épica.",
+      "Pam tiene más fuego dentro del que aparenta.",
+    ],
     "Hoy conformémonos con sobrevivir a la jornada hasta las cinco.",
   ],
   [
@@ -619,7 +851,11 @@ const RAW: RawScene[] = [
     "Si notas olor a hoguera con vainilla en mi despacho, son velas artesanales de lujo.",
     "La oficina debería oler a éxito, a ambición… y a «Hogueras de medianoche».",
     ["Huele bastante fuerte.", "¿Las vendemos también?", "Prefiero olor a café."],
-    ["Es el aroma del emprendimiento apasionado.", "No, aunque si quieres una por treinta dólares hablamos.", "Justo por allí en la cocina hay de sobra."],
+    [
+      "Es el aroma del emprendimiento apasionado.",
+      "No, aunque si quieres una por treinta dólares hablamos.",
+      "Justo por allí en la cocina hay de sobra.",
+    ],
     "Pasa sin miedo, el humo ya casi se ha disipado.",
   ],
   [
@@ -629,7 +865,11 @@ const RAW: RawScene[] = [
     "Imagina que estás aquí dentro de diez años: seguirás mirando esta recepción con nostalgia…",
     "…y recordarás el día que Michael Scott te recibió con los brazos abiertos y el corazón lleno de papel.",
     ["Qué momento tan emotivo.", "Me voy a acordar seguro.", "Espero haber vendido algo antes."],
-    ["¿Quieres un pañuelo? Tengo en el bolsillo.", "Haz una foto mental ahora mismo. Clic.", "Venderás cientos de cajas. Te lo garantizo."],
+    [
+      "¿Quieres un pañuelo? Tengo en el bolsillo.",
+      "Haz una foto mental ahora mismo. Clic.",
+      "Venderás cientos de cajas. Te lo garantizo.",
+    ],
     "¡Adelante, leyenda del futuro!",
   ],
   [
@@ -639,7 +879,11 @@ const RAW: RawScene[] = [
     "¡SORPRESA! Vale, no es tu cumpleaños, pero para mí cada primer día merece un gorrito festivo.",
     "He pensado en traer confeti, pero Angela me amenazó con una carpeta metálica.",
     ["¡Gracias por el gorrito!", "Angela da respeto.", "¿Hay tarta también?"],
-    ["El azul turquesa te favorece muchísimo en espíritu.", "Da más miedo que un oso pardo de Dwight.", "Si queda algo en la nevera… no, mejor no comas de ahí."],
+    [
+      "El azul turquesa te favorece muchísimo en espíritu.",
+      "Da más miedo que un oso pardo de Dwight.",
+      "Si queda algo en la nevera… no, mejor no comas de ahí.",
+    ],
     "Que empiece la fiesta del trabajo bien hecho.",
     "partyHat",
   ],
@@ -650,7 +894,11 @@ const RAW: RawScene[] = [
     "Si vas al Anexo, verás a Kelly. Sabe TODO sobre famosos, parejas de Hollywood y chismes de la oficina.",
     "Un consejo: no le preguntes qué ha pasado esta semana en las revistas si tienes prisa.",
     ["¿Es muy habladora?", "Me encantan los cotilleos.", "Le diré hola rápido."],
-    ["Es como un huracán rosa que nunca se queda sin batería.", "Entonces vas a disfrutar muchísimo en el Anexo.", "Suerte saliendo de ahí en menos de veinte minutos."],
+    [
+      "Es como un huracán rosa que nunca se queda sin batería.",
+      "Entonces vas a disfrutar muchísimo en el Anexo.",
+      "Suerte saliendo de ahí en menos de veinte minutos.",
+    ],
     "Recuerda escuchar también lo que hablan los compañeros por los pasillos.",
   ],
   [
@@ -660,7 +908,11 @@ const RAW: RawScene[] = [
     "Cuando mandes un correo importante aquí, pon siempre algo dramático al final, como «P.D.: Cuidado con los mapas».",
     "Mantiene a los clientes en vilo. No saben por qué lo dices, pero saben que eres misterioso.",
     ["¡Genial técnica!", "Quizá se asusten.", "Lo usaré con Toby."],
-    ["El misterio vende más que los folios de 80 gramos.", "Un cliente ligeramente asustado presta más atención.", "Con Toby usa «P.D.: No respondas»."],
+    [
+      "El misterio vende más que los folios de 80 gramos.",
+      "Un cliente ligeramente asustado presta más atención.",
+      "Con Toby usa «P.D.: No respondas».",
+    ],
     "Tienes correo en tu ordenador de ventas esperándote luego.",
   ],
   [
@@ -670,7 +922,11 @@ const RAW: RawScene[] = [
     "¿Has subido bien en el ascensor? A veces tarda un poco porque Hank, el guardia de abajo, está viendo el partido.",
     "Si alguna vez nos quedamos encerrados todos dentro, recuerda establecer un rincón de baño en el segundo minuto. Por experiencia.",
     ["¿En el segundo minuto?!", "Saludaré a Hank al salir.", "Subiré por las escaleras."],
-    ["Hay que ser previsor en situaciones extremas.", "Hank es un tipo estupendo, aunque un poco lento con las llaves.", "Las escaleras están al lado de Reuniones, muy útiles para hacer cardio."],
+    [
+      "Hay que ser previsor en situaciones extremas.",
+      "Hank es un tipo estupendo, aunque un poco lento con las llaves.",
+      "Las escaleras están al lado de Reuniones, muy útiles para hacer cardio.",
+    ],
     "Ya estás arriba sano y salvo. ¡A conquistar el segundo piso!",
   ],
   [
@@ -680,7 +936,11 @@ const RAW: RawScene[] = [
     "¡Kalimera, amigo! Hoy soy Spiros, de Mykonos. Porque Dunder Mifflin es como una isla griega llena de pasión…",
     "…y de archivadores grises. Cierra los ojos y siente la brisa del mar Egeo saliendo del aire acondicionado.",
     ["¡Opa!", "¿Hacemos vacaciones?", "Hace un poco de fresco."],
-    ["¡OPA! ¡Ya tenemos espíritu mediterráneo en Scranton!", "A las cinco en punto empiezan tus vacaciones hasta mañana.", "Es la brisa del Egeo mezclada con humedad de Pensilvania."],
+    [
+      "¡OPA! ¡Ya tenemos espíritu mediterráneo en Scranton!",
+      "A las cinco en punto empiezan tus vacaciones hasta mañana.",
+      "Es la brisa del Egeo mezclada con humedad de Pensilvania.",
+    ],
     "Vamos a trabajar con alegría griega antes de que entre una llamada.",
   ],
   [
@@ -690,7 +950,11 @@ const RAW: RawScene[] = [
     "Tema delicado en la cocina: alguien deja siempre el microondas hecho un desastre y nunca confiesa.",
     "Si ves una nota pasivo-agresiva pegada en la puerta, no he sido yo… ni Pam… seguramente fue Pam.",
     ["Lo dejaré impoluto.", "¿Qué cocinan ahí dentro?", "Qué drama culinario."],
-    ["Eres un ciudadano ejemplar de la cocina.", "Palomitas quemadas, pescado sospechoso y platos misteriosos.", "Es nuestra pequeña guerra civil de la hora de comer."],
+    [
+      "Eres un ciudadano ejemplar de la cocina.",
+      "Palomitas quemadas, pescado sospechoso y platos misteriosos.",
+      "Es nuestra pequeña guerra civil de la hora de comer.",
+    ],
     "A las doce todos van para allá. No te quedes sin silla.",
   ],
   [
@@ -700,7 +964,11 @@ const RAW: RawScene[] = [
     "Para mí lo más importante de un empleado nuevo no es su currículum. Ni sus notas. Ni que sepa sumar.",
     "Es que sepa reírse cuando hago mi imitación de Chris Rock… bueno, mejor ya no la hago. Solo sonríe.",
     ["Aquí tienes mi mejor sonrisa.", "No hace falta imitación.", "¿Qué tal imitas a Elvis?"],
-    ["¡Brillante! Casi ilumina toda la recepción.", "Agradezco que me protejas de mí mismo.", "«Thank you, thank you very much». ¡Clavado!"],
+    [
+      "¡Brillante! Casi ilumina toda la recepción.",
+      "Agradezco que me protejas de mí mismo.",
+      "«Thank you, thank you very much». ¡Clavado!",
+    ],
     "Con esa cara vas a caer bien desde Contabilidad hasta el almacén.",
   ],
   [
@@ -710,7 +978,11 @@ const RAW: RawScene[] = [
     "¡Véndeme este bolígrafo! No, espera, ni siquiera tengo uno encima ahora mismo… ¡véndeme este aire!",
     "No hace falta que me lo vendas ahora. Pero piensa: si el aire cuesta cero dólares, ¿por qué no vender papel a su lado?",
     ["Qué mente comercial.", "Te vendo una caja de folios.", "Prefiero usar el ordenador."],
-    ["Por algo me dieron este despacho con vistas al aparcamiento.", "¡Trato hecho! Tu primer cliente imaginario está encantado.", "Muy bien, ahí tienes llamadas de verdad con clientes reales."],
+    [
+      "Por algo me dieron este despacho con vistas al aparcamiento.",
+      "¡Trato hecho! Tu primer cliente imaginario está encantado.",
+      "Muy bien, ahí tienes llamadas de verdad con clientes reales.",
+    ],
     "Adelante, tiburón de Scranton.",
   ],
   [
@@ -720,7 +992,11 @@ const RAW: RawScene[] = [
     "Abajo está el almacén, dirigido por Darryl Philbin. Es territorio independiente casi.",
     "Tienen montacargas, una empacadora gigante que NADIE de arriba debe tocar, y mucho carácter.",
     ["No tocaré la empacadora.", "¿Darryl es majo?", "¿Bajaremos luego?"],
-    ["Michael dice: «¡Ni siquiera la mires muy fijo!»", "Es genial cuando no le pido que me deje conducir el toro.", "Seguro. Siempre hay alguna caja que recoger por allí."],
+    [
+      "Michael dice: «¡Ni siquiera la mires muy fijo!»",
+      "Es genial cuando no le pido que me deje conducir el toro.",
+      "Seguro. Siempre hay alguna caja que recoger por allí.",
+    ],
     "La puerta del almacén está pasando Archivo, bajando las escaleras.",
   ],
   [
@@ -730,7 +1006,11 @@ const RAW: RawScene[] = [
     "Siento una perturbación en la Fuerza… ¡ah, no, es que eres nuevo y traes energía fresca!",
     "Hoy canalizo mi lado oscuro corporativo para aplastar a la competencia: Staples y Office Depot no tienen nada que hacer.",
     ["¡Que la Fuerza nos acompañe!", "Dwight aprobaría este traje.", "¿Tienes sable láser?"],
-    ["Que nos acompañe… y que compren papel satinado.", "Dwight lleva semanas queriendo este atuendo para Halloween.", "Me lo confiscó Toby el año pasado. Tragedia total."],
+    [
+      "Que nos acompañe… y que compren papel satinado.",
+      "Dwight lleva semanas queriendo este atuendo para Halloween.",
+      "Me lo confiscó Toby el año pasado. Tragedia total.",
+    ],
     "Ve hacia el lado luminoso de tu escritorio.",
     "sith",
   ],
@@ -740,8 +1020,16 @@ const RAW: RawScene[] = [
     "Sabiduría",
     "¿Sabes en qué se parece esta oficina a una cebolla? No, no te hará llorar… casi nunca.",
     "Tiene muchas capas: recepción, ventas, contabilidad, cocina, anexo, almacén… y yo soy el corazón dulce de dentro.",
-    ["¿Las cebollas tienen corazón dulce?", "Qué metáfora tan profunda.", "Voy a explorar todas las capas."],
-    ["Las cebollas mágicas de Dunder Mifflin sí.", "Me salió mientras pelaba una manzana. Inspiración pura.", "Hazlo. Hay cosas escondidas hasta en el último rincón."],
+    [
+      "¿Las cebollas tienen corazón dulce?",
+      "Qué metáfora tan profunda.",
+      "Voy a explorar todas las capas.",
+    ],
+    [
+      "Las cebollas mágicas de Dunder Mifflin sí.",
+      "Me salió mientras pelaba una manzana. Inspiración pura.",
+      "Hazlo. Hay cosas escondidas hasta en el último rincón.",
+    ],
     "A explorar se ha dicho, pero vuelve a tiempo para las ventas.",
   ],
   [
@@ -751,7 +1039,11 @@ const RAW: RawScene[] = [
     "Tengo una regla de oro: los cinco primeros minutos del día no se trabaja, se conecta emocionalmente.",
     "Ya llevas cuatro minutos escuchándome, así que oficialmente eres el empleado más conectado del trimestre.",
     ["¡Qué rápido pasa el tiempo!", "¿Queda un minuto libre?", "Estoy listo para trabajar."],
-    ["Cuando te diviertes conmigo, las horas vuelan.", "Úsalo para hacerte un café o saludar a Pam.", "Esa hambre de éxito me pone la piel de gallina."],
+    [
+      "Cuando te diviertes conmigo, las horas vuelan.",
+      "Úsalo para hacerte un café o saludar a Pam.",
+      "Esa hambre de éxito me pone la piel de gallina.",
+    ],
     "¡Se acabó el tiempo de calentamiento, al campo!",
   ],
   [
@@ -761,7 +1053,11 @@ const RAW: RawScene[] = [
     "La sala de conferencias es nuestro teatro de sueños. A veces tenemos reuniones serias y a veces vemos películas.",
     "Si ves que la pizarra tiene un esquema rarísimo de pirámide… no era una estafa piramidal, era un trapecio.",
     ["Un trapecio suena legal.", "¿Ponéis palomitas en las pelis?", "¿Quién manda en la pizarra?"],
-    ["¡Totalmente! ¡Jim lo dibujó y ya me di cuenta!", "A veces, cuando Ryan no mira las calorías.", "Yo. Aunque Dwight siempre quiere dibujar osos."],
+    [
+      "¡Totalmente! ¡Jim lo dibujó y ya me di cuenta!",
+      "A veces, cuando Ryan no mira las calorías.",
+      "Yo. Aunque Dwight siempre quiere dibujar osos.",
+    ],
     "Cuando convoque algo, sabrás dónde sentarte.",
   ],
   [
@@ -771,7 +1067,11 @@ const RAW: RawScene[] = [
     "Sé sincero en tu primer segundo aquí: ¿cómo ves mi pelo? Hoy he usado cera nueva y un poco de fe.",
     "A mí me importa la imagen. Si un empleado quiere cambiar su propio pelo o ropa luego, en el menú de Pausa puede hacerlo.",
     ["Te queda de cine, Michael.", "¿Puedo cambiar mi ropa luego?", "Muy estilo ejecutivo."],
-    ["¡Lo sabía! Es volumen de director regional.", "¡Claro! Pulsa Pausa cuando quieras y ponte el estilo que te dé la gana.", "Eso es exactamente lo que buscaba en el espejo."],
+    [
+      "¡Lo sabía! Es volumen de director regional.",
+      "¡Claro! Pulsa Pausa cuando quieras y ponte el estilo que te dé la gana.",
+      "Eso es exactamente lo que buscaba en el espejo.",
+    ],
     "Cada uno con su propio flow, pero siempre representando a Dunder Mifflin.",
   ],
   [
@@ -781,7 +1081,11 @@ const RAW: RawScene[] = [
     "Consejo culinario: si metes un táper en la nevera de la cocina, ponle tu nombre en letras gigantes.",
     "Aquí hay gente que cree que «sin etiqueta» significa «regalo de los dioses del almuerzo».",
     ["Lo etiquetaré todo.", "¿Quién roba comida?", "¿Puedo comer de las máquinas?"],
-    ["Pónselo incluso con cinta americana si hace falta.", "No señalo a nadie… pero Kevin sonríe demasiado sospechosamente.", "Sí, en la sala de descanso hay máquinas con comida para recuperar energía."],
+    [
+      "Pónselo incluso con cinta americana si hace falta.",
+      "No señalo a nadie… pero Kevin sonríe demasiado sospechosamente.",
+      "Sí, en la sala de descanso hay máquinas con comida para recuperar energía.",
+    ],
     "Con el estómago lleno se vende el doble.",
   ],
   [
@@ -791,7 +1095,11 @@ const RAW: RawScene[] = [
     "¿Has notado algo pesado al levantar el auricular alguna vez? Tranquilo, el tuyo está limpio.",
     "Jim le fue metiendo monedas al teléfono de Dwight durante semanas y luego las quitó de golpe para que se diese en la cara.",
     ["¡Qué obra maestra!", "Pobre Dwight.", "¿Te lo han hecho a ti?"],
-    ["Es el Mozart de las travesuras de oficina.", "Bueno, su frente es bastante resistente.", "Conmigo no se atreve… creo. Déjame comprobar mi auricular luego."],
+    [
+      "Es el Mozart de las travesuras de oficina.",
+      "Bueno, su frente es bastante resistente.",
+      "Conmigo no se atreve… creo. Déjame comprobar mi auricular luego.",
+    ],
     "Ten los ojos bien abiertos en la zona de Ventas.",
   ],
   [
@@ -801,7 +1109,11 @@ const RAW: RawScene[] = [
     "¡Uuuuuuh! ¡Soy el fantasma de las ventas pasadas! He venido a asustarte… ¡con precios competitivos!",
     "Solo quería ver si te asustabas fácil. En Scranton los sustos suelen venir de auditorías sorpresa de Nueva York.",
     ["¡Qué susto me has dado!", "Llevo una sábana mejor en casa.", "Solo le temo a los lunes."],
-    ["¡Ja! Sabía que este disfraz seguía siendo terrorífico.", "¿En serio? ¿Algodon egipcio de 400 hilos?", "En Dunder Mifflin los lunes son viernes con más café."],
+    [
+      "¡Ja! Sabía que este disfraz seguía siendo terrorífico.",
+      "¿En serio? ¿Algodon egipcio de 400 hilos?",
+      "En Dunder Mifflin los lunes son viernes con más café.",
+    ],
     "Vuelvo a mi forma corporal normal. ¡Que tengas un día de miedo (del bueno)!",
     "ghost",
   ],
@@ -812,7 +1124,11 @@ const RAW: RawScene[] = [
     "No importa qué día marque el calendario: en mi corazón siempre faltan cinco minutos para montar el árbol.",
     "Si algún día toca fiesta navideña, prepárate para el «Yankee Swap» y algún regalo absurdamente caro.",
     ["¿Yankee Swap? ¿Qué es eso?", "Me encantan las fiestas.", "¿Habrá karaoke?"],
-    ["Es como el amigo invisible, pero con traiciones y lágrimas.", "Aquí cada excusa es buena para cortar tarta.", "Si conectamos el micrófono, prepárate para escucharme cantar."],
+    [
+      "Es como el amigo invisible, pero con traiciones y lágrimas.",
+      "Aquí cada excusa es buena para cortar tarta.",
+      "Si conectamos el micrófono, prepárate para escucharme cantar.",
+    ],
     "Por hoy disfrutemos el ambiente y saquemos trabajo adelante.",
   ],
   [
@@ -822,7 +1138,11 @@ const RAW: RawScene[] = [
     "¿Sabes qué debería existir? «Lunes en pijama». Todavía estoy intentando convencer a Contabilidad.",
     "Mientras tanto, venimos vestidos de oficina, pero con el alma cómoda. Como unas zapatillas invisibles.",
     ["Apoyo esa propuesta.", "¿Qué diría Nueva York?", "Así vamos más elegantes."],
-    ["¡Primer voto a favor! Vamos ganando terreno.", "Nueva York nunca entiende la vanguardia de Scranton.", "La elegancia está en cómo vendes la caja de A4."],
+    [
+      "¡Primer voto a favor! Vamos ganando terreno.",
+      "Nueva York nunca entiende la vanguardia de Scranton.",
+      "La elegancia está en cómo vendes la caja de A4.",
+    ],
     "Cuando quieras cambiar de look, recuerda el menú de Pausa.",
   ],
   [
@@ -832,7 +1152,11 @@ const RAW: RawScene[] = [
     "A veces por la zona de los contenedores aparece algún mapache o murciélago. No te alarmes.",
     "La última vez atrapamos un murciélago con una bolsa de basura en la cabeza de Meredith. Todo salió… casi bien.",
     ["¿Murciélagos aquí dentro?!", "Meredith es muy valiente.", "Me quedaré lejos del cubo."],
-    ["Solo fue una vez y la rabia está totalmente controlada.", "Deberían darle una medalla, aunque no quiso vacunarse al principio.", "Buen instinto de supervivencia laboral."],
+    [
+      "Solo fue una vez y la rabia está totalmente controlada.",
+      "Deberían darle una medalla, aunque no quiso vacunarse al principio.",
+      "Buen instinto de supervivencia laboral.",
+    ],
     "Hoy el único animal salvaje aquí soy yo antes del segundo café.",
   ],
   [
@@ -842,7 +1166,11 @@ const RAW: RawScene[] = [
     "«Fallas el cien por cien de los tiros que no lanzas». — Wayne Gretzky. — Michael Scott.",
     "¿Entiendes la profundidad? Si no descuelgas el teléfono, no vendes. Si lo descuelgas, igual vendes o igual haces un chiste.",
     ["Inspirador total.", "Voy a citar eso siempre.", "Directo a por el teléfono."],
-    ["Guárdalo en tu corazón como si fuera oro.", "Cita siempre a los dos: Gretzky y yo.", "Ese es el espíritu del campeonato."],
+    [
+      "Guárdalo en tu corazón como si fuera oro.",
+      "Cita siempre a los dos: Gretzky y yo.",
+      "Ese es el espíritu del campeonato.",
+    ],
     "¡Sal ahí y tira a puerta en cada llamada!",
   ],
   [
@@ -851,8 +1179,16 @@ const RAW: RawScene[] = [
     "Alter Ego",
     "¡Jo, jo, jo! ¿Has sido bueno todo el año? Porque si no, te traigo… ¡una semana entera de llamadas en frío!",
     "Es broma. Aunque sea o no diciembre, siempre me gusta traer espíritu generoso al que acaba de llegar.",
-    ["¡Gracias, Santa Michael!", "Prefiero carbón a llamadas en frío.", "¿Puedo pedirte un aumento?"],
-    ["¡Un caramelo invisible para el novato educado!", "Ja, ja, ja… espera, sí tienes que hacer llamadas luego.", "Pídeselo a Santa en diciembre, ahora estoy de turno como jefe."],
+    [
+      "¡Gracias, Santa Michael!",
+      "Prefiero carbón a llamadas en frío.",
+      "¿Puedo pedirte un aumento?",
+    ],
+    [
+      "¡Un caramelo invisible para el novato educado!",
+      "Ja, ja, ja… espera, sí tienes que hacer llamadas luego.",
+      "Pídeselo a Santa en diciembre, ahora estoy de turno como jefe.",
+    ],
     "¡Jo, jo, jo! ¡A producir alegría y facturas!",
     "santa",
   ],
@@ -863,7 +1199,11 @@ const RAW: RawScene[] = [
     "Secreto de jefe: por esta oficina la gente habla muchísimo en voz baja cerca de la fotocopiadora o la cocina.",
     "Cuando veas que dos compañeros se juntan a charlar con burbujitas encima, acércate disimuladamente y escucha.",
     ["¿Para qué sirven los cotilleos?", "Soy muy discreto.", "Eso suena divertido."],
-    ["Para enterarte de TODO lo que pasa en Scranton y ganar reputación.", "Discreto pero atento, como un espía de oficina.", "Es mejor que ver la tele por la tarde."],
+    [
+      "Para enterarte de TODO lo que pasa en Scranton y ganar reputación.",
+      "Discreto pero atento, como un espía de oficina.",
+      "Es mejor que ver la tele por la tarde.",
+    ],
     "Oídos bien abiertos, novato. Aquí las paredes oyen.",
   ],
   [
@@ -873,7 +1213,11 @@ const RAW: RawScene[] = [
     "Con «todos los ingredientes» encima de un pretzel: caramelo, chocolate, sirope, virutas… se alcanza la iluminación.",
     "Si alguna vez ves al carrito de pretzels abajo, olvida tus problemas y corre.",
     ["Apuntado en rojo.", "¿Stanley hace cola?", "¿Invitas tú, Michael?"],
-    ["En rojo fluorescente y subrayado dos veces.", "Stanley es capaz de hacer cola desde las ocho y media.", "El Día del Pretzel invita la empresa. Un milagro."],
+    [
+      "En rojo fluorescente y subrayado dos veces.",
+      "Stanley es capaz de hacer cola desde las ocho y media.",
+      "El Día del Pretzel invita la empresa. Un milagro.",
+    ],
     "Sueña con azúcar y vende mucho papel mientras tanto.",
   ],
   [
@@ -883,7 +1227,11 @@ const RAW: RawScene[] = [
     "¿Sabes qué hay al final del pasillo derecho, pasando los baños? El Anexo. La tierra del olvido.",
     "Allí están Toby, Kelly y a veces otros compañeros. Es un lugar oscuro… bueno, con moqueta beige, pero espiritualmente oscuro.",
     ["Iré a visitarles luego.", "¿Toby muerde?", "Me gusta el beige."],
-    ["Valiente decisión. Llévate una linterna emocional.", "Peor: te da folletos sobre ergonomía de la silla.", "No digas eso muy alto o Angela te recluta."],
+    [
+      "Valiente decisión. Llévate una linterna emocional.",
+      "Peor: te da folletos sobre ergonomía de la silla.",
+      "No digas eso muy alto o Angela te recluta.",
+    ],
     "Aquí delante en Ventas está toda la acción de verdad.",
   ],
   [
@@ -893,7 +1241,11 @@ const RAW: RawScene[] = [
     "Si oyes a alguien mencionar bodas, recuerda que mi padre me enseñó a empujar la silla de ruedas mejor que nadie.",
     "Bueno, y que nunca hay que robarle el micrófono al cura… a menos que el discurso sea aburrido.",
     ["Qué gran consejo.", "Respetaré el micrófono.", "Eso suena sospechoso."],
-    ["De nada. Consejos vitales incluidos sin coste extra.", "Muy maduro por tu parte.", "Solo fueron cinco minutos de comedia nupcial."],
+    [
+      "De nada. Consejos vitales incluidos sin coste extra.",
+      "Muy maduro por tu parte.",
+      "Solo fueron cinco minutos de comedia nupcial.",
+    ],
     "Aquí cada día es como una celebración rara pero entrañable.",
   ],
   [
@@ -903,7 +1255,11 @@ const RAW: RawScene[] = [
     "«Saltas a la derecha y haces una mano, saltas a la izquierda y haces la otra… ¡así es el Scarn!»",
     "¿Ves qué fácil? Si te bloqueas delante de un cliente difícil, recuerda los pasos en tu mente.",
     ["¡Lo estoy bailando ya!", "Necesito ver eso otra vez.", "¿Eso ayuda a vender?"],
-    ["¡Eso es! ¡Tienes ritmo de agente secreto!", "En el estreno de la peli lo verás en pantalla grande.", "Da una confianza que atraviesa la línea telefónica."],
+    [
+      "¡Eso es! ¡Tienes ritmo de agente secreto!",
+      "En el estreno de la peli lo verás en pantalla grande.",
+      "Da una confianza que atraviesa la línea telefónica.",
+    ],
     "Con ese paso ya tienes medio contrato firmado.",
   ],
   [
@@ -913,7 +1269,11 @@ const RAW: RawScene[] = [
     "Si encuentras comida suelta o un objeto brillante por los muebles, casi siempre es parte de algún encargo.",
     "La gente de esta oficina pierde tazas, grapadoras, carpetas y hasta el rumbo vital. Ayúdales cuando te lo pidan.",
     ["¿Cómo sé quién pide ayuda?", "Seré el recadero oficial.", "¿Me pagan por ayudar?"],
-    ["Verás un signo de exclamación amarillo gigante encima de su cabeza. Muy natural.", "Empezarás haciendo recados y acabarás mandando casi tanto como yo.", "Ganas reputación, favores y a veces algún dólar."],
+    [
+      "Verás un signo de exclamación amarillo gigante encima de su cabeza. Muy natural.",
+      "Empezarás haciendo recados y acabarás mandando casi tanto como yo.",
+      "Ganas reputación, favores y a veces algún dólar.",
+    ],
     "Pasa por las mesas y mira quién necesita una mano hoy.",
   ],
   [
@@ -923,7 +1283,11 @@ const RAW: RawScene[] = [
     "A mediodía suelo comer un pastel de pollo entero yo solo y luego echarme una siesta productiva en el sofá.",
     "Así que si me ves dormido entre las doce y la una, estoy «meditando estrategias de cuarto trimestre».",
     ["Qué técnica más avanzada.", "No te despertaré entonces.", "¿Puedo dormir en el sofá?"],
-    ["Solo los directores de élite la dominan.", "Eso es lealtad. Y trae mantita si hace frío.", "El sofá de descanso da energía… úsalo con moderación."],
+    [
+      "Solo los directores de élite la dominan.",
+      "Eso es lealtad. Y trae mantita si hace frío.",
+      "El sofá de descanso da energía… úsalo con moderación.",
+    ],
     "De nueve a doce toca brillar. ¡Vamos allá!",
   ],
   [
@@ -933,7 +1297,11 @@ const RAW: RawScene[] = [
     "¿Sabes qué quería ser cuando era pequeño? Quería casarme y tener cien hijos para tener cien amigos y que nadie pudiese decir que no.",
     "Ahora tengo una oficina entera… que básicamente cobra por ser mis amigos. ¡Mucho mejor!",
     ["Yo sería tu amigo gratis.", "Qué bonito… y triste.", "¡Por los cien amigos!"],
-    ["¡Ay! Eso me ha llegado directo al corazón. Toma un abrazo virtual.", "No es triste si hay aire acondicionado y fotocopiadora.", "¡Cien resmas de amistad pura!"],
+    [
+      "¡Ay! Eso me ha llegado directo al corazón. Toma un abrazo virtual.",
+      "No es triste si hay aire acondicionado y fotocopiadora.",
+      "¡Cien resmas de amistad pura!",
+    ],
     "Vamos, amigo gratis número uno, ¡a empezar el día!",
   ],
   [
@@ -943,7 +1311,11 @@ const RAW: RawScene[] = [
     "¡Buuu! Bueno, no te asustes, es solo mi modo calabaza festiva. ¿A que impone respeto directivo?",
     "Quería probar si un jefe dentro de una calabaza gigante sigue dando órdenes con autoridad.",
     ["Das todo el respeto del mundo.", "¿Ves bien ahí dentro?", "Parece incómodo."],
-    ["¡Confirmado! La autoridad nace del interior, no del cuello.", "Veo más o menos el veinte por ciento de la sala. Suficiente.", "El arte y el liderazgo siempre duelen un poco."],
+    [
+      "¡Confirmado! La autoridad nace del interior, no del cuello.",
+      "Veo más o menos el veinte por ciento de la sala. Suficiente.",
+      "El arte y el liderazgo siempre duelen un poco.",
+    ],
     "Me quito esto antes de tropezar con la impresora. ¡Buen primer día!",
     "pumpkin",
   ],
@@ -954,7 +1326,11 @@ const RAW: RawScene[] = [
     "Nuestro éxito se basa en tres pilares: Gente, Papel y… otra palabra con P. ¿Pasión? ¡Sí, Pasión!",
     "Bueno, y también «Pedidos», «Promesas» y «Pretzels». Son seis pilares. Somos invencibles.",
     ["Falta «Productividad».", "Seis pilares sólidos.", "¿Y «Pranks» (bromas)?"],
-    ["¡Siete! ¡Lo voy a añadir a la presentación de PowerPoint!", "Más sólidos que las columnas del almacén.", "Eso lo añades por Jim. Ocho pilares entonces."],
+    [
+      "¡Siete! ¡Lo voy a añadir a la presentación de PowerPoint!",
+      "Más sólidos que las columnas del almacén.",
+      "Eso lo añades por Jim. Ocho pilares entonces.",
+    ],
     "Con tantos pilares es imposible que este edificio se caiga hoy.",
   ],
   [
@@ -964,7 +1340,11 @@ const RAW: RawScene[] = [
     "Anoche soñé que nos compraba la NASA porque necesitaban imprimir los planos de Marte en papel reciclado.",
     "Hoy podemos empezar más modesto: un colegio, una clínica dental o una empresa local de Scranton.",
     ["Empecemos por Scranton.", "¿La NASA usa A4?", "Marte es el límite."],
-    ["Paso a paso. Primero Pensilvania, luego la galaxia.", "Si se lo vendemos nosotros, seguro que sí.", "¡Esa ambición me encanta!"],
+    [
+      "Paso a paso. Primero Pensilvania, luego la galaxia.",
+      "Si se lo vendemos nosotros, seguro que sí.",
+      "¡Esa ambición me encanta!",
+    ],
     "Los clientes esperan al otro lado del teléfono.",
   ],
   [
@@ -974,7 +1354,11 @@ const RAW: RawScene[] = [
     "Aviso técnico: la fotocopiadora principal a veces se atasca si la miras con cara de prisa.",
     "Trátala con cariño, háblale suave y dale un golpecito en el lateral izquierdo. Como un coche antiguo.",
     ["Le hablaré con cariño.", "¿La tenemos que cambiar pronto?", "Para eso está Archivo."],
-    ["«Hola guapa, saca veinte copias». Funciona siempre.", "Es un debate eterno entre sillas nuevas y fotocopiadora.", "Exacto, abajo también hay máquinas si hace falta."],
+    [
+      "«Hola guapa, saca veinte copias». Funciona siempre.",
+      "Es un debate eterno entre sillas nuevas y fotocopiadora.",
+      "Exacto, abajo también hay máquinas si hace falta.",
+    ],
     "Suerte con el tóner y con tu primera ronda por la planta.",
   ],
   [
@@ -984,7 +1368,11 @@ const RAW: RawScene[] = [
     "¡Top of the morning! Hoy canalizo al duende de la suerte para que cada cliente te diga que sí a la primera.",
     "No hace falta encontrar un trébol de cuatro hojas para tener un gran día aquí… aunque yo escondí uno.",
     ["¡Gracias por la suerte!", "¿Dónde está el trébol?", "¿Me das oro?"],
-    ["La suerte de los Scott ahora te protege.", "Secreto profesional. Explora las salas luego.", "Te doy mejor que oro: papel de 90 gramos al mejor precio."],
+    [
+      "La suerte de los Scott ahora te protege.",
+      "Secreto profesional. Explora las salas luego.",
+      "Te doy mejor que oro: papel de 90 gramos al mejor precio.",
+    ],
     "¡Que la buena fortuna te acompañe hasta las cinco!",
     "leprechaun",
   ],
@@ -995,7 +1383,11 @@ const RAW: RawScene[] = [
     "¿Sabes qué es lo mejor de esta gente? Que puedes acercarte y hablar libremente de casi cualquier cosa.",
     "Si le das un chivatazo a alguien —por ejemplo, sobre una broma o un rumor—, pueden reaccionar de verdad por la oficina.",
     ["¿Reaccionan en directo?!", "Qué locura, lo probaré.", "Tendré cuidado con lo que digo."],
-    ["¡Sí! Igual salen corriendo a buscar a otro o se ponen a vigilar.", "No siembres demasiado caos… o sí, un poco es divertido.", "Conmigo puedes decir lo que quieras, soy un libro abierto."],
+    [
+      "¡Sí! Igual salen corriendo a buscar a otro o se ponen a vigilar.",
+      "No siembres demasiado caos… o sí, un poco es divertido.",
+      "Conmigo puedes decir lo que quieras, soy un libro abierto.",
+    ],
     "Prueba a charlar con tus compañeros y verás cómo cobra vida todo.",
   ],
   [
@@ -1005,7 +1397,11 @@ const RAW: RawScene[] = [
     "Cerca de la sala de conferencias hay unas escaleras que bajan a Archivo y el Almacén, y por el sur también puedes bajar.",
     "¿Por qué tenemos dos niveles? Porque una sola planta no puede contener tanto talento papelero.",
     ["Me gusta explorar.", "¿Hay fantasmas abajo?", "Bajaré a conocer a Darryl."],
-    ["Perfecto. Hay objetos, Dundies y rincones por descubrir.", "Solo cajas de 1998 que dan bastante miedo.", "Dile que vienes de mi parte… bueno, mejor di solo tu nombre."],
+    [
+      "Perfecto. Hay objetos, Dundies y rincones por descubrir.",
+      "Solo cajas de 1998 que dan bastante miedo.",
+      "Dile que vienes de mi parte… bueno, mejor di solo tu nombre.",
+    ],
     "Recorre la planta entera cuando tengas un respiro.",
   ],
   [
@@ -1015,7 +1411,11 @@ const RAW: RawScene[] = [
     "Hoy quiero ponerte a prueba: intenta trabajar todo el día con entusiasmo pero sin que suene sospechoso.",
     "«Es muy largo», «cuesta meterlo», «está demasiado duro»… ¡Cuidado con esas frases cerca de mí!",
     ["Hablaré con extrema precisión.", "¿Incluso con los pedidos?", "Imposible no caer."],
-    ["Te doy cinco minutos antes de decir algo arriesgado.", "Sobre todo cuando hables de cajas grandes y gruesas… ¡eso dijo ella!", "Es un juego peligroso pero irresistible."],
+    [
+      "Te doy cinco minutos antes de decir algo arriesgado.",
+      "Sobre todo cuando hables de cajas grandes y gruesas… ¡eso dijo ella!",
+      "Es un juego peligroso pero irresistible.",
+    ],
     "Mantén la concentración… y el sentido del humor afilado.",
   ],
   [
@@ -1025,7 +1425,11 @@ const RAW: RawScene[] = [
     "«Goodbye Toby, it's been nice…» Uy, perdón, estaba ensayando mi canción de despedida favorita aunque no se vaya hoy.",
     "La música une a los departamentos. Cuando quieras animar la mañana, tararea algo por Ventas.",
     ["¡Buena voz, Michael!", "¿Cantas también en dúo?", "Pobre Toby… casi."],
-    ["Me llaman el Springsteen de Scranton. Bueno, me llamo yo así.", "Claro, «Islands in the Stream» cuando quieras.", "Nunca digas pobre Toby delante del jefe."],
+    [
+      "Me llaman el Springsteen de Scranton. Bueno, me llamo yo así.",
+      "Claro, «Islands in the Stream» cuando quieras.",
+      "Nunca digas pobre Toby delante del jefe.",
+    ],
     "¡Ponle música interior a tu jornada y ve a por todas!",
   ],
   [
@@ -1035,7 +1439,11 @@ const RAW: RawScene[] = [
     "¡Atención! Acabas de desbloquear mi discurso número cien de bienvenida. ¡Suenan trompetas imaginarias!",
     "Para celebrarlo, no hay bono económico… pero sí mi respeto eterno durante las próximas dos horas.",
     ["¡Todo un honor!", "¿Ni un café gratis?", "Voy a enmarcar este momento."],
-    ["Y deberías sentirte honrado. Muy pocos llegan al cien.", "El café ya es gratis en la cocina, ¡así que técnicamente sí!", "Hazlo, y ponle marco de madera bonita."],
+    [
+      "Y deberías sentirte honrado. Muy pocos llegan al cien.",
+      "El café ya es gratis en la cocina, ¡así que técnicamente sí!",
+      "Hazlo, y ponle marco de madera bonita.",
+    ],
     "Ahora pasa a la acción y haz que el día merezca cien puntos.",
   ],
   [
@@ -1045,7 +1453,11 @@ const RAW: RawScene[] = [
     "Si alguna vez necesitas poner una excusa rápida para escaparte a la cocina, no digas que vas al dentista «Crentist».",
     "Dwight lo intentó una vez y casi termina con un caramelo de menta del tamaño de una moneda.",
     ["Es un nombre terrible.", "Usaré una excusa mejor.", "¿Tú tienes excusas buenas?"],
-    ["Suena literalmente a «dentista» con una C delante. Qué desastre.", "Di que vas a revisar el stock de carpetas. Nunca falla.", "Yo soy el jefe, mis excusas son «reuniones estratégicas»."],
+    [
+      "Suena literalmente a «dentista» con una C delante. Qué desastre.",
+      "Di que vas a revisar el stock de carpetas. Nunca falla.",
+      "Yo soy el jefe, mis excusas son «reuniones estratégicas».",
+    ],
     "Ve a tu sitio sin necesidad de inventar dentistas.",
   ],
   [
@@ -1055,7 +1467,11 @@ const RAW: RawScene[] = [
     "¡Cupido corporativo ha aterrizado en recepción! Hoy traigo amor puro por las ventas… y un poco por mí mismo.",
     "Recuerda que en esta oficina las relaciones son complicadas, pero nuestra relación con los clientes es para siempre.",
     ["¡Qué romántico!", "¿Hay bombones?", "Me enfocaré en vender."],
-    ["El amor y la celulosa tienen mucho en común: ambos arden rápido.", "Si ves una caja de corazones, mira primero que no sea de Angela.", "El amor verdadero se mide en pedidos cerrados."],
+    [
+      "El amor y la celulosa tienen mucho en común: ambos arden rápido.",
+      "Si ves una caja de corazones, mira primero que no sea de Angela.",
+      "El amor verdadero se mide en pedidos cerrados.",
+    ],
     "Reparte buenas vibraciones por todo Scranton.",
     "heart",
   ],
@@ -1066,7 +1482,11 @@ const RAW: RawScene[] = [
     "Consejo práctico: si pulsas Shift mientras caminas por la oficina, corres como si estuvieras persiguiendo a un cliente.",
     "No corras con tijeras, claro. Para eso ya está Dwight vigilando.",
     ["¡Gracias por el truco!", "Correré hacia el café.", "Seguridad ante todo."],
-    ["De nada. Un buen jefe enseña tanto a caminar como a esprintar.", "Prioridades claras desde el minuto uno.", "Eso suena muy de RRHH… mejor dejémoslo en «agilidad»."],
+    [
+      "De nada. Un buen jefe enseña tanto a caminar como a esprintar.",
+      "Prioridades claras desde el minuto uno.",
+      "Eso suena muy de RRHH… mejor dejémoslo en «agilidad».",
+    ],
     "Pisa fuerte por esa moqueta gris, campeón.",
   ],
   [
@@ -1076,7 +1496,11 @@ const RAW: RawScene[] = [
     "¡Aloha, recién llegado! Aunque hoy sea un día laboral serio, por dentro estamos en una playa de Hawái.",
     "Con camisa de flores y una bebida sin paraguas… bueno, agua del dispensador, pero con mentalidad tropical.",
     ["¡Aloha, jefe!", "¿Hay baile hula en la reunión?", "Me encanta el buen rollo."],
-    ["¡Aloha! Ya me caes mejor que medio edificio.", "Si me das treinta segundos pongo música de ukelele.", "Es la marca de la casa: estrés mínimo, humor máximo."],
+    [
+      "¡Aloha! Ya me caes mejor que medio edificio.",
+      "Si me das treinta segundos pongo música de ukelele.",
+      "Es la marca de la casa: estrés mínimo, humor máximo.",
+    ],
     "Surfea la ola de llamadas de hoy como un profesional.",
     "hawaiian",
   ],
@@ -1087,7 +1511,11 @@ const RAW: RawScene[] = [
     "Si un cliente te dice «es demasiado caro», no entres en pánico. Respira y sonríe a través del teléfono.",
     "Dile que la calidad Dunder Mifflin viene con servicio personalizado que ninguna gran superficie puede imitar.",
     ["¡Suena convincente!", "¿Y si sigue diciendo que no?", "Voy a anotar esa frase."],
-    ["Porque es verdad… casi siempre que contestamos el teléfono.", "Entonces cambias de enfoque: cercanía o un buen chiste.", "Así me gusta, aprendiendo del maestro."],
+    [
+      "Porque es verdad… casi siempre que contestamos el teléfono.",
+      "Entonces cambias de enfoque: cercanía o un buen chiste.",
+      "Así me gusta, aprendiendo del maestro.",
+    ],
     "Con esa actitud cerrarás ventas enormes.",
   ],
   [
@@ -1097,7 +1525,11 @@ const RAW: RawScene[] = [
     "Una cosa sagrada aquí: a las cinco de la tarde en punto se acaba el día laboral.",
     "A las 16:59 Stanley ya tiene las llaves en la mano y el abrigo abrochado. No te pongas en su camino hacia la puerta.",
     ["Apartado del pasillo a las cinco.", "¿Habrá premios al final?", "Aprovecharé cada minuto."],
-    ["Es una medida básica de seguridad pública en Scranton.", "¡Claro! Siempre evalúo el día con un gran premio final.", "Ese es el espíritu. A las cinco veremos qué tal te ha ido."],
+    [
+      "Es una medida básica de seguridad pública en Scranton.",
+      "¡Claro! Siempre evalúo el día con un gran premio final.",
+      "Ese es el espíritu. A las cinco veremos qué tal te ha ido.",
+    ],
     "Tienes toda la jornada por delante. ¡Haz que cuente!",
   ],
   [
@@ -1107,7 +1539,11 @@ const RAW: RawScene[] = [
     "Miau. No preguntes por qué llevo esto puesto hoy. A veces simplemente te levantas sintiéndote ágil como un felino.",
     "O quizá quería solidarizarme con los gatos de Angela para que apruebe mi presupuesto de fiesta.",
     ["¿Funcionó con Angela?", "Miau, jefe.", "Es… muy valiente."],
-    ["Dijo «qué ridículo» y luego se fue. Eso es casi un sí.", "¡Por fin alguien que habla idioma ejecutivo felino!", "La moda corporativa empieza por los que arriesgan."],
+    [
+      "Dijo «qué ridículo» y luego se fue. Eso es casi un sí.",
+      "¡Por fin alguien que habla idioma ejecutivo felino!",
+      "La moda corporativa empieza por los que arriesgan.",
+    ],
     "Pasa antes de que alguien saque una foto para el tablón.",
     "catEars",
   ],
@@ -1118,7 +1554,11 @@ const RAW: RawScene[] = [
     "Última pregunta filosófica de bienvenida: si un árbol cae en el bosque y nadie lo imprime… ¿existió?",
     "Respuesta: sí, y lo convertimos en quinientas hojas blancas listas para tu próximo pedido.",
     ["Filosofía pura.", "Pobre árbol, al menos es útil.", "Véndeme un bosque entero."],
-    ["Platón habría trabajado muy a gusto en esta sucursal.", "Reciclamos cuando podemos, lo juro por Dwight.", "¡Esa es la energía de ventas que necesitábamos!"],
+    [
+      "Platón habría trabajado muy a gusto en esta sucursal.",
+      "Reciclamos cuando podemos, lo juro por Dwight.",
+      "¡Esa es la energía de ventas que necesitábamos!",
+    ],
     "Pasa a tu puesto, filósofo del papel. ¡Scranton es tuyo!",
   ],
   [
@@ -1128,7 +1568,11 @@ const RAW: RawScene[] = [
     "¡Saludos desde el taller secreto de Santa… o sea, Ventas! Hoy vengo cargado de espíritu navideño aunque no toque.",
     "Los clientes aman a alguien optimista. Piensa en cada pedido como un regalo envuelto con lazo.",
     ["Qué buena imagen.", "¿Traes regalos para mí?", "Me pongo a ello, elfo jefe."],
-    ["Soy todo un poeta comercial cuando me lo propongo.", "Tu regalo es un ordenador con acceso directo a la gloria.", "¡Así se habla al ayudante número uno de Scranton!"],
+    [
+      "Soy todo un poeta comercial cuando me lo propongo.",
+      "Tu regalo es un ordenador con acceso directo a la gloria.",
+      "¡Así se habla al ayudante número uno de Scranton!",
+    ],
     "¡A fabricar ventas felices se ha dicho!",
     "elf",
   ],
@@ -1139,7 +1583,11 @@ const RAW: RawScene[] = [
     "Bueno, basta de rodeos. En este edificio pasan cosas absurdas, raras, incómodas y geniales cada hora.",
     "Prométeme solo una cosa: que cuando mires atrás a las cinco, te hayas reído al menos una vez.",
     ["¡Prometido, Michael!", "Con esta gente es imposible no reírse.", "A darlo todo hoy."],
-    ["¡Trato sellado! Ya eres oficialmente parte de la familia.", "Y eso que todavía no has visto el día completo.", "¡A por todas! Si me necesitas, estoy en mi despacho."],
+    [
+      "¡Trato sellado! Ya eres oficialmente parte de la familia.",
+      "Y eso que todavía no has visto el día completo.",
+      "¡A por todas! Si me necesitas, estoy en mi despacho.",
+    ],
     "Bienvenido a Dunder Mifflin Scranton. ¡Que empiece tu gran día!",
   ],
 ];

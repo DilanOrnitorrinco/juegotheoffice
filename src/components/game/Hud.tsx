@@ -3,7 +3,15 @@ import { useState, type RefObject } from "react";
 import type { Game } from "@/game/engine/game";
 import type { UIState } from "@/game/engine/state";
 
-export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimapRef: RefObject<HTMLCanvasElement | null> }) {
+export function Hud({
+  ui,
+  game,
+  minimapRef,
+}: {
+  ui: UIState;
+  game: Game;
+  minimapRef: RefObject<HTMLCanvasElement | null>;
+}) {
   const [brandOpen, setBrandOpen] = useState(true);
   const [statsOpen, setStatsOpen] = useState(true);
   const [agendaOpen, setAgendaOpen] = useState(true);
@@ -11,12 +19,13 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
   const [helpOpen, setHelpOpen] = useState(true);
   const [mapOpen, setMapOpen] = useState(true);
 
-  if (ui.cinematic) return null;
+  if (ui.cinematic || ui.meetingCinema) return null;
 
   const active = ui.missions.filter((m) => m.status === "active");
   const done = ui.missions.filter((m) => m.status === "done").length;
-  const energyTone = ui.energy < 20 ? "bg-destructive" : ui.energy < 50 ? "bg-mustard" : "bg-success";
-  const modalOpen = Boolean(ui.dialog || ui.chat || ui.pc || ui.journal || ui.paused);
+  const energyTone =
+    ui.energy < 20 ? "bg-destructive" : ui.energy < 50 ? "bg-mustard" : "bg-success";
+  const modalOpen = Boolean(ui.dialog || ui.chat || ui.pc || ui.journal || ui.paused || ui.meeting);
 
   return (
     <div className="pointer-events-none fixed inset-0 z-20 select-none">
@@ -40,15 +49,36 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
             </div>
             {ui.episode ? (
               <div className="mt-1 text-xs font-bold text-foreground">
-                {ui.episode.epLabel} · {ui.episode.title}{" "}
-                <span className="font-semibold text-muted-foreground tabular-nums">({ui.episode.castCount} pers.)</span>
+                Día {ui.dayNumber} · {ui.episode.epLabel} · {ui.episode.title}{" "}
+                <span className="font-semibold text-muted-foreground tabular-nums">
+                  ({ui.episode.castCount} pers.)
+                </span>
               </div>
             ) : (
-              <div className="mt-1 text-xs font-semibold capitalize text-muted-foreground">{ui.dateLabel}</div>
+              <div className="mt-1 text-xs font-semibold capitalize text-muted-foreground">
+                Día {ui.dayNumber} · {ui.dateLabel}
+              </div>
             )}
+            <div className="mt-0.5 text-[11px] font-bold text-primary">
+              Puesto: {ui.dailyGoal.rankTitle}
+            </div>
             {ui.event && !modalOpen && (
               <div className="mt-1 dm-chip bg-mustard">
                 {ui.event.emoji} {ui.event.name}
+              </div>
+            )}
+            {ui.approachingNpc && !modalOpen && !ui.meetingNotice && (
+              <div className="mt-1.5 max-w-[260px] rounded border border-sky-500/60 bg-sky-100/90 px-2 py-1 text-[11px] font-semibold text-sky-950">
+                💬 <b>{ui.approachingNpc.name}</b> viene hacia ti ({ui.approachingNpc.reason})
+              </div>
+            )}
+            {ui.activeOfficeEvent && !modalOpen && !ui.meetingNotice && (
+              <div className="mt-1.5 max-w-[260px] rounded border border-amber-500/60 bg-amber-100/90 px-2 py-1 text-[11px] leading-snug text-amber-950">
+                <div className="flex items-center justify-between gap-1 font-bold">
+                  <span>🎬 En vivo · {ui.activeOfficeEvent.roomName}</span>
+                  <span className="opacity-70">{ui.activeOfficeEvent.clockEnd}</span>
+                </div>
+                <div className="truncate font-semibold">{ui.activeOfficeEvent.title}</div>
               </div>
             )}
           </div>
@@ -76,11 +106,16 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
                 📋 {done}/{ui.missions.length}
               </span>
               <span className="dm-chip">🗣️ {ui.gossip.heard.length}</span>
-              <span className="dm-chip">🏆 {ui.dundies.found.length}/{ui.dundies.total}</span>
+              <span className="dm-chip">
+                🏆 {ui.dundies.found.length}/{ui.dundies.total}
+              </span>
               <span className="flex items-center gap-1.5" title="Energía">
                 ⚡
                 <span className="block h-2.5 w-20 overflow-hidden rounded-full border border-border bg-muted">
-                  <span className={`block h-full ${energyTone} transition-all`} style={{ width: `${ui.energy}%` }} />
+                  <span
+                    className={`block h-full ${energyTone} transition-all`}
+                    style={{ width: `${ui.energy}%` }}
+                  />
                 </span>
               </span>
               <button
@@ -108,6 +143,21 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
           )}
           <button
             type="button"
+            aria-label="Cambiar vista de cámara"
+            title="Cambiar ángulo de cámara (V)"
+            className="dm-btn px-3 py-2 text-xs font-bold shadow-sm"
+            onClick={game.toggleCameraMode}
+          >
+            🎥{" "}
+            {ui.cameraMode === "shoulder_right"
+              ? "Hombro Der."
+              : ui.cameraMode === "shoulder_left"
+                ? "Hombro Izq."
+                : "1.ª Pers."}{" "}
+            <span className="dm-kbd ml-1">V</span>
+          </button>
+          <button
+            type="button"
             aria-label="Pausa y aspecto"
             title="Pausa y personalización (Esc)"
             className="dm-btn px-3 py-2 text-xs font-bold shadow-sm"
@@ -124,7 +174,11 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
               <div className="flex items-center justify-between gap-2">
                 <span className="font-display text-sm uppercase">Agenda de hoy</span>
                 <div className="flex items-center gap-1.5">
-                  <button type="button" className="dm-btn px-2 py-0.5 text-xs" onClick={game.toggleJournal}>
+                  <button
+                    type="button"
+                    className="dm-btn px-2 py-0.5 text-xs"
+                    onClick={game.toggleJournal}
+                  >
                     Misiones <span className="dm-kbd">J</span>
                   </button>
                   <button
@@ -139,25 +193,69 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
                   </button>
                 </div>
               </div>
+              {/* Clear daily objective box */}
+              <div
+                className={`mt-1.5 rounded border px-2 py-1.5 text-[11px] leading-snug ${
+                  ui.dailyGoal.allCompleted
+                    ? "border-success/60 bg-success/15"
+                    : "border-border/80 bg-mustard/20"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-1 font-bold text-foreground">
+                  <span>🎯 Objetivo Día {ui.dailyGoal.dayNumber}</span>
+                  <span className="tabular-nums">{ui.dailyGoal.completedCount}/3</span>
+                </div>
+                <p className="mt-0.5 line-clamp-2 text-muted-foreground">{ui.dailyGoal.why}</p>
+                <div className="mt-1 flex flex-wrap gap-1 font-semibold">
+                  <span
+                    className={`rounded px-1.5 py-0.5 ${ui.dailyGoal.sales >= ui.dailyGoal.targetSales ? "bg-success/20 text-foreground" : "bg-card/80 text-muted-foreground"}`}
+                  >
+                    {ui.dailyGoal.sales >= ui.dailyGoal.targetSales ? "✓" : "○"} 💼{" "}
+                    {ui.dailyGoal.sales}/{ui.dailyGoal.targetSales}
+                  </span>
+                  <span
+                    className={`rounded px-1.5 py-0.5 ${ui.dailyGoal.missionsDone >= ui.dailyGoal.targetMissions ? "bg-success/20 text-foreground" : "bg-card/80 text-muted-foreground"}`}
+                  >
+                    {ui.dailyGoal.missionsDone >= ui.dailyGoal.targetMissions ? "✓" : "○"} 📋{" "}
+                    {ui.dailyGoal.missionsDone}/{ui.dailyGoal.targetMissions}
+                  </span>
+                  <span
+                    className={`rounded px-1.5 py-0.5 ${ui.dailyGoal.rep >= ui.dailyGoal.targetRep ? "bg-success/20 text-foreground" : "bg-card/80 text-muted-foreground"}`}
+                  >
+                    {ui.dailyGoal.rep >= ui.dailyGoal.targetRep ? "✓" : "○"} ★ {ui.dailyGoal.rep}/
+                    {ui.dailyGoal.targetRep}
+                  </span>
+                </div>
+              </div>
               {active.length === 0 ? (
-                <p className="mt-1 text-xs leading-snug text-muted-foreground">
-                  Sin encargos activos. Habla con tus compañeros: los que tienen <b className="text-ink">!</b> encima necesitan algo.
+                <p className="mt-1.5 text-xs leading-snug text-muted-foreground">
+                  Sin encargos activos. Habla con tus compañeros: los que tienen{" "}
+                  <b className="text-ink">!</b> encima tienen algo nuevo hoy.
                 </p>
               ) : (
-                <ul className="mt-1 space-y-1.5">
+                <ul className="mt-1.5 space-y-1.5">
                   {active.slice(0, 4).map((m) => (
                     <li key={m.id} className="text-xs leading-snug">
                       <b>{m.title}</b>
                       {m.event && " ✨"}
                       <span className="block text-muted-foreground">
-                        → {m.step} <span className="opacity-70">({m.stepIndex + 1}/{m.steps})</span>
+                        → {m.step}{" "}
+                        <span className="opacity-70">
+                          ({m.stepIndex + 1}/{m.steps})
+                        </span>
                       </span>
                     </li>
                   ))}
-                  {active.length > 4 && <li className="text-xs text-muted-foreground">+{active.length - 4} más…</li>}
+                  {active.length > 4 && (
+                    <li className="text-xs text-muted-foreground">+{active.length - 4} más…</li>
+                  )}
                 </ul>
               )}
-              <button type="button" className="dm-btn dm-btn-primary mt-2 w-full py-1.5 text-xs" onClick={game.openPC}>
+              <button
+                type="button"
+                className="dm-btn dm-btn-primary mt-2 w-full py-1.5 text-xs"
+                onClick={game.openPC}
+              >
                 💼 Abrir ordenador de ventas
               </button>
             </div>
@@ -241,13 +339,20 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
               </button>
             </div>
             <div className="mt-1">
-              <span className="dm-kbd">WASD</span>/<span className="dm-kbd">↑↓←→</span> moverte · <span className="dm-kbd">Shift</span> correr
+              <span className="dm-kbd">WASD</span>/<span className="dm-kbd">↑↓←→</span> moverte ·{" "}
+              <span className="dm-kbd">Shift</span> correr
               <br />
-              <span className="dm-kbd">E</span> hablar / usar · <span className="dm-kbd">1-9</span> elegir opción
+              <b>Mover ratón</b> mirar · <span className="dm-kbd">V</span> cámara · <b>Rueda</b>{" "}
+              zoom
               <br />
-              <span className="dm-kbd">J</span> misiones · <span className="dm-kbd">Esc</span> pausa / cerrar
+              <span className="dm-kbd">E</span> hablar / usar · <span className="dm-kbd">H</span>{" "}
+              levantar mano (reunión)
+              <br />
+              <span className="dm-kbd">1-9</span> elegir opción · <span className="dm-kbd">J</span>{" "}
+              misiones · <span className="dm-kbd">Esc</span> pausa
               <p className="mt-1 text-muted-foreground">
-                Acércate a dos compañeros que hablen para escuchar su conversación. Busca los 🏆 escondidos. Café y máquinas = energía.
+                Acércate a dos compañeros o a los eventos del episodio. Mueve el ratón para mirar
+                (doble clic captura el ratón); en la Sala de Reuniones puedes levantar la mano [H].
               </p>
             </div>
           </div>
@@ -270,7 +375,9 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
           {mapOpen ? (
             <div className="dm-panel pointer-events-auto absolute bottom-3 right-3 overflow-hidden p-1.5">
               <div className="flex items-center justify-between gap-2 px-1 py-0.5">
-                <span className="font-display text-xs uppercase">🗺️ Mapa</span>
+                <span className="font-display text-xs uppercase">
+                  🗺️ {ui.floor === 1 ? "Planta Baja · Almacén" : "Planta 2 · Oficina"}
+                </span>
                 <button
                   type="button"
                   aria-expanded={true}
@@ -300,6 +407,71 @@ export function Hud({ ui, game, minimapRef }: { ui: UIState; game: Game; minimap
             </>
           )}
         </>
+      )}
+      {/* Pre-cinema Meeting Notice: Multi-step canon prelude -> Michael's call -> Waiting for everyone to sit */}
+      {!modalOpen && ui.meetingNotice && (
+        <div className="pointer-events-none fixed inset-x-0 top-20 z-30 flex justify-center px-3">
+          <div className="dm-panel pointer-events-auto flex max-w-xl flex-col gap-1.5 border-2 border-amber-500 bg-card/95 px-4 py-2.5 shadow-xl">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-display text-xs uppercase tracking-wide text-amber-800">
+                {ui.meetingNotice.headline}
+              </span>
+              <div className="flex items-center gap-1.5">
+                {ui.meetingNotice.stepLabel && (
+                  <span className="dm-chip bg-amber-200/80 text-xs font-bold tabular-nums text-amber-950">
+                    {ui.meetingNotice.stepLabel}
+                  </span>
+                )}
+                <span className="dm-chip bg-mustard/60 text-xs font-bold tabular-nums">
+                  🪑 {ui.meetingNotice.seatedCount}/{ui.meetingNotice.totalCount} · Tú:{" "}
+                  {ui.meetingNotice.playerSeated ? "Sentado ✓" : "De pie"}
+                </span>
+              </div>
+            </div>
+            <p className="text-sm font-semibold leading-snug text-foreground">
+              {ui.meetingNotice.phase === "trigger"
+                ? ui.meetingNotice.callText
+                : `«${ui.meetingNotice.callText}»`}
+            </p>
+            {ui.meetingNotice.replyText && (
+              <p className="text-xs italic leading-snug text-muted-foreground">
+                {ui.meetingNotice.replyText}
+              </p>
+            )}
+            {!ui.meetingNotice.playerSeated && ui.meetingNotice.phase !== "trigger" && (
+              <div className="flex items-center justify-between gap-2 pt-0.5">
+                <span className="text-[11px] text-muted-foreground">
+                  {ui.meetingNotice.inRoom
+                    ? "Acércate a la silla iluminada en ámbar o pulsa [G]."
+                    : "Ve a la Sala de Conferencias (arriba al centro) o pulsa [G]."}
+                </span>
+                <button
+                  type="button"
+                  className="dm-btn dm-btn-primary shrink-0 px-3 py-1 text-xs font-bold"
+                  onClick={game.sitInMeetingSeat}
+                >
+                  🪑 Sentarme en mi silla <span className="dm-kbd ml-1">G</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Conference Room spontaneous hand-raise button */}
+      {!modalOpen && ui.inConferenceRoom && !ui.meetingNotice && (
+        <div
+          className={`pointer-events-auto absolute left-1/2 -translate-x-1/2 ${ui.inventory.length > 0 ? "bottom-16" : "bottom-4"}`}
+        >
+          <button
+            type="button"
+            className="dm-btn dm-btn-primary flex items-center gap-2 border-2 border-amber-400 px-4 py-2 text-sm font-bold shadow-lg"
+            onClick={game.openMeeting}
+          >
+            <span>✋ Levantar la mano en la reunión</span>
+            <span className="dm-kbd">H</span>
+          </button>
+        </div>
       )}
     </div>
   );

@@ -129,12 +129,11 @@
 
 @layer components {
   .dm-panel {
-    background: color-mix(in oklab, var(--paper) 94%, transparent);
+    background: color-mix(in oklab, var(--paper) 97%, transparent);
     color: var(--ink);
     border: 2px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-hard);
-    backdrop-filter: blur(4px);
   }
   .dm-modal {
     background: var(--paper);

@@ -1,5 +1,15 @@
 import type { ChatImpactKind, NpcMemory } from "../ai";
-import type { CharacterDef, ConversationDef, CostumeKind, Facing, Look } from "../types";
+import type {
+  CameraShot,
+  CharacterDef,
+  ConversationDef,
+  CostumeKind,
+  EpisodeEventEffect,
+  ExclusiveSkinId,
+  Facing,
+  Look,
+  MeetingGesture,
+} from "../types";
 import type { Approach, Client, SaleOption, SaleOutcome } from "../data/sales";
 
 export interface ChatLogEntry {
@@ -22,12 +32,15 @@ export interface NPC {
   y: number;
   facing: Facing;
   moving: boolean;
+  running?: boolean | undefined;
   walkT: number;
-  path: { x: number; y: number }[];
+  path: { x: number; y: number; portalJump?: boolean }[];
   targetKey: string;
   target: { x: number; y: number };
   action: string;
   faceTo?: Facing | undefined;
+  seated?: boolean | undefined;
+  gesture?: MeetingGesture | undefined;
   override?: NPCOverride | undefined;
 }
 
@@ -36,7 +49,11 @@ export interface Player {
   y: number;
   facing: Facing;
   moving: boolean;
+  running?: boolean | undefined;
   walkT: number;
+  action?: string | undefined;
+  seated?: boolean | undefined;
+  gesture?: MeetingGesture | undefined;
 }
 
 export type ConvoState = "pending" | "playing" | "done";
@@ -61,7 +78,18 @@ export interface ConvoRuntime {
 
 export interface DialogOption {
   label: string;
-  tag: "topic" | "mission" | "deliver" | "missing" | "event" | "shop" | "leave" | "accept" | "back" | "game" | "chat";
+  tag:
+    | "topic"
+    | "mission"
+    | "deliver"
+    | "missing"
+    | "event"
+    | "shop"
+    | "leave"
+    | "accept"
+    | "back"
+    | "game"
+    | "chat";
   act: () => void;
 }
 
@@ -141,18 +169,40 @@ export interface MissionUI {
   available: boolean;
 }
 
+export interface DailyGoalUI {
+  dayNumber: number;
+  rankTitle: string;
+  headline: string;
+  why: string;
+  rep: number;
+  targetRep: number;
+  sales: number;
+  targetSales: number;
+  missionsDone: number;
+  targetMissions: number;
+  completedCount: number;
+  allCompleted: boolean;
+}
+
 export interface EndSummary {
+  dayNumber: number;
+  rankTitle: string;
+  goalMet: boolean;
+  goalSummary: string;
   money: number;
   sales: number;
   calls: number;
   missionsDone: number;
   missionsTotal: number;
   rep: number;
+  careerRep: number;
+  careerSales: number;
   gossip: number;
   gossipTotal: number;
   dundies: number;
   award: string;
   awardLine: string;
+  recentEvents: string[];
 }
 
 export interface CinematicUI {
@@ -168,28 +218,94 @@ export interface CinematicUI {
   choices: { label: string }[];
 }
 
-export interface PingPongUI {
-  opponentId: string;
-  opponentName: string;
-  me: number;
-  them: number;
-  target: number;
-  ball: { x: number; y: number; vx: number; vy: number };
-  playerY: number;
-  aiY: number;
-  paddleH: number;
-  fieldW: number;
-  fieldH: number;
-  status: "playing" | "point" | "ended";
-  flash: string | null;
+export interface OfficeEventUI {
+  id: string;
+  title: string;
+  room: string;
+  roomName: string;
+  spot: string;
+  isMeeting: boolean;
+  clockEnd: string;
+  effect?: EpisodeEventEffect | undefined;
+  lineText?: string | undefined;
+  speakerName?: string | undefined;
 }
+
+export interface MeetingEntry {
+  kind: "canon" | "player" | "ai" | "note";
+  who?: string | undefined;
+  name: string;
+  text: string;
+  clock: string;
+}
+
+export interface MeetingUI {
+  eventId: string;
+  title: string;
+  roomName: string;
+  hostId: string;
+  attendees: string[];
+  suggestedLines: string[];
+  entries: MeetingEntry[];
+  isSpontaneous: boolean;
+  handRaised: boolean;
+}
+
+export interface MeetingNoticeUI {
+  phase: "trigger" | "calling" | "gathering";
+  eventId: string;
+  title: string;
+  headline: string;
+  callText: string;
+  replyText?: string;
+  stepLabel?: string;
+  seatedCount: number;
+  totalCount: number;
+  playerSeated: boolean;
+  inRoom: boolean;
+}
+
+export interface MeetingCinemaUI {
+  eventId: string;
+  title: string;
+  hostId: string;
+  hostName: string;
+  speakerId: string;
+  speakerName: string;
+  speakerAction: string;
+  line: string;
+  cameraShot: CameraShot;
+  cameraLabel: string;
+  focusNpcId: string;
+  seatedCount: number;
+  totalCount: number;
+  handRaised: boolean;
+  suggestedLines: string[];
+  entries: MeetingEntry[];
+  aiEnabled: boolean;
+}
+
+export type CameraMode = "shoulder_right" | "shoulder_left" | "first_person";
 
 export interface UIState {
   phase: "start" | "playing" | "ended";
   paused: boolean;
   journal: boolean;
+  cameraMode: CameraMode;
+  floor: 0 | 1;
   playerLook: Look;
+  unlockedSkins: ExclusiveSkinId[];
+  playerSkin: ExclusiveSkinId | null;
+  dayNumber: number;
+  dailyGoal: DailyGoalUI;
+  recentEvents: string[];
+  approachingNpc: { id: string; name: string; reason: string } | null;
   cinematic: CinematicUI | null;
+  activeOfficeEvent: OfficeEventUI | null;
+  meetingNotice: MeetingNoticeUI | null;
+  meetingCinema: MeetingCinemaUI | null;
+  inConferenceRoom: boolean;
+  meeting: MeetingUI | null;
   clock: string;
   mins: number;
   money: number;
@@ -198,7 +314,13 @@ export interface UIState {
   sales: number;
   dateLabel: string;
   event: { id: string; name: string; emoji: string; description: string } | null;
-  episode: { id: string; epLabel: string; title: string; officeState: string; castCount: number } | null;
+  episode: {
+    id: string;
+    epLabel: string;
+    title: string;
+    officeState: string;
+    castCount: number;
+  } | null;
   activeCharIds: string[];
   episodeContext: string | null;
   missions: MissionUI[];
@@ -221,10 +343,16 @@ export interface UIState {
   }[];
   aiEnabled: boolean;
   pc: PcUI | null;
-  pingpong: PingPongUI | null;
   toasts: Toast[];
   gossip: { heard: { title: string }[]; total: number };
   dundies: { found: string[]; total: number };
   end: EndSummary | null;
-  pcStats: { money: number; calls: number; sales: number; rep: number; missionsDone: number; missionsTotal: number };
+  pcStats: {
+    money: number;
+    calls: number;
+    sales: number;
+    rep: number;
+    missionsDone: number;
+    missionsTotal: number;
+  };
 }

@@ -10,6 +10,8 @@ import {
   normalizeChatImpact,
   normalizeDailyConvos,
   normalizeDailyMissions,
+  normalizeMeetingIntervene,
+  normalizeNpcApproach,
   normalizeOptions,
 } from "@/game/ai";
 import { CHARACTERS, charById } from "@/game/data/characters";
@@ -23,7 +25,12 @@ const MODEL = "openai";
 type Msg = { role: "system" | "user" | "assistant"; content: string };
 type Fail = { ok: false; error: string };
 
-async function complete(apiKey: string, messages: Msg[], json: boolean, maxTokens: number): Promise<string> {
+async function complete(
+  apiKey: string,
+  messages: Msg[],
+  json: boolean,
+  maxTokens: number,
+): Promise<string> {
   const res = await fetch(ENDPOINT, {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
@@ -93,7 +100,10 @@ export const aiSalesStart = createServerFn({ method: "POST" }).handler(async () 
       contact: cleanLine(j["contact"], 40) ?? "Sr. Smith",
       personality,
       need: cleanLine(j["need"], 90) ?? "papel de oficina",
-      budget: Math.round(Math.max(300, Math.min(1000, Number.isFinite(budgetNum) ? budgetNum : 500)) / 10) * 10,
+      budget:
+        Math.round(
+          Math.max(300, Math.min(1000, Number.isFinite(budgetNum) ? budgetNum : 500)) / 10,
+        ) * 10,
       greeting: cleanLine(j["greeting"], 240) ?? "¿Diga?",
     };
     return { ok: true as const, client, options: normalizeOptions(j["options"], OPENING) };
@@ -112,7 +122,13 @@ export const aiSalesTurn = createServerFn({ method: "POST" })
         interest: z.number().min(0).max(10),
         delta: z.number().min(-10).max(10),
         history: z
-          .array(z.object({ approach: z.enum(["cercano", "tecnico", "precio", "humor"]), text: z.string().max(300), reaction: z.string().max(300).nullable() }))
+          .array(
+            z.object({
+              approach: z.enum(["cercano", "tecnico", "precio", "humor"]),
+              text: z.string().max(300),
+              reaction: z.string().max(300).nullable(),
+            }),
+          )
           .min(1)
           .max(5),
       })
@@ -123,9 +139,17 @@ export const aiSalesTurn = createServerFn({ method: "POST" })
     if (!apiKey) return { ok: false, error: "Falta la clave de Pollinations" } satisfies Fail;
     const { client, stage, interest, delta, history } = data;
     const last = history[history.length - 1]!;
-    const tone = delta >= 2 ? "le ha gustado mucho" : delta >= 0 ? "le deja indiferente" : "le ha molestado o aburrido";
+    const tone =
+      delta >= 2
+        ? "le ha gustado mucho"
+        : delta >= 0
+          ? "le deja indiferente"
+          : "le ha molestado o aburrido";
     const transcript = history
-      .map((h, i) => `Vendedor (${STAGES[i]}, enfoque ${h.approach}): «${h.text}»${h.reaction ? `\nCliente: «${h.reaction}»` : ""}`)
+      .map(
+        (h, i) =>
+          `Vendedor (${STAGES[i]}, enfoque ${h.approach}): «${h.text}»${h.reaction ? `\nCliente: «${h.reaction}»` : ""}`,
+      )
       .join("\n");
     try {
       const text = await complete(
@@ -167,7 +191,12 @@ export const aiChat = createServerFn({ method: "POST" })
     z
       .object({
         characterId: z.string().max(30),
-        messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(800) })).min(1).max(40),
+        messages: z
+          .array(
+            z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(800) }),
+          )
+          .min(1)
+          .max(40),
         eventName: z.string().max(60).nullable(),
         clock: z.string().max(10),
         memories: z.array(z.string().max(300)).max(20).optional(),
@@ -193,23 +222,46 @@ export const aiChat = createServerFn({ method: "POST" })
       data.memories && data.memories.length > 0
         ? `\nMemoria persistente de lo acordado/pasado hoy con el jugador (NUNCA lo olvides aunque haya pasado la hora de comer; haz referencia a ello con naturalidad si viene al caso):\n- ${data.memories.join("\n- ")}`
         : "";
-    const episodeHint = data.episodeContext ? `\nContexto del episodio actual: ${data.episodeContext}` : "";
+    const episodeHint = data.episodeContext
+      ? `\nContexto del episodio actual: ${data.episodeContext}`
+      : "";
     const role = data.speakerRole ?? c.role;
     const system = `Eres ${c.name} (${role}) de The Office, en la oficina de Dunder Mifflin Scranton. ${persona}
-Hablas con el empleado nuevo, que acaba de empezar. Son las ${data.clock}${data.eventName ? ` y hoy es ${data.eventName} en la oficina` : ""}.${episodeHint}${memoryBlock}
-Reglas: responde SIEMPRE en español de España, en personaje, en 1-3 frases cortas, con el humor de la serie. Nunca digas que eres una IA ni rompas el personaje. Mantén todo apto para todos los públicos. Compañeros presentes hoy en Scranton: ${activeNames}.`;
+Hablas con un compañero nuevo de la oficina. Son las ${data.clock}${data.eventName ? ` y hoy se celebra ${data.eventName} en la oficina` : ""}.${episodeHint}${memoryBlock}
+Reglas estrictas: responde SIEMPRE en español de España, 100% fiel a la personalidad, carácter, manías y humor de ${c.name} en la serie (1-3 frases naturales y cortas). PROHIBIDO decir «en este Día X», mencionar estadísticas, usar palabras de videojuego («misión», «encargos», «meta del día») o citar etiquetas de sistema. Nunca rompas el personaje. Apto para todos los públicos. Compañeros hoy en Scranton: ${activeNames}.`;
     try {
-      const reply = await complete(apiKey, [{ role: "system", content: system }, ...data.messages.slice(-18)], false, 240);
+      const reply = await complete(
+        apiKey,
+        [{ role: "system", content: system }, ...data.messages.slice(-18)],
+        false,
+        240,
+      );
       return { ok: true as const, reply: reply.slice(0, 600) };
     } catch (e) {
       console.error("aiChat", e);
-      return { ok: false, error: `${c.name.split(" ")[0]} está distraído y no te ha oído. Prueba otra vez.` } satisfies Fail;
+      return {
+        ok: false,
+        error: `${c.name.split(" ")[0]} está distraído y no te ha oído. Prueba otra vez.`,
+      } satisfies Fail;
     }
   });
 
 const dailyInputSchema = z.object({
   dateLabel: z.string().max(80),
-  eventId: z.enum(["halloween", "navidad", "sanvalentin", "cumplemichael", "sanpatricio", "pretzel", "viernes"]).nullable(),
+  dayNumber: z.number().int().min(1).max(999).optional(),
+  recentEvents: z.array(z.string().max(180)).max(12).optional(),
+  dailyGoal: z.string().max(240).nullable().optional(),
+  eventId: z
+    .enum([
+      "halloween",
+      "navidad",
+      "sanvalentin",
+      "cumplemichael",
+      "sanpatricio",
+      "pretzel",
+      "viernes",
+    ])
+    .nullable(),
   eventName: z.string().max(60).nullable(),
   eventDesc: z.string().max(160).nullable(),
   activeCharIds: z.array(z.string().max(30)).max(40).optional(),
@@ -286,8 +338,18 @@ export const aiDailyMissions = createServerFn({ method: "POST" })
     const apiKey = process.env["POLLINATIONS_API_KEY"];
     if (!apiKey) return { ok: false, error: "Falta la clave de Pollinations" } satisfies Fail;
     const { idsPrompt, allowedSet } = rosterForPrompt(data.activeCharIds);
-    const objCatalog = MISSION_OBJECT_CATALOG.map((o) => `${o.id} (${o.desc}, en ${o.place}${o.item ? `, da ítem "${o.item}"` : ""})`).join("\n- ");
-    const eventHint = data.eventName ? `Hoy se celebra ${data.eventName} (${data.eventDesc}). Adapta el tono de varias misiones si encaja.` : "";
+    const objCatalog = MISSION_OBJECT_CATALOG.map(
+      (o) => `${o.id} (${o.desc}, en ${o.place}${o.item ? `, da ítem "${o.item}"` : ""})`,
+    ).join("\n- ");
+    const dayNum = data.dayNumber ?? 1;
+    const recentHint =
+      data.recentEvents && data.recentEvents.length > 0
+        ? `\nAcontecimientos recientes en Scranton (INSPIRA varias misiones en esto, NO repitas encargos genéricos): ${data.recentEvents.slice(0, 8).join(" | ")}.`
+        : "";
+    const goalHint = data.dailyGoal ? `\nMeta del día: ${data.dailyGoal}.` : "";
+    const eventHint = data.eventName
+      ? `Hoy se celebra ${data.eventName} (${data.eventDesc}). Adapta el tono de varias misiones si encaja.`
+      : "";
     const episodeHint = data.episodeContext ? ` Episodio actual: ${data.episodeContext}.` : "";
     try {
       const text = await complete(
@@ -299,7 +361,7 @@ export const aiDailyMissions = createServerFn({ method: "POST" })
           },
           {
             role: "user",
-            content: `Inventa 12 misiones diarias DISTINTAS (una por cada personaje que la pide, mezclando SOLO personajes presentes hoy: ${idsPrompt}) para hoy (${data.dateLabel}). ${eventHint}${episodeHint}
+            content: `Inventa 12 misiones diarias ÚNICAS e IRREPETIBLES para el DÍA ${dayNum} (${data.dateLabel}) (una por cada personaje que la pide, mezclando SOLO personajes presentes hoy: ${idsPrompt}). ${eventHint}${episodeHint}${goalHint}${recentHint}
 REGLAS ESTRICTAS:
 1. Cada misión usa SOLO objetos/lugares que ya existen en la oficina:
 - ${objCatalog}
@@ -345,7 +407,12 @@ export const aiChatImpact = createServerFn({ method: "POST" })
     z
       .object({
         characterId: z.string().max(30),
-        messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(800) })).min(1).max(40),
+        messages: z
+          .array(
+            z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(800) }),
+          )
+          .min(1)
+          .max(40),
         eventName: z.string().max(60).nullable(),
         clock: z.string().max(10),
         memories: z.array(z.string().max(300)).max(20).optional(),
@@ -367,7 +434,9 @@ export const aiChatImpact = createServerFn({ method: "POST" })
       .map((m) => `${m.role === "user" ? "Empleado nuevo" : c.name}: ${m.content}`)
       .join("\n");
     const memoryHint =
-      data.memories && data.memories.length > 0 ? `\nRecuerdos previos ya registrados hoy con ${c.name}: ${data.memories.join(" | ")}` : "";
+      data.memories && data.memories.length > 0
+        ? `\nRecuerdos previos ya registrados hoy con ${c.name}: ${data.memories.join(" | ")}`
+        : "";
     const episodeHint = data.episodeContext ? `\nEpisodio actual: ${data.episodeContext}.` : "";
     const spotList = [
       `${homeSpotFor(data.characterId)} (su sitio habitual)`,
@@ -421,5 +490,178 @@ Formato:
     } catch (e) {
       console.error("aiChatImpact", e);
       return { ok: false, error: "No se pudo analizar el impacto de la charla" } satisfies Fail;
+    }
+  });
+
+export const aiMeetingIntervene = createServerFn({ method: "POST" })
+  .inputValidator((d) =>
+    z
+      .object({
+        meetingTitle: z.string().max(120),
+        topicPrompt: z.string().max(650),
+        roomName: z.string().max(80),
+        hostId: z.string().max(30),
+        attendeeIds: z.array(z.string().max(30)).min(1).max(25),
+        recentLines: z
+          .array(z.object({ who: z.string().max(40), text: z.string().max(300) }))
+          .max(12),
+        playerLine: z.string().min(1).max(500),
+        clock: z.string().max(10),
+        eventName: z.string().max(60).nullable(),
+        episodeContext: z.string().max(800).nullable(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data }) => {
+    const apiKey = process.env["POLLINATIONS_API_KEY"];
+    if (!apiKey) return { ok: false, error: "Falta la clave de Pollinations" } satisfies Fail;
+    const { prompt: attendeePrompt } = rosterForPrompt(data.attendeeIds);
+    const hostChar = charById(data.hostId);
+    const transcript =
+      data.recentLines.length > 0
+        ? data.recentLines
+            .map((l) => {
+              const nm = l.who === "player" ? "Empleado nuevo" : charById(l.who).name.split(" ")[0];
+              return `${nm}: «${l.text}»`;
+            })
+            .join("\n")
+        : "(La reunión acaba de empezar)";
+    const episodeHint = data.episodeContext ? `\nEpisodio actual: ${data.episodeContext}` : "";
+    const eventHint = data.eventName ? `\nEvento hoy en la oficina: ${data.eventName}` : "";
+
+    try {
+      const text = await complete(
+        apiKey,
+        [
+          {
+            role: "system",
+            content: `Eres el guionista de The Office (Dunder Mifflin Scranton, en español de España). Un empleado levanta la mano e interviene en directo en la ${data.roomName}. Genera las reacciones cómicas, realistas y fieles al canon de los asistentes presentes. Responde SOLO con JSON válido, apto para todos los públicos.`,
+          },
+          {
+            role: "user",
+            content: `Reunión/Escena: ${data.meetingTitle} (${data.clock}).
+Contexto: ${data.topicPrompt}${episodeHint}${eventHint}
+Dirige la reunión: ${hostChar.id} (${hostChar.name}).
+Asistentes presentes en la sala (usa SOLO estos ids en minúsculas): ${attendeePrompt}.
+
+Últimas intervenciones en la sala:
+${transcript}
+
+✋ El jugador (empleado nuevo) levanta la mano y dice:
+«${data.playerLine}»
+
+Responde en JSON con:
+- "mood": "aplausos" | "risa" | "caos" | "incomodo"
+- "repDelta": entero entre -1 y 2 según cómo cae el comentario en la sala
+- "summary": frase corta de resumen para el diario/aviso (máx 110 chars)
+- "reactions": 2 a 4 respuestas encadenadas de asistentes presentes en la sala (incluye normalmente al anfitrión ${hostChar.id} y a 1-3 compañeros distintos que reaccionen entre sí o al jugador; máx 28 palabras por frase):
+  [{"who": "<id_asistente>", "text": "..."}]
+- "followUpAction": opcional si alguien decide salir o hacer algo justo tras esto (o null):
+  {"who": "<id_asistente>", "action": "2-4 palabras máx 26 chars", "spot": "<uno de: ${VALID_CONVO_SPOTS.slice(0, 12).join(", ")}, seat_${hostChar.id}>"} | null
+
+Formato exacto:
+{"mood":"risa","repDelta":1,"summary":"...","reactions":[{"who":"${hostChar.id}","text":"..."}],"followUpAction":null}`,
+          },
+        ],
+        true,
+        750,
+      );
+      const j = parseJson(text);
+      const result = normalizeMeetingIntervene(j, data.attendeeIds, data.hostId);
+      return { ok: true as const, result };
+    } catch (e) {
+      console.error("aiMeetingIntervene", e);
+      return {
+        ok: false,
+        error: "La sala se quedó mirando en silencio (error de IA).",
+      } satisfies Fail;
+    }
+  });
+
+export const aiNpcApproach = createServerFn({ method: "POST" })
+  .inputValidator((d) =>
+    z
+      .object({
+        characterId: z.string().max(30),
+        speakerRole: z.string().max(100),
+        dayNumber: z.number().int().min(1).max(999),
+        clock: z.string().max(10),
+        eventName: z.string().max(60).nullable(),
+        episodeContext: z.string().max(800).nullable(),
+        recentEvents: z.array(z.string().max(180)).max(12),
+        memories: z.array(z.string().max(300)).max(20),
+        activeCharIds: z.array(z.string().max(30)).max(40),
+        dailyGoal: z.string().max(240),
+        stats: z.object({
+          money: z.number().min(0).max(1e6),
+          rep: z.number().min(0).max(1e5),
+          sales: z.number().min(0).max(1e4),
+          missionsDone: z.number().min(0).max(1e3),
+        }),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data }) => {
+    const apiKey = process.env["POLLINATIONS_API_KEY"];
+    if (!apiKey) return { ok: false, error: "Falta la clave de Pollinations" } satisfies Fail;
+    const persona = PERSONAS[data.characterId];
+    if (!persona) return { ok: false, error: "Personaje desconocido" } satisfies Fail;
+    const c = charById(data.characterId);
+    const { prompt: activePrompt } = rosterForPrompt(data.activeCharIds);
+    const recentBlock =
+      data.recentEvents.length > 0
+        ? `\nAcontecimientos recientes: ${data.recentEvents.slice(0, 6).join(" | ")}`
+        : "";
+    const memBlock =
+      data.memories.length > 0
+        ? `\nRecuerdos previos con este empleado: ${data.memories.slice(-5).join(" | ")}`
+        : "";
+    const episodeHint = data.episodeContext ? `\nEpisodio actual: ${data.episodeContext}` : "";
+    const eventHint = data.eventName ? `\nCelebración hoy: ${data.eventName}` : "";
+
+    try {
+      const text = await complete(
+        apiKey,
+        [
+          {
+            role: "system",
+            content: `Eres el guionista de The Office (Dunder Mifflin Scranton, en español de España). ${c.name} (${data.speakerRole}) se levanta y camina hacia el empleado nuevo para decirle algo cara a cara.
+Personalidad OBLIGATORIA de ${c.name}: ${persona}
+Reglas críticas de diálogo:
+- Habla como en un guion real de The Office, 100% en la voz única de ${c.name} (por ejemplo, Angela es seca, estricta y obsesionada con la moral y sus gatos; Stanley solo quiere paz y crucigramas; Dwight habla con rigor militar; Kevin es simple; Creed surrealista).
+- PROHIBIDO decir frases robóticas de videojuego como «Pasaba por aquí en este Día X», «¿cómo llevas los encargos y las ventas?» o mencionar puntos/estadísticas («★», «meta del día»).
+- PROHIBIDO citar entre comillas etiquetas internas o títulos raros; si aludes a algo que acaba de ocurrir, cuéntalo como un comentario o cotilleo humano normal.
+- Responde SOLO con JSON válido, apto para todos los públicos.`,
+          },
+          {
+            role: "user",
+            content: `Son las ${data.clock} en Scranton.${episodeHint}${eventHint}${recentBlock}${memBlock}
+Compañeros presentes hoy: ${activePrompt}.
+Contexto interno (NO repitas números ni nombres de sistema literalmente): el empleado lleva ${data.stats.sales} ventas cerradas y está trabajando en: ${data.dailyGoal}.
+Semilla de variedad: ${Math.floor(Math.random() * 1e6)}.
+
+Genera la escena natural cuando ${c.name} se acerca al compañero nuevo:
+- "reason": motivo corto y cotidiano (2-4 palabras, máx 36 chars, ej: "Queja del ruido", "Cotilleo de cocina", "Duda de facturas").
+- "walkCallout": frase breve y natural (3-7 palabras) que dice en voz alta mientras se acerca (ej: "Oye, perdona un segundo.").
+- "openingLine": lo que le dice al llegar (1-3 frases 100% con el tono de ${c.name}; que parezca un diálogo real de un episodio, sin Sonar artificial).
+- "replies": exactamente 3 respuestas naturales del jugador (1 empática/de acuerdo, 1 irónica estilo The Office, 1 directa de oficina), cada una con:
+  {"label": "opción máx 14 palabras", "reaction": "reacción breve de ${c.name.split(" ")[0]} en personaje (1-2 frases)", "repDelta": 1 o 0 o -1}
+
+Formato exacto JSON:
+{"reason":"...","walkCallout":"...","openingLine":"...","replies":[{"label":"...","reaction":"...","repDelta":1},{"label":"...","reaction":"...","repDelta":1},{"label":"...","reaction":"...","repDelta":0}]}`,
+          },
+        ],
+        true,
+        700,
+      );
+      const j = parseJson(text);
+      const result = normalizeNpcApproach(j, data.characterId, data.dayNumber, data.recentEvents);
+      return { ok: true as const, result };
+    } catch (e) {
+      console.error("aiNpcApproach", e);
+      return {
+        ok: false,
+        error: `${c.name.split(" ")[0]} se desvió antes de llegar.`,
+      } satisfies Fail;
     }
   });

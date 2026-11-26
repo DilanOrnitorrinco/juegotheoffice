@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { charById } from "@/game/data/characters";
 import { EPISODES, SEASON_LABELS } from "@/game/data/episodes";
 import { EVENTS, eventForDate, formatLongDate, parseLocalDate } from "@/game/data/events";
+import type { UIState } from "@/game/engine/state";
 
 import { Portrait } from "./Portrait";
 
@@ -14,12 +15,21 @@ function todayISO() {
 const SEASONS: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
 const STAMFORD_IDS = new Set(["andy", "karen", "martin", "tony", "hannah"]);
 
-export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: string | null) => void }) {
+export function StartScreen({
+  ui,
+  onResetCareer,
+  onStart,
+}: {
+  ui: UIState;
+  onResetCareer: () => void;
+  onStart: (date: string, episodeId?: string | null) => void;
+}) {
   const [mode, setMode] = useState<"episodes" | "free">("episodes");
   const [season, setSeason] = useState<1 | 2 | 3 | 4>(3);
   const [episodeId, setEpisodeId] = useState<string>("s3e8");
   const [date, setDate] = useState("");
   const [menuOpen, setMenuOpen] = useState(true);
+  const [careerOpen, setCareerOpen] = useState(true);
   const [seasonsOpen, setSeasonsOpen] = useState(true);
   const [epListOpen, setEpListOpen] = useState(true);
   const [officeStateOpen, setOfficeStateOpen] = useState(true);
@@ -39,6 +49,7 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
   const parsedFree = useMemo(() => (date ? parseLocalDate(date) : null), [date]);
   const evFree = parsedFree ? eventForDate(parsedFree) : null;
   const year = parsedFree?.getFullYear() ?? 2026;
+  const hasCareer = ui.dayNumber > 1 || ui.recentEvents.length > 0 || ui.dailyGoal.rep > 0;
 
   const handleSeasonChange = (s: 1 | 2 | 3 | 4) => {
     setSeason(s);
@@ -55,7 +66,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
             <p className="font-type text-xs uppercase tracking-widest text-muted-foreground md:text-sm">
               Dunder Mifflin Paper Company · Scranton
             </p>
-            <h1 className="dm-stamp mt-1 text-3xl leading-none text-primary md:text-5xl">THE OFFICE</h1>
+            <h1 className="dm-stamp mt-1 text-3xl leading-none text-primary md:text-5xl">
+              THE OFFICE
+            </h1>
             <p className="font-type mt-1 text-base md:text-lg">Un día en la oficina</p>
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -77,7 +90,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
               <button
                 type="button"
                 className={`whitespace-nowrap rounded px-3 py-1.5 transition-colors ${
-                  mode === "episodes" ? "bg-primary text-primary-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
+                  mode === "episodes"
+                    ? "bg-primary text-primary-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
                 onClick={() => {
                   setMode("episodes");
@@ -89,7 +104,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
               <button
                 type="button"
                 className={`whitespace-nowrap rounded px-3 py-1.5 transition-colors ${
-                  mode === "free" ? "bg-primary text-primary-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"
+                  mode === "free"
+                    ? "bg-primary text-primary-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
                 onClick={() => {
                   setMode("free");
@@ -105,6 +122,47 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
         {/* Body */}
         {menuOpen && (
           <div className="mt-4 flex-1 overflow-y-auto pr-1">
+            {hasCareer && (
+              <div className="mb-4 rounded-md border border-border bg-mustard/15 px-3 py-2 text-xs">
+                <div className="flex items-center justify-between gap-2">
+                  <button
+                    type="button"
+                    aria-expanded={careerOpen}
+                    className="flex cursor-pointer items-center gap-1.5 font-display uppercase text-primary"
+                    onClick={() => setCareerOpen((o) => !o)}
+                  >
+                    <span>
+                      🎯 Carrera · Día {ui.dayNumber} · Puesto: {ui.dailyGoal.rankTitle}
+                    </span>
+                    <span className="text-muted-foreground">{careerOpen ? "▾" : "▸"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="dm-btn px-2 py-0.5 text-[11px]"
+                    onClick={onResetCareer}
+                  >
+                    Reiniciar historial
+                  </button>
+                </div>
+                {careerOpen && (
+                  <div className="mt-1.5 space-y-1">
+                    <p className="text-muted-foreground">{ui.dailyGoal.why}</p>
+                    {ui.recentEvents.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-0.5">
+                        {ui.recentEvents.slice(0, 3).map((ev, i) => (
+                          <span
+                            key={`${i}_${ev}`}
+                            className="rounded border border-border/70 bg-card/70 px-2 py-0.5 text-[11px]"
+                          >
+                            📰 {ev}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
             {mode === "episodes" ? (
               <div className="space-y-4">
                 {/* Season selector tabs */}
@@ -162,8 +220,12 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                               }`}
                             >
                               <div className="min-w-0">
-                                <div className="text-[11px] font-bold uppercase tracking-wider text-primary">{ep.epLabel}</div>
-                                <div className="truncate font-display text-sm leading-snug">{ep.title}</div>
+                                <div className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                                  {ep.epLabel}
+                                </div>
+                                <div className="truncate font-display text-sm leading-snug">
+                                  {ep.title}
+                                </div>
                               </div>
                               <span className="shrink-0 font-mono text-xs font-bold text-muted-foreground tabular-nums">
                                 {ep.castIds.length} pers.
@@ -182,14 +244,18 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                         <div className="text-xs font-bold uppercase tracking-wider text-primary">
                           {selectedEp.epLabel} · {selectedEp.dateLabel}
                         </div>
-                        <h2 className="font-display text-xl leading-tight text-foreground">{selectedEp.title}</h2>
+                        <h2 className="font-display text-xl leading-tight text-foreground">
+                          {selectedEp.title}
+                        </h2>
                       </div>
                       <div className="font-mono text-xs font-bold text-primary tabular-nums">
                         {selectedEp.castIds.length} empleados en Scranton
                       </div>
                     </div>
 
-                    <p className="mt-2.5 text-sm leading-relaxed text-foreground">{selectedEp.summary}</p>
+                    <p className="mt-2.5 text-sm leading-relaxed text-foreground">
+                      {selectedEp.summary}
+                    </p>
 
                     <div className="mt-3 rounded border border-border/80 bg-secondary/45 px-3 py-2 text-xs leading-relaxed">
                       <button
@@ -201,7 +267,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                         <span>Estado de la oficina</span>
                         <span className="text-muted-foreground">{officeStateOpen ? "▾" : "▸"}</span>
                       </button>
-                      {officeStateOpen && <p className="mt-1 font-medium text-foreground">{selectedEp.officeState}</p>}
+                      {officeStateOpen && (
+                        <p className="mt-1 font-medium text-foreground">{selectedEp.officeState}</p>
+                      )}
                     </div>
 
                     {/* Roster grid */}
@@ -212,7 +280,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                         className="mb-2 flex w-full cursor-pointer items-center justify-between text-xs font-bold uppercase tracking-wide text-muted-foreground hover:text-primary"
                         onClick={() => setRosterOpen((o) => !o)}
                       >
-                        <span>Plantilla presente en la sucursal ({selectedEp.castIds.length} personajes)</span>
+                        <span>
+                          Plantilla presente en la sucursal ({selectedEp.castIds.length} personajes)
+                        </span>
                         <span>{rosterOpen ? "▾" : "▸"}</span>
                       </button>
                       {rosterOpen && (
@@ -236,8 +306,12 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                               >
                                 <Portrait id={id} costume={costume} size={28} />
                                 <div className="min-w-0 flex-1">
-                                  <div className="truncate text-[11px] font-bold leading-tight text-foreground">{first}</div>
-                                  <div className="truncate text-[10px] leading-tight text-muted-foreground">{role}</div>
+                                  <div className="truncate text-[11px] font-bold leading-tight text-foreground">
+                                    {first}
+                                  </div>
+                                  <div className="truncate text-[10px] leading-tight text-muted-foreground">
+                                    {role}
+                                  </div>
                                 </div>
                               </div>
                             );
@@ -251,8 +325,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
             ) : (
               <div className="space-y-4">
                 <p className="leading-relaxed">
-                  Juega un día libre con la plantilla clásica (19 empleados), atiende llamadas desde <b>tu mesa</b>, ayuda a tus compañeros cuando
-                  te lo pidan y escucha lo que hablan entre ellos. La jornada termina a las <b>17:00</b>.
+                  Juega un día libre con la plantilla clásica (19 empleados), atiende llamadas desde{" "}
+                  <b>tu mesa</b>, ayuda a tus compañeros cuando te lo pidan y escucha lo que hablan
+                  entre ellos. La jornada termina a las <b>17:00</b>.
                 </p>
 
                 <div className="grid gap-5 md:grid-cols-[1fr_1.2fr]">
@@ -264,7 +339,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                       onClick={() => setDatePickOpen((o) => !o)}
                     >
                       <span>¿Qué día es hoy?</span>
-                      <span className="text-xs text-muted-foreground">{datePickOpen ? "▾" : "▸"}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {datePickOpen ? "▾" : "▸"}
+                      </span>
                     </button>
                     {datePickOpen && (
                       <>
@@ -275,7 +352,11 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                           onChange={(e) => setDate(e.target.value)}
                           className="mt-2 w-full rounded-md border-2 border-border bg-paper px-3 py-2 font-bold"
                         />
-                        {parsedFree && <p className="mt-2 text-sm capitalize text-muted-foreground">{formatLongDate(parsedFree)}</p>}
+                        {parsedFree && (
+                          <p className="mt-2 text-sm capitalize text-muted-foreground">
+                            {formatLongDate(parsedFree)}
+                          </p>
+                        )}
                         <div className="mt-3 rounded-md border-2 border-dashed border-border p-3">
                           {evFree ? (
                             <>
@@ -285,7 +366,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                               <p className="text-sm">{evFree.description}</p>
                             </>
                           ) : (
-                            <p className="text-sm">Un día normal en Scranton. Ningún evento especial… de momento.</p>
+                            <p className="text-sm">
+                              Un día normal en Scranton. Ningún evento especial… de momento.
+                            </p>
                           )}
                         </div>
                       </>
@@ -299,7 +382,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                       onClick={() => setSpecialDatesOpen((o) => !o)}
                     >
                       <span>Fechas especiales</span>
-                      <span className="text-xs text-muted-foreground">{specialDatesOpen ? "▾" : "▸"}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {specialDatesOpen ? "▾" : "▸"}
+                      </span>
                     </button>
                     {specialDatesOpen && (
                       <>
@@ -314,12 +399,16 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
                               <span className="text-lg">{e.emoji}</span>
                               <span className="leading-tight">
                                 {e.name}
-                                <span className="block text-xs font-semibold text-muted-foreground">{e.dateLabel}</span>
+                                <span className="block text-xs font-semibold text-muted-foreground">
+                                  {e.dateLabel}
+                                </span>
                               </span>
                             </button>
                           ))}
                         </div>
-                        <p className="mt-2 text-xs text-muted-foreground">Los viernes son «viernes casual» 🌺.</p>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          Los viernes son «viernes casual» 🌺.
+                        </p>
                       </>
                     )}
                   </div>
@@ -332,8 +421,9 @@ export function StartScreen({ onStart }: { onStart: (date: string, episodeId?: s
         {/* Footer */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/50 pt-4">
           <p className="text-xs text-muted-foreground md:text-sm">
-            <span className="dm-kbd">WASD</span> moverte · <span className="dm-kbd">E</span> hablar/usar · <span className="dm-kbd">Shift</span>{" "}
-            correr · <span className="dm-kbd">J</span> misiones
+            <span className="dm-kbd">WASD</span> moverte · <span className="dm-kbd">E</span>{" "}
+            hablar/usar · <span className="dm-kbd">Shift</span> correr ·{" "}
+            <span className="dm-kbd">J</span> misiones
           </p>
           {mode === "episodes" ? (
             <button

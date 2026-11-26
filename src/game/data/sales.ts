@@ -17,7 +17,13 @@ export const APPROACH_INFO: Record<Approach, { label: string; icon: string }> = 
   humor: { label: "Humor", icon: "😄" },
 };
 
-export const STAGES = ["Apertura", "Descubrir necesidad", "Propuesta", "Objeción", "Cierre"] as const;
+export const STAGES = [
+  "Apertura",
+  "Descubrir necesidad",
+  "Propuesta",
+  "Objeción",
+  "Cierre",
+] as const;
 
 /** How much each personality likes each approach. */
 export const FIT: Record<Personality, Record<Approach, number>> = {
@@ -37,18 +43,102 @@ export interface Client {
 }
 
 export const CLIENTS: Client[] = [
-  { company: "Blue Cross of Pennsylvania", contact: "Sra. Wright", personality: "amable", need: "renovar el pedido trimestral de A4", budget: 520, greeting: "¡Hola, cielo! Qué detalle que llamen. ¿En qué puedo ayudarle?" },
-  { company: "Scranton White Pages", contact: "Sr. Hammond", personality: "tacano", need: "papel para la guía telefónica", budget: 680, greeting: "Si esto va a costarme dinero, sea breve. Y barato." },
-  { company: "Condado de Lackawanna", contact: "Sra. Davis", personality: "ocupado", need: "una licitación de papel reciclado", budget: 760, greeting: "Tengo dos minutos. Literalmente. Tengo un cronómetro delante." },
-  { company: "Vance Refrigeration", contact: "Bob Vance", personality: "bromista", need: "facturas y papel continuo", budget: 480, greeting: "¡Bob Vance, Vance Refrigeration! ¿Usted es el que hace chistes por teléfono?" },
-  { company: "Residencia Lakeview", contact: "Sr. Patel", personality: "amable", need: "papel para los boletines semanales", budget: 380, greeting: "Buenos días. Aquí todos son muy mayores, así que hable despacito, por favor." },
-  { company: "Diario The Electric City", contact: "Sr. Grotti", personality: "tacano", need: "un contrato anual de papel prensa", budget: 900, greeting: "Ya tenemos proveedor. Uno barato. ¿Por qué debería escucharle?" },
-  { company: "Clínica Dental Lustig", contact: "Dra. Lustig", personality: "ocupado", need: "formularios y papel de impresora", budget: 420, greeting: "Tengo un paciente con la boca abierta. Rápido." },
-  { company: "Restaurante Cugino's", contact: "Tony Cugino", personality: "bromista", need: "servilletas de papel y cartas", budget: 350, greeting: "¡Ey! ¿Dunder qué? Suena a nombre de mago. Me gusta. Hable." },
-  { company: "Colegio Scranton Prep", contact: "Directora Moore", personality: "amable", need: "papel para todo el curso escolar", budget: 840, greeting: "Hola, buenos días. Estoy organizando el inicio de curso, ¡qué alegría que llamen!" },
-  { company: "Bufete Hirsch & Lee", contact: "Sr. Hirsch", personality: "ocupado", need: "papel de alto gramaje para contratos", budget: 960, greeting: "Facturo 300 dólares la hora. Este minuto se lo regalo. Vaya al grano." },
-  { company: "Gimnasio Iron Valley", contact: "Coach Ruiz", personality: "bromista", need: "carteles y folletos de promoción", budget: 410, greeting: "¡Vamos, vamos, VAMOS! ¿Qué me vende, campeón?" },
-  { company: "Ferretería Krupp", contact: "Sra. Krupp", personality: "tacano", need: "tickets y papel de embalar", budget: 300, greeting: "¿Cuánto cuesta esta llamada? A mí nada, ¿verdad? Bien. Hable." },
+  {
+    company: "Blue Cross of Pennsylvania",
+    contact: "Sra. Wright",
+    personality: "amable",
+    need: "renovar el pedido trimestral de A4",
+    budget: 520,
+    greeting: "¡Hola, cielo! Qué detalle que llamen. ¿En qué puedo ayudarle?",
+  },
+  {
+    company: "Scranton White Pages",
+    contact: "Sr. Hammond",
+    personality: "tacano",
+    need: "papel para la guía telefónica",
+    budget: 680,
+    greeting: "Si esto va a costarme dinero, sea breve. Y barato.",
+  },
+  {
+    company: "Condado de Lackawanna",
+    contact: "Sra. Davis",
+    personality: "ocupado",
+    need: "una licitación de papel reciclado",
+    budget: 760,
+    greeting: "Tengo dos minutos. Literalmente. Tengo un cronómetro delante.",
+  },
+  {
+    company: "Vance Refrigeration",
+    contact: "Bob Vance",
+    personality: "bromista",
+    need: "facturas y papel continuo",
+    budget: 480,
+    greeting: "¡Bob Vance, Vance Refrigeration! ¿Usted es el que hace chistes por teléfono?",
+  },
+  {
+    company: "Residencia Lakeview",
+    contact: "Sr. Patel",
+    personality: "amable",
+    need: "papel para los boletines semanales",
+    budget: 380,
+    greeting: "Buenos días. Aquí todos son muy mayores, así que hable despacito, por favor.",
+  },
+  {
+    company: "Diario The Electric City",
+    contact: "Sr. Grotti",
+    personality: "tacano",
+    need: "un contrato anual de papel prensa",
+    budget: 900,
+    greeting: "Ya tenemos proveedor. Uno barato. ¿Por qué debería escucharle?",
+  },
+  {
+    company: "Clínica Dental Lustig",
+    contact: "Dra. Lustig",
+    personality: "ocupado",
+    need: "formularios y papel de impresora",
+    budget: 420,
+    greeting: "Tengo un paciente con la boca abierta. Rápido.",
+  },
+  {
+    company: "Restaurante Cugino's",
+    contact: "Tony Cugino",
+    personality: "bromista",
+    need: "servilletas de papel y cartas",
+    budget: 350,
+    greeting: "¡Ey! ¿Dunder qué? Suena a nombre de mago. Me gusta. Hable.",
+  },
+  {
+    company: "Colegio Scranton Prep",
+    contact: "Directora Moore",
+    personality: "amable",
+    need: "papel para todo el curso escolar",
+    budget: 840,
+    greeting: "Hola, buenos días. Estoy organizando el inicio de curso, ¡qué alegría que llamen!",
+  },
+  {
+    company: "Bufete Hirsch & Lee",
+    contact: "Sr. Hirsch",
+    personality: "ocupado",
+    need: "papel de alto gramaje para contratos",
+    budget: 960,
+    greeting: "Facturo 300 dólares la hora. Este minuto se lo regalo. Vaya al grano.",
+  },
+  {
+    company: "Gimnasio Iron Valley",
+    contact: "Coach Ruiz",
+    personality: "bromista",
+    need: "carteles y folletos de promoción",
+    budget: 410,
+    greeting: "¡Vamos, vamos, VAMOS! ¿Qué me vende, campeón?",
+  },
+  {
+    company: "Ferretería Krupp",
+    contact: "Sra. Krupp",
+    personality: "tacano",
+    need: "tickets y papel de embalar",
+    budget: 300,
+    greeting: "¿Cuánto cuesta esta llamada? A mí nada, ¿verdad? Bien. Hable.",
+  },
 ];
 
 export interface SaleOption {
@@ -58,7 +148,11 @@ export interface SaleOption {
   bonus?: Personality | undefined;
 }
 
-const O = (approach: Approach, text: string, bonus?: Personality): SaleOption => ({ approach, text, bonus });
+const O = (approach: Approach, text: string, bonus?: Personality): SaleOption => ({
+  approach,
+  text,
+  bonus,
+});
 
 export const OPENING: SaleOption[] = [
   O("cercano", "¡Buenos días! Soy de Dunder Mifflin Scranton. ¿Qué tal le va la semana?"),
@@ -92,7 +186,11 @@ export const TREE: Record<number, Record<Approach, SaleOption[]>> = {
       O("cercano", "Bueno, en serio: ¿qué tal les trata su proveedor?", "amable"),
       O("tecnico", "Vale, vale, datos: ¿cuántas impresoras tienen?"),
       O("precio", "Si le hago reír y además le ahorro dinero, ¿me da cinco minutos?"),
-      O("humor", "¿Sabe qué le dijo un folio a otro? Nada. El papel no habla. Por eso lo vendo yo.", "bromista"),
+      O(
+        "humor",
+        "¿Sabe qué le dijo un folio a otro? Nada. El papel no habla. Por eso lo vendo yo.",
+        "bromista",
+      ),
     ],
   },
   2: {
@@ -100,11 +198,18 @@ export const TREE: Record<number, Record<Approach, SaleOption[]>> = {
       O("cercano", "Le asigno un comercial fijo: yo. Me llama cuando quiera.", "amable"),
       O("tecnico", "Podemos programar entregas automáticas cada dos semanas.", "ocupado"),
       O("precio", "Para clientes de confianza tenemos un 10% de descuento fijo."),
-      O("humor", "Si nos elige, le mando una postal en Navidad. Firmada por Michael. Lo siento de antemano."),
+      O(
+        "humor",
+        "Si nos elige, le mando una postal en Navidad. Firmada por Michael. Lo siento de antemano.",
+      ),
     ],
     tecnico: [
       O("cercano", "Lo mejor: si algo falla, habla con una persona, no con una máquina."),
-      O("tecnico", "Nuestro papel tiene un 98% de blancura y no atasca impresoras láser.", "ocupado"),
+      O(
+        "tecnico",
+        "Nuestro papel tiene un 98% de blancura y no atasca impresoras láser.",
+        "ocupado",
+      ),
       O("precio", "Con su volumen, le saldría a 24 $ la caja en lugar de 31 $.", "tacano"),
       O("humor", "Es tan bueno que Dwight lo usa para sus manuales de supervivencia."),
     ],
@@ -112,13 +217,24 @@ export const TREE: Record<number, Record<Approach, SaleOption[]>> = {
       O("cercano", "Y como sé que cada dólar cuenta, le reviso la factura cada trimestre."),
       O("tecnico", "Le preparo un comparativo por escrito con su proveedor actual."),
       O("precio", "Si firma hoy, el primer envío va sin portes.", "tacano"),
-      O("humor", "Le ahorro tanto que podrá comprar una cafetera decente. O dos malas.", "bromista"),
+      O(
+        "humor",
+        "Le ahorro tanto que podrá comprar una cafetera decente. O dos malas.",
+        "bromista",
+      ),
     ],
     humor: [
-      O("cercano", "Somos una oficina pequeña: le tratamos como a uno más de la familia.", "amable"),
+      O(
+        "cercano",
+        "Somos una oficina pequeña: le tratamos como a uno más de la familia.",
+        "amable",
+      ),
       O("tecnico", "Fuera bromas: entrega en 24 horas en todo el condado."),
       O("precio", "Y ahora la parte seria: le igualo cualquier precio de la competencia."),
-      O("humor", "Nuestro lema: «Dunder Mifflin, el papel que no te deja tirado». Lo acabo de inventar."),
+      O(
+        "humor",
+        "Nuestro lema: «Dunder Mifflin, el papel que no te deja tirado». Lo acabo de inventar.",
+      ),
     ],
   },
   3: {
@@ -132,7 +248,11 @@ export const TREE: Record<number, Record<Approach, SaleOption[]>> = {
       O("cercano", "Hablemos claro: ¿qué tendría que pasar para que dijera que sí?"),
       O("tecnico", "Tenemos garantía de calidad: si hay un fallo, reponemos el lote.", "ocupado"),
       O("precio", "Le ofrezco pagar a 60 días en lugar de 30."),
-      O("humor", "Ni las grandes cadenas tienen a un Dwight revisando cada caja. Créame, es aterrador.", "bromista"),
+      O(
+        "humor",
+        "Ni las grandes cadenas tienen a un Dwight revisando cada caja. Créame, es aterrador.",
+        "bromista",
+      ),
     ],
     precio: [
       O("cercano", "No quiero presionarle. ¿Le parece si lo hablamos con su equipo?"),
@@ -144,7 +264,11 @@ export const TREE: Record<number, Record<Approach, SaleOption[]>> = {
       O("cercano", "Vale, me pongo serio: me importa que esto le funcione.", "amable"),
       O("tecnico", "Le dejo referencias de tres clientes de Scranton satisfechos."),
       O("precio", "Y si me da una oportunidad, el primer mes con un 15% menos.", "tacano"),
-      O("humor", "¿Y si le digo que el papel reciclado salva árboles y también mi trabajo?", "bromista"),
+      O(
+        "humor",
+        "¿Y si le digo que el papel reciclado salva árboles y también mi trabajo?",
+        "bromista",
+      ),
     ],
   },
   4: {
@@ -156,7 +280,11 @@ export const TREE: Record<number, Record<Approach, SaleOption[]>> = {
     ],
     tecnico: [
       O("cercano", "¿Puedo contar con usted como cliente?"),
-      O("tecnico", "Le confirmo: 40 cajas, entrega el lunes, factura a 30 días. ¿Correcto?", "ocupado"),
+      O(
+        "tecnico",
+        "Le confirmo: 40 cajas, entrega el lunes, factura a 30 días. ¿Correcto?",
+        "ocupado",
+      ),
       O("precio", "Con ese ahorro anual, ¿firmamos hoy?", "tacano"),
       O("humor", "Diga «sí» y le quito el «quizás» de encima."),
     ],
@@ -211,24 +339,56 @@ export type FitBucket = "good" | "ok" | "bad";
 
 export const REACTIONS: Record<Personality, Record<FitBucket, string[]>> = {
   amable: {
-    good: ["¡Ay, qué agradable es usted! Me gusta hablar así.", "Eso me da mucha confianza, la verdad.", "Qué majo. Así da gusto."],
+    good: [
+      "¡Ay, qué agradable es usted! Me gusta hablar así.",
+      "Eso me da mucha confianza, la verdad.",
+      "Qué majo. Así da gusto.",
+    ],
     ok: ["Ya veo, ya.", "Entiendo. Siga, siga.", "Mm, de acuerdo."],
-    bad: ["Bueno… no hace falta hablar tanto de dinero, ¿eh?", "Uy, eso suena un poco frío.", "No sé yo… parece usted un vendedor de esos."],
+    bad: [
+      "Bueno… no hace falta hablar tanto de dinero, ¿eh?",
+      "Uy, eso suena un poco frío.",
+      "No sé yo… parece usted un vendedor de esos.",
+    ],
   },
   tacano: {
-    good: ["Eso ya me gusta más. Siga hablando de ahorrar.", "Interesante. Muy interesante.", "Ahora sí nos entendemos."],
+    good: [
+      "Eso ya me gusta más. Siga hablando de ahorrar.",
+      "Interesante. Muy interesante.",
+      "Ahora sí nos entendemos.",
+    ],
     ok: ["Ya. ¿Y eso cuánto me cuesta?", "Vale. Siga.", "Mm. Sin más."],
-    bad: ["No le pago para que me haga reír. No le pago, de hecho.", "Eso no me ahorra ni un centavo.", "Está gastando mi tiempo. Y el tiempo es dinero."],
+    bad: [
+      "No le pago para que me haga reír. No le pago, de hecho.",
+      "Eso no me ahorra ni un centavo.",
+      "Está gastando mi tiempo. Y el tiempo es dinero.",
+    ],
   },
   ocupado: {
-    good: ["Bien. Claro y concreto. Siga.", "Eso es exactamente lo que necesitaba oír.", "Perfecto. Sin rodeos."],
+    good: [
+      "Bien. Claro y concreto. Siga.",
+      "Eso es exactamente lo que necesitaba oír.",
+      "Perfecto. Sin rodeos.",
+    ],
     ok: ["Ajá. ¿Algo más?", "De acuerdo. Rápido.", "Vale, vale."],
-    bad: ["No tengo tiempo para charlas.", "¿Podemos ir al grano, por favor?", "*suspira* Le quedan treinta segundos."],
+    bad: [
+      "No tengo tiempo para charlas.",
+      "¿Podemos ir al grano, por favor?",
+      "*suspira* Le quedan treinta segundos.",
+    ],
   },
   bromista: {
-    good: ["¡JA! ¡Me encanta! ¡Usted es de los míos!", "¡Ja, ja! Esto es lo mejor que me ha pasado hoy.", "¡Genial! Siga, siga."],
+    good: [
+      "¡JA! ¡Me encanta! ¡Usted es de los míos!",
+      "¡Ja, ja! Esto es lo mejor que me ha pasado hoy.",
+      "¡Genial! Siga, siga.",
+    ],
     ok: ["Je. Vale, vale.", "Bueno, no está mal.", "Ajá, ¿y qué más?"],
-    bad: ["Uf, qué serio todo. Me estoy durmiendo.", "Esto parece una auditoría…", "¿Me está leyendo un manual?"],
+    bad: [
+      "Uf, qué serio todo. Me estoy durmiendo.",
+      "Esto parece una auditoría…",
+      "¿Me está leyendo un manual?",
+    ],
   },
 };
 
@@ -249,7 +409,11 @@ export interface SaleStep {
 }
 
 /** Interest change for picking `option`, given previous approaches. */
-export function scoreOption(personality: Personality, option: SaleOption, history: Approach[]): number {
+export function scoreOption(
+  personality: Personality,
+  option: SaleOption,
+  history: Approach[],
+): number {
   let d = FIT[personality][option.approach];
   if (option.bonus === personality) d += 1;
   const n = history.length;

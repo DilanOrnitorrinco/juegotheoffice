@@ -6,7 +6,15 @@ import type { CostumeKind } from "@/game/types";
 
 import { Portrait } from "./Portrait";
 
-export function DialogBox({ ui, game, costume }: { ui: UIState; game: Game; costume?: CostumeKind | undefined }) {
+export function DialogBox({
+  ui,
+  game,
+  costume,
+}: {
+  ui: UIState;
+  game: Game;
+  costume?: CostumeKind | undefined;
+}) {
   const d = ui.dialog;
   const [open, setOpen] = useState(true);
   const dialogSpeaker = d?.speaker ?? null;
@@ -32,7 +40,11 @@ export function DialogBox({ ui, game, costume }: { ui: UIState; game: Game; cost
               <span className="truncate text-xs text-muted-foreground">«{d.line}»</span>
               <span className="shrink-0 text-xs font-bold text-primary">Desplegar ▾</span>
             </button>
-            <button type="button" className="dm-btn shrink-0 px-2 py-1 text-xs" onClick={game.closeDialog}>
+            <button
+              type="button"
+              className="dm-btn shrink-0 px-2 py-1 text-xs"
+              onClick={game.closeDialog}
+            >
               Salir ✕
             </button>
           </div>
@@ -42,12 +54,16 @@ export function DialogBox({ ui, game, costume }: { ui: UIState; game: Game; cost
               {d.portrait ? (
                 <Portrait id={d.portrait} costume={costume} />
               ) : (
-                <div className="grid h-[76px] w-[76px] shrink-0 place-items-center rounded-md border-2 border-border bg-secondary text-4xl">🥤</div>
+                <div className="grid h-[76px] w-[76px] shrink-0 place-items-center rounded-md border-2 border-border bg-secondary text-4xl">
+                  🥤
+                </div>
               )}
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="font-display text-lg leading-none text-primary">{d.speaker}</div>
+                    <div className="font-display text-lg leading-none text-primary">
+                      {d.speaker}
+                    </div>
                     <div className="text-xs font-semibold text-muted-foreground">{d.role}</div>
                   </div>
                   <div className="flex shrink-0 items-center gap-1.5">
@@ -60,29 +76,49 @@ export function DialogBox({ ui, game, costume }: { ui: UIState; game: Game; cost
                     >
                       Plegar ▸
                     </button>
-                    <button type="button" className="dm-btn px-2 py-1 text-xs" onClick={game.closeDialog}>
+                    <button
+                      type="button"
+                      className="dm-btn px-2 py-1 text-xs"
+                      onClick={game.closeDialog}
+                    >
                       Salir ✕
                     </button>
                   </div>
                 </div>
-                <p key={d.line} className="toast-in mt-2 max-h-28 overflow-auto text-[15px] leading-snug">
+                <p
+                  key={d.line}
+                  className="toast-in mt-2 max-h-28 overflow-auto text-[15px] leading-snug"
+                >
                   «{d.line}»
                 </p>
               </div>
             </div>
             <div className="mt-3 grid min-h-0 flex-1 gap-1.5 overflow-auto sm:grid-cols-2">
               {d.options.map((o, i) => (
-                <button key={i + o.label} type="button" data-tag={o.tag} className="dm-choice" onClick={() => game.choose(i)}>
+                <button
+                  key={i + o.label}
+                  type="button"
+                  data-tag={o.tag}
+                  className="dm-choice"
+                  onClick={() => game.choose(i)}
+                >
                   <span className="dm-kbd mr-1.5">{i + 1}</span>
                   {o.label}
                 </button>
               ))}
             </div>
             <div className="mt-2 flex items-center justify-between">
-              <button type="button" className="dm-btn px-2 py-1 text-xs" disabled={!d.canBack} onClick={game.dialogBack}>
+              <button
+                type="button"
+                className="dm-btn px-2 py-1 text-xs"
+                disabled={!d.canBack}
+                onClick={game.dialogBack}
+              >
                 ← Volver
               </button>
-              <span className="text-xs text-muted-foreground">El tiempo se detiene mientras hablas</span>
+              <span className="text-xs text-muted-foreground">
+                El tiempo se detiene mientras hablas
+              </span>
             </div>
           </>
         )}

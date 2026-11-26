@@ -82,10 +82,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "The Office: Scranton" },
-      { name: "description", content: "Juego fan de The Office ambientado en Dunder Mifflin Scranton." },
+      {
+        name: "description",
+        content: "Juego fan de The Office ambientado en Dunder Mifflin Scranton.",
+      },
       { name: "author", content: "Dunder Mifflin Scranton" },
       { property: "og:title", content: "The Office: Scranton" },
-      { property: "og:description", content: "Juego fan de The Office ambientado en Dunder Mifflin Scranton." },
+      {
+        property: "og:description",
+        content: "Juego fan de The Office ambientado en Dunder Mifflin Scranton.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },

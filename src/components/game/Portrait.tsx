@@ -39,5 +39,11 @@ export function Portrait({
       scale: fullBody ? size / 74 : size / 46,
     });
   }, [id, look, costume, size, fullBody]);
-  return <canvas ref={ref} style={{ width: size, height: size }} className="rounded-md border-2 border-border bg-secondary" />;
+  return (
+    <canvas
+      ref={ref}
+      style={{ width: size, height: size }}
+      className="rounded-md border-2 border-border bg-secondary"
+    />
+  );
 }

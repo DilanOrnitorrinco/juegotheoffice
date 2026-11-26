@@ -1,5 +1,22 @@
 import { CHAR_BY_ID } from "../data/characters";
-import { ELEVATOR, ROOMS, SPOTS, WALLS, WALL_CAP, WINDOWS, WORLD, getActiveFurniture, seatOf, type FloorKind, type Furniture, type Wall } from "../data/map";
+import {
+  ELEVATOR,
+  FLOOR_PORTALS,
+  FLOOR_SPLIT_Y,
+  ROOMS,
+  SPOTS,
+  STAIRWELL_HOLE,
+  WALLS,
+  WALL_CAP,
+  WINDOWS,
+  WORLD,
+  floorOfY,
+  getActiveFurniture,
+  seatOf,
+  type FloorKind,
+  type Furniture,
+  type Wall,
+} from "../data/map";
 import { DUNDIES, OBJECTS } from "../data/objects";
 import type { EventId, OfficeDecorKind } from "../types";
 import type { Game } from "./game";
@@ -21,7 +38,7 @@ function noise(g: G, size: number, base: string, dots: string[], n: number, seed
   g.fillStyle = base;
   g.fillRect(0, 0, size, size);
   let s = seed;
-  const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+  const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
   for (let i = 0; i < n; i++) {
     g.fillStyle = dots[i % dots.length]!;
     g.fillRect(rnd() * size, rnd() * size, 1.5, 1.5);
@@ -214,8 +231,18 @@ function buildFloor(event: EventId | null, decor: OfficeDecorKind | null): HTMLC
   // Event floor decor
   if (event === "sanpatricio") {
     g.fillStyle = "rgba(47,154,79,0.35)";
-    for (const [x, y] of [[280, 480], [770, 640], [1230, 640], [1840, 620], [510, 200]] as const) {
-      for (const [dx, dy] of [[0, -10], [-9, 2], [9, 2]] as const) {
+    for (const [x, y] of [
+      [280, 480],
+      [770, 640],
+      [1230, 640],
+      [1840, 620],
+      [510, 200],
+    ] as const) {
+      for (const [dx, dy] of [
+        [0, -10],
+        [-9, 2],
+        [9, 2],
+      ] as const) {
         g.beginPath();
         g.arc(x + dx, y + dy, 9, 0, Math.PI * 2);
         g.fill();
@@ -225,7 +252,7 @@ function buildFloor(event: EventId | null, decor: OfficeDecorKind | null): HTMLC
   if (event === "halloween") {
     g.fillStyle = "rgba(160,80,20,0.55)";
     let s = 3;
-    const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+    const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
     for (let i = 0; i < 90; i++) {
       g.beginPath();
       g.ellipse(60 + rnd() * 2040, 320 + rnd() * 560, 5, 3, rnd() * 3, 0, Math.PI * 2);
@@ -235,7 +262,7 @@ function buildFloor(event: EventId | null, decor: OfficeDecorKind | null): HTMLC
   if (event === "sanvalentin") {
     g.fillStyle = "rgba(224,71,107,0.4)";
     let s = 9;
-    const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+    const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
     for (let i = 0; i < 70; i++) {
       const x = 60 + rnd() * 2040;
       const y = 320 + rnd() * 560;
@@ -262,7 +289,7 @@ function buildFloor(event: EventId | null, decor: OfficeDecorKind | null): HTMLC
   if (decor === "funrun") {
     g.fillStyle = "rgba(255,255,255,0.9)";
     for (let x = 248; x < 344; x += 12) {
-      g.fillStyle = (Math.floor(x / 12) % 2 === 0) ? "#1f2937" : "#f8fafc";
+      g.fillStyle = Math.floor(x / 12) % 2 === 0 ? "#1f2937" : "#f8fafc";
       g.fillRect(x, 515, 12, 10);
     }
   }
@@ -416,7 +443,13 @@ function drawWall(g: G, w: Wall, t: number, event: EventId | null) {
     g.fillText("DUNDER MIFFLIN", 202, fy + 13);
   }
   // Event wall decor
-  if (event === "navidad" || event === "halloween" || event === "sanpatricio" || event === "sanvalentin" || event === "cumplemichael") {
+  if (
+    event === "navidad" ||
+    event === "halloween" ||
+    event === "sanpatricio" ||
+    event === "sanvalentin" ||
+    event === "cumplemichael"
+  ) {
     const cols =
       event === "navidad"
         ? ["#e53935", "#43a047", "#fdd835", "#1e88e5"]
@@ -448,7 +481,17 @@ function drawWall(g: G, w: Wall, t: number, event: EventId | null) {
 }
 
 // ---------------- furniture ----------------
-function block(g: G, x: number, y: number, w: number, h: number, top: string, front: string, depth = 10, r = 3) {
+function block(
+  g: G,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  top: string,
+  front: string,
+  depth = 10,
+  r = 3,
+) {
   g.fillStyle = "rgba(15,20,25,0.18)";
   rr(g, x + 3, y + 5, w, h, r);
   g.fill();
@@ -856,6 +899,13 @@ function drawFurniture(g: G, f: Furniture, t: number, seatLabel?: string) {
       g.fillStyle = PAL.paper;
       g.fillRect(f.x + 50, f.y + 10, 24, 16);
       return;
+    case "sideTable":
+      block(g, f.x, f.y, f.w, f.h, "#cf9658", "#8f5c2d", 10, 2);
+      g.fillStyle = "#f4e6be";
+      g.beginPath();
+      g.arc(f.x + f.w / 2, f.y + f.h / 2 - 4, 6, 0, Math.PI * 2);
+      g.fill();
+      return;
   }
 }
 
@@ -922,9 +972,27 @@ function eventDecos(event: EventId | null): Deco[] {
     });
 
   if (event === "halloween") {
-    ([[270, 320], [450, 560], [1340, 560], [2130, 895], [70, 890], [2130, 240], [1980, 1460], [90, 1460]] as const).forEach(([x, y]) => pumpkin(x, y));
+    (
+      [
+        [270, 320],
+        [450, 560],
+        [1340, 560],
+        [2130, 895],
+        [70, 890],
+        [2130, 240],
+        [1980, 1460],
+        [90, 1460],
+      ] as const
+    ).forEach(([x, y]) => pumpkin(x, y));
     // cobwebs in corners
-    for (const [x, y, sx] of [[24, 40, 1], [2176, 40, -1], [24, 300, 1], [2176, 300, -1], [1020, 960, 1], [2176, 960, -1]] as const) {
+    for (const [x, y, sx] of [
+      [24, 40, 1],
+      [2176, 40, -1],
+      [24, 300, 1],
+      [2176, 300, -1],
+      [1020, 960, 1],
+      [2176, 960, -1],
+    ] as const) {
       out.push({
         y: y + 1,
         draw: (g) => {
@@ -954,7 +1022,11 @@ function eventDecos(event: EventId | null): Deco[] {
         const y = 356;
         g.fillStyle = "#6d4a33";
         g.fillRect(x - 4, y - 10, 8, 10);
-        for (const [w, yy] of [[30, -14], [24, -30], [17, -46]] as const) {
+        for (const [w, yy] of [
+          [30, -14],
+          [24, -30],
+          [17, -46],
+        ] as const) {
           g.fillStyle = "#2e7d32";
           g.beginPath();
           g.moveTo(x - w, y + yy);
@@ -978,7 +1050,11 @@ function eventDecos(event: EventId | null): Deco[] {
     out.push({
       y: 760,
       draw: (g) => {
-        for (const [x, y] of [[350, 320], [1320, 320], [1860, 320]] as const) {
+        for (const [x, y] of [
+          [350, 320],
+          [1320, 320],
+          [1860, 320],
+        ] as const) {
           g.strokeStyle = "#2e7d32";
           g.lineWidth = 6;
           g.beginPath();
@@ -1101,7 +1177,8 @@ export function renderWorld(g: G, game: Game, view: View) {
   const epId = game.episode?.id ?? null;
   const decor = game.episode?.decor ?? null;
   const cacheKey = `${eventId ?? ""}|${epId ?? ""}`;
-  if (!floorCache || floorCache.key !== cacheKey) floorCache = { canvas: buildFloor(eventId, decor), key: cacheKey };
+  if (!floorCache || floorCache.key !== cacheKey)
+    floorCache = { canvas: buildFloor(eventId, decor), key: cacheKey };
 
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
   g.fillStyle = PAL.void;
@@ -1135,12 +1212,99 @@ export function renderWorld(g: G, game: Game, view: View) {
   for (const w of WALLS) list.push({ y: w.y + w.h, draw: () => drawWall(g, w, t, eventId) });
   for (const f of getActiveFurniture()) {
     const label = f.owner
-      ? deskLabelByOriginalOwner[f.owner] ?? (STAMFORD_DESK_OWNERS.has(f.owner) ? f.owner.toUpperCase() : undefined)
+      ? (deskLabelByOriginalOwner[f.owner] ??
+        (STAMFORD_DESK_OWNERS.has(f.owner) ? f.owner.toUpperCase() : undefined))
       : undefined;
     list.push({ y: f.y + f.h, draw: () => drawFurniture(g, f, t, label) });
   }
   for (const d of eventDecos(eventId)) list.push({ y: d.y, draw: () => d.draw(g, t) });
   for (const d of episodeBannerDecos(decor)) list.push({ y: d.y, draw: () => d.draw(g, t) });
+  const activeEvEffect = game.activeOfficeEventEffect();
+  // Active canon episode props on furniture & walls
+  if (epId === "s1e1" || activeEvEffect === "gelatin_stapler") {
+    list.push({
+      y: 531,
+      draw: () => {
+        // Gelatin-encased stapler on Dwight's desk
+        g.fillStyle = "rgba(240,210,55,0.88)";
+        rr(g, 595, 492, 20, 15, 4);
+        g.fill();
+        g.fillStyle = "#c8312f";
+        rr(g, 599, 497, 12, 5, 2);
+        g.fill();
+      },
+    });
+  }
+  if (epId === "s2e10" || activeEvEffect === "yankee_swap") {
+    list.push({
+      y: 209,
+      draw: () => {
+        // Gift boxes + white iPod box on conference table
+        g.fillStyle = "#c8312f";
+        g.fillRect(825, 160, 16, 14);
+        g.fillStyle = "#f2c14e";
+        g.fillRect(831, 160, 4, 14);
+        g.fillStyle = "#2f6ea3";
+        g.fillRect(895, 162, 16, 12);
+        g.fillStyle = "#ffffff";
+        rr(g, 862, 158, 13, 17, 2);
+        g.fill();
+        g.fillStyle = "#3aa7a3";
+        g.fillRect(865, 161, 7, 6);
+      },
+    });
+  }
+  if (epId === "s2e22") {
+    list.push({
+      y: 1235,
+      draw: () => {
+        // Poker chips & cards on casino table in Warehouse
+        for (const [cx, cy, col] of [
+          [1255, 1175, "#e53935"],
+          [1265, 1185, "#1e88e5"],
+          [1335, 1178, "#fdd835"],
+          [1345, 1188, "#43a047"],
+        ] as const) {
+          g.fillStyle = col;
+          g.beginPath();
+          g.arc(cx, cy, 4, 0, Math.PI * 2);
+          g.fill();
+        }
+        g.fillStyle = "#ffffff";
+        g.fillRect(1292, 1172, 10, 13);
+        g.fillRect(1300, 1176, 10, 13);
+      },
+    });
+  }
+  if (epId === "s3e13" && (game.mins >= 562 || activeEvEffect === "wall_hole")) {
+    list.push({
+      y: 365,
+      draw: () => {
+        // Punched drywall hole near Annex entrance
+        g.fillStyle = "#241d19";
+        g.beginPath();
+        g.ellipse(1734, 342, 7, 10, 0.2, 0, Math.PI * 2);
+        g.fill();
+        g.strokeStyle = "#8a7f6c";
+        g.lineWidth = 1.5;
+        g.stroke();
+      },
+    });
+  }
+  if (epId === "s4e1") {
+    list.push({
+      y: 530,
+      draw: () => {
+        // Fun Run water cups next to starting line
+        for (const cx of [318, 328, 338]) {
+          g.fillStyle = "#ffffff";
+          g.fillRect(cx, 506, 6, 8);
+          g.fillStyle = "#4fc3f7";
+          g.fillRect(cx + 1, 506, 4, 2);
+        }
+      },
+    });
+  }
   for (const o of OBJECTS) {
     if (!targetedObjects.has(o.id)) continue;
     list.push({
@@ -1171,7 +1335,7 @@ export function renderWorld(g: G, game: Game, view: View) {
   for (const n of game.npcs) {
     list.push({
       y: n.y,
-      draw: () =>
+      draw: () => {
         drawCharacter(g, {
           x: n.x,
           y: n.y,
@@ -1179,8 +1343,37 @@ export function renderWorld(g: G, game: Game, view: View) {
           moving: n.moving,
           walkT: n.walkT,
           look: n.def.look,
-          costume: (n.def.id === "michael" ? game.cinematicCostume : undefined) ?? game.event?.costumes[n.def.id] ?? undefined,
-        }),
+          costume:
+            (n.def.id === "michael" ? game.cinematicCostume : undefined) ??
+            game.event?.costumes[n.def.id] ??
+            undefined,
+        });
+        // Diversity Day sticky notes on foreheads inside conf
+        if (
+          (activeEvEffect === "sticky_notes" ||
+            (epId === "s1e2" && n.x >= 680 && n.x <= 1080 && n.y <= 280)) &&
+          n.facing !== "up"
+        ) {
+          g.fillStyle = n.def.id === "dwight" ? "#fff59d" : "#f8fafc";
+          g.strokeStyle = "#94a3b8";
+          g.lineWidth = 0.8;
+          g.fillRect(n.x - 5, n.y - 54, 10, 6);
+          g.strokeRect(n.x - 5, n.y - 54, 10, 6);
+        }
+        // Prison Mike purple bandana
+        if (
+          n.def.id === "michael" &&
+          (activeEvEffect === "prison_mike" || (epId === "s3e9" && game.mins < 630))
+        ) {
+          g.fillStyle = "#6c3fb5";
+          rr(g, n.x - 11.5, n.y - 55, 23, 7, 2);
+          g.fill();
+          g.fillStyle = "#532c94";
+          g.beginPath();
+          g.arc(n.x + 11, n.y - 52, 3, 0, Math.PI * 2);
+          g.fill();
+        }
+      },
     });
   }
   const p = game.player;
@@ -1199,9 +1392,21 @@ export function renderWorld(g: G, game: Game, view: View) {
         moving: p.moving,
         walkT: p.walkT,
         isPlayer: true,
-        costume: game.event?.playerCostume,
+        costume: game.playerSkin ?? game.event?.playerCostume,
         look: game.playerLook,
       });
+      if (game.meetingOpen) {
+        g.fillStyle = "#f2c14e";
+        g.strokeStyle = "#1b232b";
+        g.lineWidth = 1.5;
+        rr(g, p.x - 11, p.y - 78, 22, 18, 6);
+        g.fill();
+        g.stroke();
+        g.fillStyle = "#1b232b";
+        g.font = "12px sans-serif";
+        g.textAlign = "center";
+        g.fillText("✋", p.x, p.y - 65);
+      }
     },
   });
   list.sort((a, b) => a.y - b.y);
@@ -1231,7 +1436,8 @@ export function renderWorld(g: G, game: Game, view: View) {
     }
     if (!game.isCinematic) {
       const markY = n.y - 80 + Math.sin(t * 4 + n.x) * 3;
-      if (targetedNPCs.has(n.def.id)) drawBadge(g, n.x, markY, "?", PAL.teal);
+      if (game.approachingNpcId() === n.def.id) drawBadge(g, n.x, markY, "💬", "#38bdf8");
+      else if (targetedNPCs.has(n.def.id)) drawBadge(g, n.x, markY, "?", PAL.teal);
       else if (offers.has(n.def.id)) drawBadge(g, n.x, markY, "!", PAL.marker);
     }
   }
@@ -1291,8 +1497,19 @@ function overlapsRect(a: ScreenRect, b: ScreenRect): boolean {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-function hudObstructions(game: Game, vw: number, vh: number): { safeTop: number; safeBottom: number; boxes: ScreenRect[] } {
-  const modalOpen = !!(game.dialog || game.chatWith || game.pc || game.journal || game.paused);
+function hudObstructions(
+  game: Game,
+  vw: number,
+  vh: number,
+): { safeTop: number; safeBottom: number; boxes: ScreenRect[] } {
+  const modalOpen = !!(
+    game.dialog ||
+    game.chatWith ||
+    game.pc ||
+    game.journal ||
+    game.paused ||
+    game.meetingOpen
+  );
   if (modalOpen) {
     return { safeTop: 72, safeBottom: vh - 16, boxes: [{ x: 0, y: 0, w: vw, h: 72 }] };
   }
@@ -1300,8 +1517,8 @@ function hudObstructions(game: Game, vw: number, vh: number): { safeTop: number;
   const boxes: ScreenRect[] = [
     // Top bar (brand + clock/stats strip, generous vertical clearance so bubbles never hide behind it)
     { x: 0, y: 0, w: vw, h: vw < 1100 ? 104 : 76 },
-    // Agenda panel (top-right)
-    { x: Math.max(0, vw - 310), y: 0, w: 310, h: 268 },
+    // Agenda panel (top-right, including daily objective box)
+    { x: Math.max(0, vw - 310), y: 0, w: 310, h: 332 },
     // Controls panel (bottom-left)
     { x: 0, y: Math.max(0, vh - 178), w: 344, h: 178 },
     // Minimap (bottom-right)
@@ -1468,7 +1685,18 @@ function drawHoverScreenSpace(g: G, game: Game, view: View) {
   g.font = "800 11px Archivo, sans-serif";
   const w = g.measureText(h.label).width + 18;
   const bh = 20;
-  const { bx, by } = resolveScreenPlacement(sx, sy - 2, sy + 80, w, bh, vw, vh, safeTop, safeBottom, boxes);
+  const { bx, by } = resolveScreenPlacement(
+    sx,
+    sy - 2,
+    sy + 80,
+    w,
+    bh,
+    vw,
+    vh,
+    safeTop,
+    safeBottom,
+    boxes,
+  );
   g.fillStyle = "rgba(24,32,40,0.92)";
   rr(g, bx, by, w, bh, 6);
   g.fill();
@@ -1526,7 +1754,14 @@ function drawLighting(g: G, game: Game, vw: number, vh: number) {
     g.fillStyle = "rgba(80,200,110,0.06)";
     g.fillRect(0, 0, vw, vh);
   }
-  const vg = g.createRadialGradient(vw / 2, vh / 2, Math.min(vw, vh) * 0.35, vw / 2, vh / 2, Math.max(vw, vh) * 0.75);
+  const vg = g.createRadialGradient(
+    vw / 2,
+    vh / 2,
+    Math.min(vw, vh) * 0.35,
+    vw / 2,
+    vh / 2,
+    Math.max(vw, vh) * 0.75,
+  );
   vg.addColorStop(0, "rgba(10,14,20,0)");
   vg.addColorStop(1, ev === "halloween" ? "rgba(10,5,20,0.6)" : "rgba(10,14,20,0.35)");
   g.fillStyle = vg;
@@ -1539,7 +1774,8 @@ function drawOffscreenArrows(g: G, game: Game, view: View) {
   const tObj = game.targetedObjects();
   for (const o of OBJECTS) if (tObj.has(o.id)) targets.push({ x: o.x, y: o.y, col: PAL.marker });
   const tNpc = game.targetedNPCs();
-  for (const n of game.npcs) if (tNpc.has(n.def.id)) targets.push({ x: n.x, y: n.y - 30, col: PAL.teal });
+  for (const n of game.npcs)
+    if (tNpc.has(n.def.id)) targets.push({ x: n.x, y: n.y - 30, col: PAL.teal });
   const cx = vw / 2;
   const cy = vh / 2;
   for (const tg of targets) {
@@ -1574,8 +1810,14 @@ function drawOffscreenArrows(g: G, game: Game, view: View) {
 // ---------------- minimap ----------------
 export function renderMinimap(g: G, game: Game, w: number, h: number, dpr: number) {
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const playerFloor = floorOfY(game.player.y);
+  const yMin = playerFloor === 0 ? 0 : FLOOR_SPLIT_Y;
+  const yMax = playerFloor === 0 ? FLOOR_SPLIT_Y : WORLD.h;
+  const floorH = Math.max(1, yMax - yMin);
   const sx = w / WORLD.w;
-  const sy = h / WORLD.h;
+  const sy = h / floorH;
+  const py = (y: number) => (y - yMin) * sy;
+
   g.fillStyle = "#26313b";
   g.fillRect(0, 0, w, h);
   const floorCol: Record<string, string> = {
@@ -1590,34 +1832,86 @@ export function renderMinimap(g: G, game: Game, w: number, h: number, dpr: numbe
     concrete: "#97978f",
   };
   for (const r of ROOMS) {
+    if (floorOfY(r.y + r.h * 0.5) !== playerFloor) continue;
     g.fillStyle = floorCol[r.floor] ?? "#888";
-    g.fillRect(r.x * sx, r.y * sy, r.w * sx, r.h * sy);
+    g.fillRect(r.x * sx, py(r.y), r.w * sx, r.h * sy);
+  }
+  if (playerFloor === 0) {
+    g.fillStyle = "#1a2028";
+    g.fillRect(
+      STAIRWELL_HOLE.x * sx,
+      py(STAIRWELL_HOLE.y),
+      STAIRWELL_HOLE.w * sx,
+      STAIRWELL_HOLE.h * sy,
+    );
   }
   g.fillStyle = "#1b232b";
-  for (const wl of WALLS) g.fillRect(wl.x * sx, wl.y * sy, Math.max(1, wl.w * sx), Math.max(1, wl.h * sy * 0.6));
+  for (const wl of WALLS) {
+    if (floorOfY(wl.y + Math.min(wl.h, 24) * 0.5) !== playerFloor) continue;
+    g.fillRect(wl.x * sx, py(wl.y), Math.max(1, wl.w * sx), Math.max(1, wl.h * sy * 0.6));
+  }
   g.fillStyle = "rgba(60,50,40,0.6)";
-  for (const f of getActiveFurniture()) g.fillRect(f.x * sx, f.y * sy, f.w * sx, f.h * sy);
+  for (const f of getActiveFurniture()) {
+    if (floorOfY(f.y + f.h * 0.5) !== playerFloor) continue;
+    g.fillRect(f.x * sx, py(f.y), f.w * sx, f.h * sy);
+  }
+
+  for (const pt of FLOOR_PORTALS) {
+    if (pt.fromFloor !== playerFloor) continue;
+    const px = pt.x * sx;
+    const pyPt = py(pt.y);
+    g.fillStyle = pt.kind === "stairs" ? "#f2c14e" : "#4fc3f7";
+    g.strokeStyle = "#10171f";
+    g.lineWidth = 1;
+    g.beginPath();
+    g.rect(px - 3.5, pyPt - 3.5, 7, 7);
+    g.fill();
+    g.stroke();
+  }
+
   const tObj = game.targetedObjects();
   const tNpc = game.targetedNPCs();
   const offers = game.npcsWithOffers();
   for (const o of OBJECTS) {
-    if (!tObj.has(o.id)) continue;
+    if (!tObj.has(o.id) || floorOfY(o.y) !== playerFloor) continue;
     g.fillStyle = PAL.marker;
     g.beginPath();
-    g.arc(o.x * sx, o.y * sy, 3.5, 0, Math.PI * 2);
+    g.arc(o.x * sx, py(o.y), 3.5, 0, Math.PI * 2);
     g.fill();
   }
   for (const n of game.npcs) {
+    if (floorOfY(n.y) !== playerFloor) continue;
     g.fillStyle = tNpc.has(n.def.id) ? PAL.teal : offers.has(n.def.id) ? PAL.marker : "#e9e4d6";
     g.beginPath();
-    g.arc(n.x * sx, n.y * sy, tNpc.has(n.def.id) || offers.has(n.def.id) ? 3 : 2, 0, Math.PI * 2);
+    g.arc(n.x * sx, py(n.y), tNpc.has(n.def.id) || offers.has(n.def.id) ? 3 : 2, 0, Math.PI * 2);
     g.fill();
+  }
+  const activeEv = game.getSnapshot().activeOfficeEvent;
+  if (activeEv) {
+    const pos = SPOTS[activeEv.spot];
+    if (pos) {
+      const pulse = (Math.sin(game.time * 5) + 1) / 2;
+      g.strokeStyle = `rgba(242,193,78,${0.55 + pulse * 0.45})`;
+      g.lineWidth = 2;
+      if (floorOfY(pos.y) === playerFloor) {
+        g.beginPath();
+        g.arc(pos.x * sx, py(pos.y), 6 + pulse * 5, 0, Math.PI * 2);
+        g.stroke();
+      } else {
+        for (const pt of FLOOR_PORTALS) {
+          if (pt.fromFloor !== playerFloor) continue;
+          g.beginPath();
+          g.arc(pt.x * sx, py(pt.y), 5 + pulse * 4, 0, Math.PI * 2);
+          g.stroke();
+        }
+      }
+    }
   }
   g.fillStyle = "#4fc3f7";
   g.strokeStyle = "#fff";
   g.lineWidth = 1.5;
   g.beginPath();
-  g.arc(game.player.x * sx, game.player.y * sy, 4, 0, Math.PI * 2);
+  g.arc(game.player.x * sx, py(game.player.y), 4, 0, Math.PI * 2);
   g.fill();
   g.stroke();
 }

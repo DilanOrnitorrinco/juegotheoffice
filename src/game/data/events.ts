@@ -67,9 +67,18 @@ export const EVENTS: EventDef[] = [
     name: "Cumpleaños de Michael",
     emoji: "🎂",
     dateLabel: "15 de marzo",
-    description: "Globos, pancarta y una tarta que nadie debe estropear. Michael está insoportable.",
+    description:
+      "Globos, pancarta y una tarta que nadie debe estropear. Michael está insoportable.",
     match: (d) => d.getMonth() === 2 && d.getDate() === 15,
-    costumes: { michael: "crown", kevin: "partyHat", pam: "partyHat", jim: "partyHat", phyllis: "partyHat", kelly: "partyHat", dwight: "partyHat" },
+    costumes: {
+      michael: "crown",
+      kevin: "partyHat",
+      pam: "partyHat",
+      jim: "partyHat",
+      phyllis: "partyHat",
+      kelly: "partyHat",
+      dwight: "partyHat",
+    },
     playerCostume: "partyHat",
     example: (y) => ymd(y, 3, 15),
   },
@@ -80,7 +89,12 @@ export const EVENTS: EventDef[] = [
     dateLabel: "17 de marzo",
     description: "Todo es verde. Tréboles escondidos y Michael asegura ser irlandés.",
     match: (d) => d.getMonth() === 2 && d.getDate() === 17,
-    costumes: { michael: "leprechaun", kevin: "leprechaun", meredith: "leprechaun", creed: "leprechaun" },
+    costumes: {
+      michael: "leprechaun",
+      kevin: "leprechaun",
+      meredith: "leprechaun",
+      creed: "leprechaun",
+    },
     playerCostume: "leprechaun",
     example: (y) => ymd(y, 3, 17),
   },
@@ -123,7 +137,20 @@ export function parseLocalDate(s: string): Date {
   return new Date(y, (m || 1) - 1, d || 1);
 }
 
-const MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const MONTHS = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
 const DAYS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 
 export function formatLongDate(d: Date): string {

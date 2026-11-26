@@ -14,7 +14,15 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 /** Free-text chat with a character, persisted across sessions with character memory. */
-export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costume?: CostumeKind | undefined }) {
+export function FreeChat({
+  ui,
+  game,
+  costume,
+}: {
+  ui: UIState;
+  game: Game;
+  costume?: CostumeKind | undefined;
+}) {
   const chat = ui.chat;
   const [open, setOpen] = useState(true);
   const [memOpen, setMemOpen] = useState(true);
@@ -45,8 +53,20 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
   const send = async () => {
     const content = text.trim().slice(0, 500);
     if (!content || busy || !game.ai) return;
+
+    if (game.isSecretChatTrigger(chat.id, content)) {
+      game.appendChatMessage(chat.id, { role: "user", content });
+      setText("");
+      setError(null);
+      inputRef.current?.focus();
+      return;
+    }
+
     const priorMsgs: ChatMessage[] = chat.history
-      .filter((e): e is { role: "user" | "assistant"; content: string; clock: string } => e.role === "user" || e.role === "assistant")
+      .filter(
+        (e): e is { role: "user" | "assistant"; content: string; clock: string } =>
+          e.role === "user" || e.role === "assistant",
+      )
       .map((e) => ({ role: e.role, content: e.content }));
     const nextForAi: ChatMessage[] = [...priorMsgs, { role: "user" as const, content }].slice(-18);
 
@@ -60,7 +80,11 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
         messages: nextForAi,
         eventName: ui.event?.name ?? null,
         clock: ui.clock,
-        memories: chat.memories.slice(-20).map((m) => `[${m.atClock} · ${STATUS_LABELS[m.status] ?? m.status}] ${m.summary}`.slice(0, 280)),
+        memories: chat.memories
+          .slice(-20)
+          .map((m) =>
+            `[${m.atClock} · ${STATUS_LABELS[m.status] ?? m.status}] ${m.summary}`.slice(0, 280),
+          ),
         activeCharIds: ui.activeCharIds,
         episodeContext: ui.episodeContext,
         speakerRole: chat.role,
@@ -86,10 +110,16 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
               onClick={() => setOpen(true)}
             >
               <span className="font-display text-sm text-primary">💬 Chat con {chat.name}</span>
-              <span className="truncate text-xs text-muted-foreground">({chat.history.length} mensajes)</span>
+              <span className="truncate text-xs text-muted-foreground">
+                ({chat.history.length} mensajes)
+              </span>
               <span className="ml-auto shrink-0 text-xs font-bold text-primary">Desplegar ▾</span>
             </button>
-            <button type="button" className="dm-btn shrink-0 px-2 py-1 text-xs" onClick={game.closeChat}>
+            <button
+              type="button"
+              className="dm-btn shrink-0 px-2 py-1 text-xs"
+              onClick={game.closeChat}
+            >
               Salir ✕
             </button>
           </div>
@@ -100,8 +130,12 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="font-display text-lg leading-none text-primary">{chat.name}</div>
-                    <div className="text-xs font-semibold text-muted-foreground">{chat.role} · charla libre y memoria de hoy</div>
+                    <div className="font-display text-lg leading-none text-primary">
+                      {chat.name}
+                    </div>
+                    <div className="text-xs font-semibold text-muted-foreground">
+                      {chat.role} · charla libre y memoria de hoy
+                    </div>
                   </div>
                   <div className="flex shrink-0 items-center gap-1.5">
                     <button
@@ -113,7 +147,11 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
                     >
                       Plegar ▸
                     </button>
-                    <button type="button" className="dm-btn px-2 py-1 text-xs" onClick={game.closeChat}>
+                    <button
+                      type="button"
+                      className="dm-btn px-2 py-1 text-xs"
+                      onClick={game.closeChat}
+                    >
                       Salir ✕
                     </button>
                   </div>
@@ -156,24 +194,39 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
               </div>
             )}
 
-            <div ref={listRef} className="mt-2.5 min-h-[140px] flex-1 space-y-2 overflow-auto rounded-md border-2 border-border bg-secondary/40 p-3" aria-live="polite">
-              {chat.history.length === 0 && <p className="text-sm text-muted-foreground">«{chat.intro}»</p>}
+            <div
+              ref={listRef}
+              className="mt-2.5 min-h-[140px] flex-1 space-y-2 overflow-auto rounded-md border-2 border-border bg-secondary/40 p-3"
+              aria-live="polite"
+            >
+              {chat.history.length === 0 && (
+                <p className="text-sm text-muted-foreground">«{chat.intro}»</p>
+              )}
               {chat.history.map((m, i) =>
                 m.role === "note" ? (
                   <div key={i} className="flex justify-center">
                     <div className="rounded border border-mustard/60 bg-mustard/20 px-2.5 py-1 text-xs font-medium text-foreground">
-                      <span className="mr-1.5 font-mono text-[11px] text-muted-foreground">{m.clock}</span>
+                      <span className="mr-1.5 font-mono text-[11px] text-muted-foreground">
+                        {m.clock}
+                      </span>
                       {m.content}
                     </div>
                   </div>
                 ) : (
-                  <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
+                  <div
+                    key={i}
+                    className={m.role === "user" ? "flex justify-end" : "flex justify-start"}
+                  >
                     <div
                       className={`toast-in max-w-[80%] rounded-lg border-2 px-3 py-1.5 text-[15px] leading-snug ${
-                        m.role === "user" ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-card-foreground"
+                        m.role === "user"
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-card text-card-foreground"
                       }`}
                     >
-                      {m.role === "assistant" && <span className="mr-1 font-bold text-primary">{first}:</span>}
+                      {m.role === "assistant" && (
+                        <span className="mr-1 font-bold text-primary">{first}:</span>
+                      )}
                       {m.content}
                       <span
                         className={`ml-2 text-[10px] ${
@@ -186,7 +239,11 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
                   </div>
                 ),
               )}
-              {busy && <p className="animate-pulse text-sm text-muted-foreground">{first} está escribiendo…</p>}
+              {busy && (
+                <p className="animate-pulse text-sm text-muted-foreground">
+                  {first} está escribiendo…
+                </p>
+              )}
               {error && <p className="text-sm font-semibold text-destructive">{error}</p>}
             </div>
 
@@ -213,7 +270,9 @@ export function FreeChat({ ui, game, costume }: { ui: UIState; game: Game; costu
                 Enviar
               </button>
             </form>
-            <span className="mt-2 text-xs text-muted-foreground">El tiempo se detiene mientras hablas · Esc para salir</span>
+            <span className="mt-2 text-xs text-muted-foreground">
+              El tiempo se detiene mientras hablas · Esc para salir
+            </span>
           </>
         )}
       </div>
